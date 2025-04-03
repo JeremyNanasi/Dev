@@ -1,0 +1,207 @@
+body {
+    margin: 0;
+    padding: 0;
+    font-family: sans-serif;
+}
+
+footer {
+    background-color: #000000;
+    justify-content: space-between;
+    bottom: 0;
+    width: 100%;
+}
+
+.socialmedias_footer {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    padding-top: 16px;
+    padding-right: 16px;
+    padding-bottom: 8px;
+}
+
+.footer_socialmedia_img {
+    width: 32px;
+    height: 32px;
+    margin-left: 8px;
+}
+
+.datenschutz_div {
+    display: flex;
+    flex-direction: column;
+    padding: 16px;
+    font-size: 16px;
+}
+
+.datenschutz_text, .impressum {
+    color: #fff;
+    font-size: 24px;
+}
+
+a {
+    text-decoration: none;
+}
+
+@media screen and (max-width: 528px) {
+    .text_bfdi {
+        font-size: 9px;
+    }
+}
+@media screen and (max-width: 330px) {
+    .datenschutzhinweise {
+        font-size: 31px;
+    }
+}
+
+@media screen and (min-width: 1440px) {
+    .footer_img_div {
+        max-width: 1440px;
+        margin: 0 auto;
+    }
+    .socialmedias_footer {
+        max-width: 1440px;
+        margin: 0 auto;
+    }
+    .datenschutz_div {
+        max-width: 1440px;
+        margin: 0 auto;
+    }
+    #generator_results {
+        max-width: 1440px;
+        margin: 0 auto;
+    }
+}
+
+@media ((min-height: 3090px) and (max-width: 331px))  {
+    footer {
+        position: fixed;
+    }
+}
+@media ((min-width: 991px) and (min-width: 1839)) {
+    footer {
+        position: fixed;
+    }
+}
+
+
+
+@media (min-height: 3200px) {
+    footer {
+        position: fixed;
+    }
+}
+@media ((min-width: 340px) and (min-height: 2836px)) {
+    footer {
+        position: fixed; 
+    }
+}
+@media ((min-width: 366px) and (min-height: 2732px)) {
+    footer {
+        position: fixed;
+    }
+}
+@media ((min-width: 387px) and (min-height: 2681px)) {
+    footer {
+        position: fixed;
+    }
+}
+@media ((min-width: 414px) and (min-height: 2618px)) {
+    footer {
+        position: fixed;
+    }
+}
+@media ((min-width: 441px) and (min-height: 2572px)) {
+    footer {
+        position: fixed;
+    }
+}
+@media ((min-width: 454px) and (min-height: 2539px)) {
+    footer {
+        position: fixed;
+    }
+}
+@media ((min-width: 468px) and (min-height: 2449px)) {
+    footer {
+        position: fixed;
+    }
+}
+@media ((min-width: 488px) and (min-height: 2399px)) {
+    footer {
+        position: fixed;
+    }
+}
+@media ((min-width: 543px) and (min-height: 2290px)) {
+    footer {
+        position: fixed;
+    }
+}
+@media ((min-width: 591px) and (min-height: 2227px)) {
+    footer {
+        position: fixed;
+    }
+}
+@media ((min-width: 611px) and (min-height: 2161px)) {
+    footer {
+        position: fixed;
+    }
+}
+@media ((min-width:631px) and (min-height: 2241px)) {
+    footer {
+        position: fixed;
+    }
+}
+@media ((min-width:652px) and (min-height: 2097px)) {
+    footer {
+        position: fixed;
+    }
+}
+@media ((min-width:699px) and (min-height: 2037px)) {
+    footer {
+        position: fixed;
+    }
+}
+@media ((min-width:719px) and (min-height: 1994px)) {
+    footer {
+        position: fixed;
+    }
+}
+@media ((min-width:799px) and (min-height: 1954px)) {
+    footer {
+        position: fixed;
+    }
+}
+@media ((min-width:859px) and (min-height: 1887px)) {
+    footer {
+        position: fixed;
+    }
+}
+@media ((min-width:945px) and (min-height: 1851px)) {
+    footer {
+        position: fixed;
+    }
+}
+@media ((min-width:992px) and (min-height: 1804px)) {
+    footer {
+        position: fixed;
+    }
+}
+@media ((min-width:1079px) and (min-height: 1754px)) {
+    footer {
+        position: fixed;
+    }
+}
+@media ((min-width:1212px) and (min-height: 1718px)) {
+    footer {
+        position: fixed;
+    }
+}
+@media ((min-width:1299px) and (min-height: 1681px)) {
+    footer {
+        position: fixed;
+    }
+}
+@media ((min-width:1472px) and (min-height: 1661px)) {
+    footer {
+        position: fixed;
+    }
+}

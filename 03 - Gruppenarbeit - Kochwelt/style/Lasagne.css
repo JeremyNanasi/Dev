@@ -1,0 +1,251 @@
+body {
+    margin: 0;
+    padding: 0;
+    max-width: 100%;
+    overflow-x: hidden;
+    font-family: "Raleway", serif;
+    font-optical-sizing: auto;
+    font-style: normal;    
+}
+
+h2 {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+}
+
+a {
+    text-decoration: none;
+    color:black;
+
+}
+
+img {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: fit-content;
+    height: 68px;
+}
+
+button {
+   background-color: green;
+   color: #ffffff;
+   border-radius: 8px;
+   width: 140px;
+   height: 32px;
+}
+
+/* header end */
+
+
+
+table{
+    width: 100%;
+
+}
+.tr_grey{
+    background-color: #f1f1f1;
+}
+td{
+    padding: 20px;
+    border-top-left-radius: 10px;
+    border-bottom-left-radius: 10px;
+    border-radius: 10px;
+    width: 100%;
+}
+
+
+span {
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    width: max-content;
+    background-color: rgba(221, 221, 221);
+    border-radius: 20px; 
+    padding-right: 16px;
+    padding-left: 16px; 
+    padding-top: 4px;
+    padding-bottom: 4px;  
+    margin-left: 8px;
+}
+
+.datahead  {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    padding: 16px;
+}
+
+#portionsInput {
+    border-right: 8px;
+    margin-left: 8px;
+    border-start-start-radius: 8px;
+    border-bottom-left-radius: 8px;
+    border-width: 1px;
+    border: 2px groove rgba(0,0,0,0.1);
+    height: 26px;
+}
+
+#button_radius {
+    border-radius: 0px 8px 8px 0px;
+}
+
+.text_preperation {
+    margin-top: 50px;
+    margin-bottom: 50px;
+}
+.section_preparation{
+    padding: 32px;
+}
+
+.charakter {
+    height: 20px;
+    width: 20px;
+    padding-right: 8px;
+}
+
+.empanadas_pic {
+    height: 230px;
+    width: 100%;
+    object-fit: cover;
+    border-radius: 8px;
+}
+
+.picture {
+    padding: 50px;
+}
+
+
+.seperator {
+    height: 1px;
+    width: 100%;
+    background-color: grey;
+    margin-top: 70px; 
+}
+
+@media screen and (max-width: 742px) {
+    .navlink_none {
+        display: none;
+    }
+    .display_none_rezept {
+        display: none;
+    }
+}
+
+
+
+
+/*  */
+
+@media screen and (max-width: 742px) {
+    .navlink_none {
+        display: none;
+    }
+    
+}
+@media screen and (max-width: 580px) {
+    table{
+        padding: 20px;
+    }
+    .picture {
+        padding: 5px;
+    }
+    th {
+        font-size: 14px;
+}
+    td {
+        font-size: 14px;
+    }
+    .empanadas_section{
+        padding-left: 50px;
+        padding-right: 50px;
+    }
+}
+@media(max-width:320px){
+    table{
+        padding: 24px;
+    }
+}
+@media(min-width:1440px){
+    section{
+        max-width: 1440px;
+        margin: 0 auto;
+    }
+    footer{
+        padding: 23px;
+    }
+    .content_div_lasagne{
+        min-height:92vh;
+    }
+}
+@media(max-width:580px){
+    .empanadas_pic{
+        height: 100px;
+        width: 100%;
+    }
+    section{
+        padding-left: 50px;
+        padding-right: 50px;
+    }
+}
+@media(max-width:563px){
+    .button_class{
+        height: 32px;
+        width: 72px;
+    }
+    .input_class{
+        height: 24px;
+        width: 72px;
+    }
+    form{
+        display: flex;
+    }
+}
+@media(max-width:369px){
+    span{
+        margin-bottom: 8px;
+    }
+}
+
+
+/* footer responsive */
+
+@media ((min-height: 1900px) and (min-width: 346px)) {
+    footer {
+        position: fixed;
+    }
+}
+
+@media ((max-height: 1600px) and (min-width: 600px)) {
+    footer {
+        position: static;
+    }
+}
+@media ((min-height: 1685px) and (max-width: 600px)) {
+    footer {
+        position: fixed;
+    }
+}
+
+
+@media ((min-height: 2759px) and (min-width: 1500px)) {
+    footer {
+        position: fixed;
+    }
+}
+@media ((min-height: 2600px) and (min-width: 1500px)) {
+    footer {
+        position: fixed;
+    }
+}
+
+
+
+
+/* @media ((min-height: 1745px) and (max-width: 1398)) {
+    footer {
+        position: fixed;
+    }
+} */

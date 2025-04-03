@@ -1,0 +1,228 @@
+@media screen and (max-width: 758px) {
+    .start_link {
+        display: none;
+    }
+
+    .recipe_link {
+        display: none;
+    }
+}
+
+body {
+    margin: 0px;
+}
+
+body {
+    font-family: "Raleway", serif;
+    font-optical-sizing: auto;
+    font-style: normal;
+    margin: 0px;
+    overflow-x: hidden;
+}
+
+h2 {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+}
+
+button {
+    background-color: green;
+    color: #ffffff;
+    border-radius: 8px;
+    width: 140px;
+    height: 32px;
+}
+
+.kochwelt_imgage_div {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+
+.Kochwelt-logo {
+    color: rgb(245, 247, 248);
+}
+
+.navlink-bottom:hover {
+    text-decoration: underline;
+    color: rgb(132, 243, 132);
+
+}
+
+a {
+    text-decoration: none;
+    color: black;
+    font-size: 20px;
+}
+
+section {
+    padding-left: 50px;
+    padding-right: 50px;
+}
+
+
+@media(min-width:1440px) {
+
+    section {
+        max-width: 1440px;
+        margin: 0 auto;
+    }
+
+    .footer_under_div{
+        max-width: 1440px;
+        margin: 0 auto;
+
+    }
+}
+
+
+
+@media screen and (max-width: 640px) {
+    .section_2_and_4_column {
+        height: fit-content;
+    }
+
+    .overlay {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .pick {
+        text-align: center;
+    }
+
+    .recept_page {
+        margin-top: 224px;
+        height: 365px;
+    }
+
+    .section_2_and_4_column {
+        display: flex;
+        flex-direction: column;
+    }
+}
+
+@media screen and (max-width: 550px) {
+    .section_2_and_4_column {
+        margin-bottom: auto;
+    }
+}
+
+@media screen and (max-width: 500px) {
+    h1 {
+        font-size: 24px;
+        display: flex;
+        justify-content: center;
+    }
+
+    a {
+        font-size: 16px;
+    }
+
+    section {
+        padding: 30px;
+    }
+}
+
+@media screen and (max-width: 400px) {
+    h1 {
+        font-size: 20px;
+    }
+
+    .recept_page {
+        margin-top: 280px;
+    }
+}
+
+@media (max-width:730px) {
+    img {
+        height: 68px;
+    }
+
+
+}
+
+@media (max-width:640px) {
+    .overlay {
+        gap: 20px;
+    }
+
+    .recept_page {
+        margin-top: 180px;
+    }
+
+}
+
+@media (max-width:489px) {
+    .navlink-bottom_div {
+        display: none;
+    }
+}
+
+@media (max-width:400px) {
+
+    h2 {
+        font-size: 16px;
+    }
+
+    nav {
+        display: flex;
+    }
+
+    .recept_page {
+        margin-top: 200px;
+        height: 380px;
+    }
+}
+
+@media(max-width:388px) {
+    .section_2_and_4_column {
+        margin-top: 48px;
+    }
+}
+
+@media(max-width:800px) {
+    p {
+        font-size: 70%;
+    }
+
+}
+
+@media(max-width:532px) {
+    nav {
+        display: flex;
+    }
+}
+
+@media(max-width:400px) {
+    #contact {
+        width: 80%;
+    }
+}
+
+@media(max-width:497px) {
+    .socialmedia_div {
+        padding-right: 8px;
+    }
+}
+
+@media(max-width:1000px) {
+    p {
+        font-size: 80%
+    }
+}
+
+@media(max-width:800px) {
+    p {
+        font-size: 70%;
+    }
+}
+@media(min-height:1600px){
+    footer{
+        position: fixed;
+        bottom: 0;
+    }
+}
