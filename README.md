@@ -1,3 +1,3 @@
-That are my first codes 😄
+These are my first codes 😄
 
-I hope you enjoy and maybe correct me to become a awesome Fullstack coder 😎
+I hope you enjoy and maybe correct me to help me become an awesome Fullstack coder 😎
