@@ -1,0 +1,36 @@
+h1 {
+    display: flex;
+    justify-content: start;
+    align-items: center;
+    margin: 0;
+}
+
+header {
+    display: flex;
+    justify-content: space-between;
+    background-color: #afa396;
+    height: 72px;
+    padding-left: 20px;
+    padding-right: 20px; 
+}
+
+footer {
+    display: flex;
+    align-items: center;
+    background-color: black;
+    height: 72px;
+}
+
+a {
+    direction: none;
+}
+
+button {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 20px;
+    width: fit-content;
+    background-color: #afa396;
+    border: none;
+}

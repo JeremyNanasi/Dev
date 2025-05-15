@@ -87,7 +87,5 @@ function meinePortion() {
     } else {
         alert("Dein Wert ist zu hoch und sollte nicht mehr als 20 Portionen enthalten");
     }
-
-    console.log(solution);
 }
 
