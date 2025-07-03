@@ -1,0 +1,155 @@
+body {
+    margin: 0;
+    padding: 0;
+    max-width: 100%;
+
+    font-family: ;
+    font-optical-sizing: auto;
+    font-style: normal;
+}
+
+
+header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    height: 88px;
+    padding-left: 48px;
+    padding-right: 48px;
+    padding-bottom: 8px;
+    border-bottom: 4px groove rgba(0, 0, 0, 0.1);
+    max-width: 1440px;
+    height: 100px;
+}
+
+h2 {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+}
+
+a {
+    text-decoration: none;
+    color: black;
+
+}
+
+img {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: fit-content;
+    height: 50px;
+}
+
+button {
+    background-color: ;
+    color: ;
+    border-radius: 8px;
+    width: 140px;
+    height: 32px;
+}
+
+.subtitle_margin {
+    padding-top: 16px;
+}
+
+.header_logo_img_div {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.header_pic {
+    padding-bottom: 8px;
+    height: 68px;
+}
+
+.navlink-header_all {
+    margin: 8px;
+    color: black;
+    font-size: 18px;
+}
+
+.navlink-header_all:hover {
+    text-decoration: 4px underline;
+    text-underline-offset: 10px;
+    color: green;
+}
+
+/* js */
+
+.menu_div_active {
+    display: flex;
+    height: 43px;
+    width: 43px;
+    
+}
+
+.js_burgermenu_div {
+    display: none;
+}
+
+.active {
+    display: flex;
+    flex-direction: column;
+}
+
+.menu_img {
+    display: flex;
+    height: 26px;
+    width: fit-content;
+}
+
+
+#myLinks { /* javascript */
+    display: none;
+    justify-content: flex-end;
+    height: fit-content;
+    padding-left: 20px; 
+} 
+
+.navbar_burger{
+    position: absolute;
+    border-radius: 8px 0px 0px 8px;
+}
+
+.nav_link_burger {
+    text-decoration: none;
+    flex-direction: column;
+    display: flex;
+    background-color: rgba(153, 153, 153, 0.265);
+    width: 93px;
+}
+
+
+
+@media screen and (max-width: 740px) {
+    .navlink-header_all {
+        display: none;
+    }
+    .js_burgermenu_div {
+        display: flex;
+    }
+    .nav_link_burger {
+        display: flex;
+        justify-content: flex-end;
+    }
+}
+@media screen and (min-width: 430px) {
+    header {
+       height: 62px;
+       padding-left: 20px;
+       padding-right: 20px;
+    }
+    .header_logo_img {
+        height: 53px;
+    }
+}
+
+@media screen and (min-width: 1440px) {
+    #myLinks {
+        max-width: 1440px;
+    }
+}

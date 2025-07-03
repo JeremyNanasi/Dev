@@ -1,0 +1,364 @@
+
+body {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    font-family: sans-serif;
+    font-optical-sizing: auto;
+    font-style: normal;
+    min-height: 100vh;
+}
+
+.background_img {
+    background-image: url(./img/section/sternenhimmel.jpg);
+    background-repeat: no-repeat;
+    background-size: cover;
+    width: 100%;
+    height: 100vh;
+}
+
+section {
+    width: 100%;
+}
+
+#overlay_content {
+    display: flex;
+    justify-self: unset;
+    align-items: center;
+    width: 100%;
+}
+
+#content {
+    display: inline-flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    max-height: fit-content;
+    padding: 32px;
+}
+
+#body_onclick {
+        position: relative;
+}
+
+#dialog {
+    display: none;
+    width: 310px;
+    height: fit-content;
+    color: white;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -40%);
+    z-index: 2;
+}
+
+#template_all_div {
+    background-color: rgb(36 45 46 / 86%);
+    border: 16px;
+}
+
+#template_image_div {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 16px;
+}
+
+#template_image {
+    height: 188px;
+    width: fit-content;
+}
+
+#template_text_div {
+    padding: 16px;
+    height: 100px; 
+}
+
+.image_all {
+    width: 200px;
+    height: 135px;
+    border-radius: 8px 8px 8px 8px;
+    margin: 8px;
+    transition: transfrom .2s;
+    cursor: pointer;
+}
+
+.image_all:hover {
+    transform: scale(1.1);
+}
+
+#d_none {
+    display: none;
+}
+
+#template_button {
+    color: #313133;
+    background: #4FD1C5;
+    min-width: 150px;
+    margin-bottom: 8px;
+    cursor: pointer;
+}
+
+#close_div {
+    display: flex;
+    justify-content: flex-end;
+    padding: 8px;
+}
+
+#template_button_close {
+    background-color:rgb(219 68 68 / 77%);
+    border: -8px;
+    padding: 8px;
+    cursor: pointer;
+}
+
+#close_button_template {
+    width: 24px;
+    height: 24px;
+    transition: transfrom .2s;
+}
+#close_button_template:hover {
+    transform: scale(1.5);
+} 
+
+ @media screen and (min-width: 1440px) {
+        .overlay_content, section {
+            display: flex;
+            max-width: 1440px;
+            margin: 0 auto;
+        }
+        .background_img {
+            background-size: cover;
+            height: calc(100vh - 147px);  
+            /* sorgt dafür, dass kein scrollbalken ensteht */
+        }
+        .content {
+            max-width: 1440px;
+            margin: 0 auto;
+        }
+    }
+
+
+    @media (max-width: 412px) {
+        #dialog {
+            height: 544px;
+            position: sticky;
+
+        }
+        #template_text_div {
+            height: 200px;
+        }
+        #template_image {
+            height: 188px;
+            width: fit-content;
+        }
+    }
+    @media (max-width: 500px) {
+        #image_all {
+        width: 200px;
+        height: 135px;
+        }
+        #dialog {
+            height: 584px;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+    }
+
+    @media (min-width: 412px) {
+        #dialog {
+            height: 584px;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+        #template_text_div {
+            height: 188px;
+        }
+        #template_image {
+            height: 210px;
+        }
+    }
+
+    @media (min-width: 510px) {
+        #dialog {
+            width: 477px;
+        }
+        #template_text_div {
+            height: 130px;
+        }
+        #template_image {
+            height: 300px;
+        }
+    }
+
+    @media (min-width: 700px) {
+        #dialog {
+            width: 665px;
+            height: 700px;
+        }
+        #template_image {
+            height: 424px;
+        }
+        #template_text_div {
+            height: 120px;
+        }
+    }
+    @media ((min-width: 2400px) and (min-height: 2400px)) {
+        #dialog {
+            width: 1660px;
+            height: 1800px;
+        }
+        #close_div {
+            height: 200px;
+        }
+        #template_button_close {
+            width: 150px;
+            height: 150px;
+            font-size: xxx-large;
+        }
+        #close_button_template {
+            height: 120px;
+            width: 100px; 
+        }
+        #template_image {
+            height: 1000px;
+
+        }
+        #template_text_div {
+            font-size: xxx-large;
+            height: 400px;
+        }
+        #template_button {
+            width: 100px;
+            height: 100px;
+            font-size: xxx-large;
+        }
+    }
+    @media ((min-width: 4000px) and (min-height: 4000px)) {
+        #dialog {
+            width: 3000px;
+            height: 2900px;
+        }
+        #close_div {
+            height: 200px;
+        }
+        #close_button_template {
+            height: 200px;
+            width: 200px; 
+        }
+        #template_image {
+            height: 1500px;
+        }
+        #template_text_div {
+            font-size: 100px;
+            height: 900px;
+        }
+        #template_button {
+            width: 600px;
+            height: 150px;
+            font-size: 100px;
+        }
+        #template_button_close {
+            width: 300px;
+            height: 300px;
+            font-size: 100px;
+        }
+    }
+    @media ((min-width: 4800px) and (min-height: 4800px)) {
+        #dialog {
+            width: 4000px;
+            height: 4250px;
+        }
+        #close_div {
+            height: 200px;
+        }
+        #close_button_template {
+            height: 200px;
+            width: 200px; 
+        }
+        #template_image {
+            height: 2000px;
+
+        }
+        #template_text_div {
+            font-size: 150px;
+            height: 1700px;
+        }
+        #template_button {
+            width: 900px;
+            height: 200px;
+            font-size: 150px;
+        }
+        #template_button_close {
+            width: 400px;
+            height: 200px;
+            font-size: 150px;
+        }
+    }
+
+
+    /* footer */
+    @media screen and ((min-width: 0px) and (max-height: 2400px)) {
+        .background_img {
+            background-size: cover;
+            height: 2100px;
+        }
+    }
+    @media screen and ((min-width: 0px) and (min-height: 2400px)) {
+        .background_img {
+            background-size: cover;
+            height: calc(100vh - 146px);
+        }
+    }
+    @media screen and ((min-width: 0px) and (min-height: 2256px)) {
+        .background_img {
+            background-size: cover;
+            height: calc(100vh - 146px);
+        }
+    }
+    @media screen and ((min-width: 496px) and (max-height: 1300px)) {
+        .background_img {
+            background-size: cover;
+            height: 1147px;
+        }
+    }
+    @media screen and ((min-width: 496px) and (max-height: 800px)) {
+        .background_img {
+            background-size: cover;
+            height: 1147px;
+        }
+    }
+    @media screen and ((min-width: 712px) and (max-height: 800px)) {
+        .background_img {
+            background-size: cover;
+            height: 800px;
+        }
+    }
+    @media ((min-width: 469px) and (min-height: 1300px)) {
+        .background_img {
+            background-size: cover;
+            height: calc(100vh - 148px);  
+        }
+    }
+    @media ((min-width: 730px) and (min-height: 1100px)) {
+        .background_img {
+            background-size: cover;
+            height: calc(100vh - 148px);  
+        }
+    }
+    @media ((min-width: 928px) and (min-height: 900px)) {
+        .background_img {
+            background-size: cover;
+            height: calc(100vh - 148px);  
+        }
+    }
+    @media ((min-width: 1400px) and (min-height: 800px)) {
+        .background_img {
+            background-size: cover;
+            height: calc(100vh - 148px);
+        }
+    }

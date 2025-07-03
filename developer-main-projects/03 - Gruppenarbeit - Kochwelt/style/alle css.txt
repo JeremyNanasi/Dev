@@ -1,0 +1,2623 @@
+Datenschutz------
+
+body {
+    font-family: "Raleway", serif;
+    font-optical-sizing: auto;
+    font-style: normal;
+}
+
+
+
+@media screen and (max-width: 600px) {
+    .link {
+        font-size: 14px;
+    }
+}
+
+@media screen and (max-width: 400px) {
+    .link {
+        font-size: 8px;
+    }
+
+    .instagram {
+        font-size: 16px;
+    }
+
+    .header_pic {
+        height: 45px;
+        width: fit-content;
+    }
+
+    a {
+        font-size: 16px;
+    }
+}
+
+@media screen and (max-width: 850px) {
+    .header_pic {
+        height: 56px;
+    }
+
+    .main_image {
+        height: 150px;
+    }
+}
+
+@media screen and (max-width: 750px) {
+    a {
+        font-size: 16px;
+    }
+
+    .start_responsive {
+        display: none;
+    }
+
+    .rezept_des_tages_responsive {
+        display: none;
+    }
+}
+
+@media screen and (max-width: 640px) {
+    .section_2_and_4_column {
+        height: fit-content;
+    }
+
+    .overlay {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .pick {
+        text-align: center;
+    }
+
+    .recept_page {
+        margin-top: 224px;
+        height: 365px;
+    }
+
+    .section_2_and_4_column {
+        display: flex;
+        flex-direction: column;
+    }
+}
+
+@media screen and (max-width: 550px) {
+    .section_2_and_4_column {
+        margin-bottom: auto;
+    }
+}
+
+@media screen and (max-width: 500px) {
+    h1 {
+        font-size: 24px;
+        display: flex;
+        justify-content: center;
+    }
+
+    a {
+        font-size: 16px;
+    }
+
+    header {
+        padding: 8px;
+    }
+
+    .section_2_and_4_column {
+        flex-direction: column;
+    }
+}
+
+@media screen and (max-width: 400px) {
+    h1 {
+        font-size: 20px;
+    }
+
+    .flex_column_header {
+        display: flex;
+        justify-content: flex-end;
+    }
+
+    .header_pic {
+        height: 45px;
+    }
+
+    .section_2_and_4_column {
+        padding: 0;
+    }
+
+    .recept_page {
+        margin-top: 280px;
+    }
+}
+
+@media (max-width:730px) {
+    img {
+        height: 68px;
+
+
+    }
+}
+
+@media (max-width:640px) {
+    footer {
+        margin-top: 150px;
+    }
+
+    .overlay {
+        gap: 20px;
+    }
+
+    .recept_page {
+        margin-top: 180px;
+    }
+
+}
+
+@media (max-width:412px) {
+    .navlink-header {
+        font-size: 16px;
+    }
+}
+
+@media (max-width:401px) {
+    .navlink-header {
+        font-size: 16px;
+    }
+}
+
+@media (max-width:400px) {
+    .navlink-header {
+        font-size: 14px;
+    }
+
+    h2 {
+        font-size: 16px;
+    }
+
+    nav {
+        display: flex;
+    }
+
+    .recept_page {
+        margin-top: 200px;
+        height: 380px;
+    }
+}
+
+@media(max-width:328px) {
+    header {
+        padding: 0px;
+    }
+}
+
+
+
+
+
+@media(min-width:1440px) {
+    header {
+        max-width: 1440px;
+        margin: 0 auto;
+    }
+
+    .section_2_and_4_column {
+        max-width: 1440px;
+        margin: 0 auto;
+    }
+
+    .lust_auf_was_neues {
+        max-width: 1440px;
+        margin: 0 auto;
+    }
+
+    .overlay {
+        max-width: 1440px;
+        margin: 0 auto;
+    }
+
+    .margin-top {
+        max-width: 1440px;
+        margin: 0 auto;
+    }
+
+    .Kochwelt-logo {
+        max-width: 1400px;
+        margin: 0 auto;
+    }
+
+    .p_section {
+        padding-left: 50px;
+        padding-right: 50px;
+        margin-top: 50px;
+        max-width: 1440px;
+        margin: 0 auto;
+    }
+}
+
+    @media(max-width:518px) {
+        a {
+            font-size: 7px;
+        }
+
+        .link {
+            font-size: 7px;
+        }
+    }
+
+    @media(max-width:400px) {
+        .instagram {
+            font-size: 8px;
+        }
+    }
+
+    @media screen and (max-width: 820px) {
+        .navlink-header_all {
+            display: none;
+        }
+        .navication_burger_img_div {
+            display: flex;
+        }
+        .nav_link {
+            display: flex;
+            justify-content: flex-end;
+        }
+    }
+
+    /* header */
+    body {
+        margin: 0;
+        padding: 0;
+        max-width: 100%;
+    
+        font-family: "Raleway", serif;
+        font-optical-sizing: auto;
+        font-style: normal;
+    }
+    
+    h2 {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    
+    }
+    
+     a {
+        text-decoration: none;
+        color: black;
+    }
+    
+    img {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: fit-content;
+    }
+    
+    button {
+        background-color: green;
+        color: #ffffff;
+        border-radius: 8px;
+        width: 140px;
+        height: 32px;
+    }
+    
+    .subtitle_margin {
+        padding-top: 16px;
+    }
+    
+    .kochwelt_imgage_div {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+    
+    .header_pic {
+        padding-bottom: 8px;
+        height: 68px;
+    }
+    
+    .navlink-header {
+        margin: 8px;
+        color: black;
+        font-size: 18px;
+    }
+    
+    .navlink-header_all {
+        padding-left: 12px; 
+    }
+    
+    .navlink-header_all:hover {
+        text-decoration: 4px underline;
+        text-underline-offset: 10px;
+        color: green;
+    }
+    
+    /* js */
+    
+    .menu_white_div {
+        display: flex;
+        height: 43px;
+        width: 43px;
+        
+    }
+    
+    .navication_burger_img_div {
+        display: none;
+    }
+    
+    .menu_img {
+        display: flex;
+        height: 26px;
+        width: fit-content;
+    }
+    
+    #myLinks {
+        display: none;
+        justify-content: flex-end;
+        height: fit-content;
+        padding-left: 20px;
+    } 
+    
+    .active {
+        display: flex;
+        flex-direction: column;
+    }
+    
+    .nav_link {
+        text-decoration: none;
+        flex-direction: column;
+        display: flex;
+        width: 93px;
+    }
+    
+    .nav_link_width {
+        width: 100%;
+    }
+    
+    .navbar_burger{
+        display: flex;
+        position: absolute;
+        flex-direction: column;
+        padding: 8px;
+        border-radius: 8px 0px 0px 8px;
+        background-color: hwb(0deg 46.25% 53.75%);
+    }
+    
+    @media screen and (min-width: 1440px) {
+        header {
+            max-width: 1440px;
+            margin: 0 auto;
+        }
+    }
+   
+    
+    @media screen and (max-width: 953px) {
+        .navlink-header_all {
+            display: none;
+        }
+        .navication_burger_img_div {
+            display: flex;
+        }
+        .nav_link {
+            display: flex;
+            justify-content: flex-end;
+        }
+    }
+    @media screen and (max-width: 600px) {
+        header {
+           height: 62px;
+           padding-left: 20px;
+           padding-right: 20px;
+           align-items: baseline;
+        }
+        .header_pic_img {
+            height: 53px;
+        }
+        .menu_img {
+            height: 20px;
+        }
+    }
+
+
+    /* responsive footer */
+
+        footer {
+            position: static;
+        }
+    
+
+    ----------------------------------------------------------------------------
+
+    email------------------
+
+    body {
+    font-family: "Raleway", serif;
+    font-optical-sizing: auto;
+    font-style: normal;
+    margin: 0px;
+    overflow-x: hidden;
+}
+
+h2 {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+}
+
+button {
+    background-color: green;
+    color: #ffffff;
+    border-radius: 8px;
+    width: 140px;
+    height: 32px;
+}
+
+.kochwelt_imgage_div {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+
+a {
+    text-decoration: none;
+    color: black;
+
+}
+
+img {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: fit-content;
+    height: 68px;
+}
+
+/* section */
+
+.contact_middle {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+    margin-top: 50px;
+    margin-bottom: 50px;
+}
+
+#contact {
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    flex-direction: column;
+    background-color: #EFEFEF;
+    border-radius: 8px;
+    padding: 8px;
+    height: auto;
+    width: 41%;
+}
+
+h3 {
+    font-weight: 500;
+}
+
+form {
+    width: 97%;
+    height: 100%;
+}
+
+input {
+    width: 100%;
+    height: 24px;
+    border-radius: 8px;
+    border: none;
+}
+
+label {
+    display: flex;
+    flex-direction: column;
+}
+
+.deine_nachricht {
+    resize: vertical;
+}
+
+.button {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: green;
+    color: #ffffff;
+    border-radius: 8px;
+    border: none;
+    width: 60px;
+    height: 32px;
+    margin: 16px;
+}
+
+textarea {
+    display: flex;
+    height: 240px;
+    border-radius: 8px;
+    border-color: #EFEFEF;
+}
+
+.button_left {
+    display: flex;
+    justify-content: flex-end;
+}
+
+@media screen and (max-width: 550px) {
+    .section_2_and_4_column {
+        margin-bottom: auto;
+    }
+}
+
+@media screen and (max-width: 500px) {
+    h1 {
+        font-size: 24px;
+        display: flex;
+        justify-content: center;
+    }
+
+    a {
+        font-size: 16px;
+    }
+}
+
+@media screen and (max-width: 400px) {
+    h1 {
+        font-size: 20px;
+    }
+
+    .recept_page {
+        margin-top: 280px;
+    }
+}
+
+@media (max-width:730px) {
+    img {
+        height: 68px;
+
+
+    }
+    
+    .overlay {
+        gap: 20px;
+    }
+    
+    .recept_page {
+        margin-top: 180px;
+    }
+}
+    
+
+
+@media(max-width:800px) {
+
+    .start_link {
+        display: none;
+    }
+
+}
+
+@media(max-width:532px) {
+    nav {
+        display: flex;
+    }
+}
+
+@media(max-width:1000px) {
+    #contact {
+        width: 60%;
+    }
+}
+
+@media(max-width:400px) {
+    #contact {
+        width: 80%;
+    }
+}
+
+@media(min-width:1440px) {
+    .contact_middle {
+        max-width: 1440px;
+        margin: 0 auto;
+        min-height: 92vh;
+    }
+}
+
+@media(min-width:1920) {
+    .contact_middle {
+        min-height: 92vh;
+    }
+}
+
+/* responsive footer */
+
+@media ((min-height: 1360px) and (min-width: 610px)) {
+    footer {
+        position: fixed;
+    }
+}
+@media ((min-height: 868px) and (max-width: 1435px)) {
+    footer {
+        position: fixed;
+    }
+}
+@media ((min-height: 1148px) and (max-width: 1200px)) {
+    footer {
+        position: fixed;
+    }
+}
+
+--------------------------------------------------------------------
+
+empanadas---------------------
+body {
+    margin: 0;
+    padding: 0;
+    max-width: 100%;
+    overflow-x: hidden;
+    font-family: "Raleway", serif;
+    font-optical-sizing: auto;
+    font-style: normal;
+}
+
+h2 {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+a {
+    text-decoration: none;
+    color:black;
+
+}
+
+img {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: fit-content;
+    height: 68px;
+}
+
+button {
+   background-color: green;
+   color: #ffffff;
+   border-radius: 8px;
+   width: 140px;
+   height: 32px;
+}
+
+.kochwelt_imgage_div {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* header end */
+
+.table_div {
+    width: 100%;
+    overflow-x: auto;
+}
+
+table {
+    width: 100%;
+}
+
+thead {
+    display: flex;
+    flex-direction: column;  
+    height: 100%;
+}
+
+tbody {
+    height: 100%; 
+}
+
+
+
+td {
+    padding: 20px;
+    padding: 20px;
+    border-top-left-radius: 10px;
+    border-bottom-left-radius: 10px;
+    border-radius: 10px;
+    width: 100%;
+}
+
+.tr_grey{
+    background-color:#f1f1f1;
+}
+
+
+
+
+span {
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    width: max-content;
+    background-color: rgba(221, 221, 221);
+    border-radius: 20px; 
+    padding-right: 16px;
+    padding-left: 16px; 
+    padding-top: 4px;
+    padding-bottom: 4px;  
+    margin-left: 8px;
+    margin-bottom: 16px;
+}
+
+.datahead  {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    padding: 16px;
+}
+
+#portionsInput {
+    border-right: 8px;
+    margin-left: 8px;
+    border-start-start-radius: 8px;
+    border-bottom-left-radius: 8px;
+    border-width: 1px;
+    border: 2px groove rgba(0,0,0,0.1);
+    height: 26px;
+}
+
+#button_radius {
+    border-radius: 0px 8px 8px 0px;
+}
+
+
+
+.grey_right {
+    background-color: #f1f1f1;
+    border-radius: 0px 8px 8px 0px;
+}
+
+.text_preperation {
+    margin-inline: 40px;
+    width: 100%;
+    margin-inline: 50px;
+}
+
+.padding_text {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+}
+
+.charakter {
+    height: 20px;
+    width: 20px;
+    padding-right: 8px;
+}
+
+.empanadas_pic {
+    height: 230px;
+    width: 100%;
+    object-fit: cover;
+    border-radius: 8px;
+}
+
+.picture {
+    padding: 50px;
+}
+
+.seperator {
+    height: 1px;
+    width: 100%;
+    background-color: grey;
+    margin-top: 70px; 
+}
+
+@media screen and (max-width: 777px ) {
+    .Kochwelt-logo {
+        height: 66px;
+        width: fit-content;
+    }
+    .socialmedia_icon {
+        height: 24px;
+    }
+}
+@media screen and (max-width: 742px) {
+    .navlink-bottom {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin-right: 16px;
+    }
+    .navlink-bottom_div {
+        display: flex;
+        flex-direction: column;
+    }
+    .navlink_none {
+        display: none;
+    }
+}
+@media screen and (max-width: 580px) {
+    .picture {
+        padding: 5px;
+    }
+    th {
+    font-size: 14px;
+}
+    td {
+        font-size: 14px;
+    }
+}
+@media screen and (max-width: 485px) {
+    .socialmedia_icon {
+        padding-right: 10px;
+    }
+    .navlink-bottom {
+        margin-right: 10px; 
+    }
+    .Kochwelt-logo {
+        height: 45px;
+    }
+}
+@media screen and (max-width: 320px) {
+    .Kochwelt-logo {
+        height: 33px;
+    }
+    .empanadas_section{
+        padding-left: 32px;
+        padding-right: 32px;
+    }
+}
+
+@media screen and (max-width: 777px ) {
+    .Kochwelt-logo {
+        height: 66px;
+        width: fit-content;
+    }
+    .socialmedia_icon {
+        height: 24px;
+    }
+}
+@media screen and (max-width: 742px) {
+    .navlink-bottom {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin-right: 16px;
+    }
+    .navlink-bottom_div {
+        display: flex;
+        flex-direction: column;
+    }
+    .navlink_none {
+        display: none;
+    }
+    .display_none_rezept {
+        display: none;
+    }
+}
+@media screen and (max-width: 485px) {
+    .socialmedia_icon {
+        padding-right: 5px;
+    }
+    .Kochwelt-logo {
+        height: 45px;
+    }
+    .text_preperation {
+        margin-left: 20px;
+        margin-right: 20px;
+    }
+}
+@media screen and (max-width: 370px) {
+    .Kochwelt-logo {
+        height: 33px;
+    }
+}
+@media(min-width:1440px){
+    .empanadas_section{
+        max-width: 1440px;
+        margin: 0 auto;
+    }
+    .section_preparation{
+        max-width: 1440px;
+        margin: 0 auto;
+    }
+}
+@media(max-width:580px){
+    .empanadas_section{
+        padding-left: 50px;
+        padding-right: 50px;
+    }
+    .empanadas_pic{
+        height: 100px;
+    }
+}
+@media(max-width:563px){
+    .input_class{
+        height: 24px;
+        width: 72px;
+    }
+    .portion_class{
+        height: 32px;
+        width: 72px;
+    }
+}
+@media(max-width:404px){
+    form{
+        display: flex;
+    }
+}
+
+
+/* responsive footer */
+
+@media ((max-height: 2250px) and (max-height: 1600px)) {
+    footer {
+        position: static;
+    }
+}
+@media ((min-height: 2190px) and (min-width: 1600px)) {
+    footer {
+        position: fixed;
+    }
+}
+@media (min-height: 2190px) {
+    footer {
+        position: fixed;
+    }
+}
+
+--------------------------------------------------------
+footer-----------------------
+
+body {
+    margin: 0;
+    padding: 0;
+    font-family: sans-serif;
+}
+
+footer {
+    background-color: rgb(185 181 180);
+    position: relative;
+    justify-content: space-between;
+    bottom: 0;
+    width: 100%;
+}
+.footer_img{
+    height: 100px;
+}
+.datenschutz_footer{
+    text-decoration:none;
+    color: rgb(0, 0, 0);
+    font-size: 24px;
+}
+.datenschutz_footer:hover{
+    text-decoration: underline;
+    color: rgb(113, 179, 95);
+}
+.socialmedias_div {
+    display: flex;
+    justify-content: flex-end;
+    padding-top: 16px;
+    padding-right: 16px;
+    padding-bottom: 8px;
+}
+
+.footer_img-datenschutz_div {
+    padding: 16px;
+}
+
+.footer_socialmedia_img {
+    width: 48px;
+    height: 48px;
+    margin-left: 16px;
+}
+
+.footer_under_div {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+}
+
+.socialmedias_footer {
+    display: flex;
+    align-items: baseline;
+}
+
+@media screen and (min-width: 1440px) {
+    .footer_under_div, .footer_img_div, .datenschutz, .socialmedias_footer {
+        max-width: 1440px;
+        margin: 0 auto;
+    }
+}
+@media screen and (max-width: 450px) {
+    .footer_socialmedia_img {
+        padding-top: 8px;
+        height: 24px;
+        width: fit-content;
+    }
+    .footer_img {
+        height: 45px;
+        width: fit-content;
+    }
+}
+
+------------------------------------------------------------------
+header ----------------------
+body {
+    margin: 0;
+    padding: 0;
+    max-width: 100%;
+
+    font-family: "Raleway", serif;
+    font-optical-sizing: auto;
+    font-style: normal;
+}
+
+.header_pic_img {
+    height: 70px;
+    width: fit-content;
+}
+
+
+header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    height: 88px;
+    padding-left: 48px;
+    padding-right: 48px;
+    padding-bottom: 8px;
+    max-width: 1440px;
+    height: 100px;
+}
+
+.header_seperator{
+    height: 1px;
+    border-bottom: 4px groove rgba(0, 0, 0, 0.1);
+}
+
+h2 {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+}
+
+ a {
+    text-decoration: none;
+    color: black;
+}
+
+img {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: fit-content;
+}
+
+button {
+    background-color: green;
+    color: #ffffff;
+    border-radius: 8px;
+    width: 140px;
+    height: 32px;
+}
+
+.subtitle_margin {
+    padding-top: 16px;
+}
+
+.header_pic_img_div {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+}
+
+.kochwelt_imgage_div {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.header_pic {
+    padding-bottom: 8px;
+    height: 68px;
+}
+
+.navlink-header {
+    margin: 8px;
+    color: black;
+    font-size: 18px;
+}
+
+.navlink-header_all {
+    cursor: pointer;
+    padding-left: 12px;
+    font-size: 20px;
+}
+
+.navlink-header_all:hover {
+    text-decoration: 4px underline;
+    text-underline-offset: 10px;
+    color: green;
+}
+
+/* js */
+
+.menu_white_div {
+    display: flex;
+    height: 43px;
+    width: fit-content;
+    
+}
+
+.navication_burger_img_div {
+    display: none;
+}
+
+.menu_img {
+    display: flex;
+    height: 26px;
+    width: fit-content;
+}
+
+#myLinks {
+    display: none;
+    justify-content: flex-end;
+    height: fit-content;
+    padding-left: 20px;
+    cursor: pointer;
+} 
+
+.active {
+    display: flex;
+    flex-direction: column;
+}
+
+.nav_link {
+    text-decoration: none;
+    flex-direction: column;
+    display: flex;
+    width: 93px;
+}
+
+.nav_link_width {
+    width: 100%;
+}
+
+.navbar_burger{
+    display: flex;
+    position: absolute;
+    flex-direction: column;
+    padding: 8px;
+    border-radius: 8px 0px 0px 8px;
+    background-color: hwb(0deg 46.25% 53.75%);
+}
+
+@media screen and (min-width: 1440px) {
+    header {
+        max-width: 1440px;
+        margin: 0 auto;
+    }
+}
+
+@media screen and (max-width: 953px) {
+    .navlink-header_all {
+        display: none;
+    }
+    .navication_burger_img_div {
+        display: flex;
+    }
+    .nav_link {
+        display: flex;
+        justify-content: flex-end;
+        width: 140px;
+    }
+}
+@media(min-width:953px){
+    .navbar_burger{
+        display: none;
+    }
+}
+@media screen and (max-width: 600px) {
+    header {
+       height: 62px;
+       padding-left: 20px;
+       padding-right: 20px;
+       align-items: baseline;
+    }
+    .header_pic_img {
+        height: 53px;
+    }
+    .menu_img {
+        height: 20px;
+    }
+}
+----------------------------------------------------
+impressum------------------------------
+@media screen and (max-width: 758px) {
+    .start_link {
+        display: none;
+    }
+
+    .recipe_link {
+        display: none;
+    }
+}
+
+body {
+    margin: 0px;
+}
+
+body {
+    font-family: "Raleway", serif;
+    font-optical-sizing: auto;
+    font-style: normal;
+    margin: 0px;
+    overflow-x: hidden;
+}
+
+h2 {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+}
+
+button {
+    background-color: green;
+    color: #ffffff;
+    border-radius: 8px;
+    width: 140px;
+    height: 32px;
+}
+
+.kochwelt_imgage_div {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+
+.Kochwelt-logo {
+    color: rgb(245, 247, 248);
+}
+
+.navlink-bottom:hover {
+    text-decoration: underline;
+    color: rgb(132, 243, 132);
+
+}
+
+a {
+    text-decoration: none;
+    color: black;
+    font-size: 20px;
+}
+
+section {
+    padding-left: 50px;
+    padding-right: 50px;
+}
+
+
+@media(min-width:1440px) {
+
+    section {
+        max-width: 1440px;
+        margin: 0 auto;
+    }
+
+    .footer_under_div{
+        max-width: 1440px;
+        margin: 0 auto;
+
+    }
+
+    .div_content_impressum {
+        min-height: 90vh;
+    }
+}
+
+@media(min-width:1920px) {
+    .div_content_Impressum {
+        min-height: 91vh;
+    }
+}
+
+
+
+@media screen and (max-width: 640px) {
+    .section_2_and_4_column {
+        height: fit-content;
+    }
+
+    .overlay {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .pick {
+        text-align: center;
+    }
+
+    .recept_page {
+        margin-top: 224px;
+        height: 365px;
+    }
+
+    .section_2_and_4_column {
+        display: flex;
+        flex-direction: column;
+    }
+}
+
+@media screen and (max-width: 550px) {
+    .section_2_and_4_column {
+        margin-bottom: auto;
+    }
+}
+
+@media screen and (max-width: 500px) {
+    h1 {
+        font-size: 24px;
+        display: flex;
+        justify-content: center;
+    }
+
+    a {
+        font-size: 16px;
+    }
+
+    section {
+        padding: 30px;
+    }
+}
+
+@media screen and (max-width: 400px) {
+    h1 {
+        font-size: 20px;
+    }
+
+    .recept_page {
+        margin-top: 280px;
+    }
+}
+
+@media (max-width:730px) {
+    img {
+        height: 68px;
+    }
+
+
+}
+
+@media (max-width:640px) {
+    .overlay {
+        gap: 20px;
+    }
+
+    .recept_page {
+        margin-top: 180px;
+    }
+
+}
+
+@media (max-width:489px) {
+    .navlink-bottom_div {
+        display: none;
+    }
+}
+
+@media (max-width:400px) {
+
+    h2 {
+        font-size: 16px;
+    }
+
+    nav {
+        display: flex;
+    }
+
+    .recept_page {
+        margin-top: 200px;
+        height: 380px;
+    }
+}
+
+@media(max-width:388px) {
+    .section_2_and_4_column {
+        margin-top: 48px;
+    }
+}
+
+@media(max-width:800px) {
+    p {
+        font-size: 70%;
+    }
+
+}
+
+@media(max-width:532px) {
+    nav {
+        display: flex;
+    }
+}
+
+@media(max-width:400px) {
+    #contact {
+        width: 80%;
+    }
+}
+
+@media(max-width:497px) {
+    .socialmedia_div {
+        padding-right: 8px;
+    }
+}
+
+@media(max-width:1000px) {
+    p {
+        font-size: 80%
+    }
+}
+
+@media(max-width:800px) {
+    p {
+        font-size: 70%;
+    }
+}
+
+--------------------------------------------------------
+lasagne----------------------------------------------
+@media screen and (max-width: 758px) {
+    .start_link {
+        display: none;
+    }
+
+    .recipe_link {
+        display: none;
+    }
+}
+
+body {
+    margin: 0px;
+}
+
+body {
+    font-family: "Raleway", serif;
+    font-optical-sizing: auto;
+    font-style: normal;
+    margin: 0px;
+    overflow-x: hidden;
+}
+
+h2 {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+}
+
+button {
+    background-color: green;
+    color: #ffffff;
+    border-radius: 8px;
+    width: 140px;
+    height: 32px;
+}
+
+.kochwelt_imgage_div {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+
+.Kochwelt-logo {
+    color: rgb(245, 247, 248);
+}
+
+.navlink-bottom:hover {
+    text-decoration: underline;
+    color: rgb(132, 243, 132);
+
+}
+
+a {
+    text-decoration: none;
+    color: black;
+    font-size: 20px;
+}
+
+section {
+    padding-left: 50px;
+    padding-right: 50px;
+}
+
+
+@media(min-width:1440px) {
+
+    section {
+        max-width: 1440px;
+        margin: 0 auto;
+    }
+
+    .footer_under_div{
+        max-width: 1440px;
+        margin: 0 auto;
+
+    }
+
+    .div_content_impressum {
+        min-height: 90vh;
+    }
+}
+
+@media(min-width:1920px) {
+    .div_content_Impressum {
+        min-height: 91vh;
+    }
+}
+
+
+
+@media screen and (max-width: 640px) {
+    .section_2_and_4_column {
+        height: fit-content;
+    }
+
+    .overlay {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .pick {
+        text-align: center;
+    }
+
+    .recept_page {
+        margin-top: 224px;
+        height: 365px;
+    }
+
+    .section_2_and_4_column {
+        display: flex;
+        flex-direction: column;
+    }
+}
+
+@media screen and (max-width: 550px) {
+    .section_2_and_4_column {
+        margin-bottom: auto;
+    }
+}
+
+@media screen and (max-width: 500px) {
+    h1 {
+        font-size: 24px;
+        display: flex;
+        justify-content: center;
+    }
+
+    a {
+        font-size: 16px;
+    }
+
+    section {
+        padding: 30px;
+    }
+}
+
+@media screen and (max-width: 400px) {
+    h1 {
+        font-size: 20px;
+    }
+
+    .recept_page {
+        margin-top: 280px;
+    }
+}
+
+@media (max-width:730px) {
+    img {
+        height: 68px;
+    }
+
+
+}
+
+@media (max-width:640px) {
+    .overlay {
+        gap: 20px;
+    }
+
+    .recept_page {
+        margin-top: 180px;
+    }
+
+}
+
+@media (max-width:489px) {
+    .navlink-bottom_div {
+        display: none;
+    }
+}
+
+@media (max-width:400px) {
+
+    h2 {
+        font-size: 16px;
+    }
+
+    nav {
+        display: flex;
+    }
+
+    .recept_page {
+        margin-top: 200px;
+        height: 380px;
+    }
+}
+
+@media(max-width:388px) {
+    .section_2_and_4_column {
+        margin-top: 48px;
+    }
+}
+
+@media(max-width:800px) {
+    p {
+        font-size: 70%;
+    }
+
+}
+
+@media(max-width:532px) {
+    nav {
+        display: flex;
+    }
+}
+
+@media(max-width:400px) {
+    #contact {
+        width: 80%;
+    }
+}
+
+@media(max-width:497px) {
+    .socialmedia_div {
+        padding-right: 8px;
+    }
+}
+
+@media(max-width:1000px) {
+    p {
+        font-size: 80%
+    }
+}
+
+@media(max-width:800px) {
+    p {
+        font-size: 70%;
+    }
+}
+
+---------------------------------------------------------------
+recipe----------------------------------
+body {
+    margin: 0;
+    padding: 0;
+    max-width: 100%;
+    font-family: "Raleway", serif;
+    font-optical-sizing: auto;
+    font-style: normal;
+    overflow-x: hidden;
+}
+
+h2 {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+}
+
+.h2_section2 {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+
+}
+
+
+
+a {
+    text-decoration: none;
+    color: black;
+}
+
+img {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: fit-content;
+    height: 68px;
+    height: 100px;
+}
+
+button {
+    background-color: green;
+    color: #ffffff;
+    border-radius: 8px;
+    width: 140px;
+}
+
+.kochwelt_imgage_div {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.section_1 {
+    padding-left: 50px;
+    padding-right: 50px;
+}
+
+.salad_img {
+    height: 230px;
+    width: 100%;
+    object-fit: cover;
+    border-radius: 10px;
+}
+
+.characteristic_container {
+    display: flex;
+    padding-top: 30px;
+    padding-bottom: 50px;
+}
+
+
+span {
+    margin-right: 50px;
+    display: flex;
+    background-color: rgba(221, 221, 221);
+    align-items: center;
+    border-radius: 20px;
+}
+
+img {
+    margin-right: 5px;
+    height: 20px;
+}
+
+.seperator {
+    height: 1px;
+    width: 100%;
+    background-color: grey;
+    margin-top: 70px;
+}
+
+.portion_container {
+    margin-top: 8px;
+    margin-bottom: 10px;
+}
+
+.portion_button {
+    background-color: green;
+    color: #ffffff;
+    border-radius: 0px 8px 8px 0px;
+    width: 140px;
+    height: 32px;
+}
+
+.portion_button:hover {
+    background-color: rgb(26, 157, 114);
+    cursor: pointer;
+}
+
+.portion_button:active {
+    box-shadow: 0 1px #666;
+    transform: translateY(4px);
+}
+
+.input_button {
+    border-right: 8px;
+    margin-left: 8px;
+    border-start-start-radius: 8px;
+    border-bottom-left-radius: 8px;
+    border-width: 1px;
+    border: 2px groove rgba(0, 0, 0, 0.1);
+    height: 26px;
+    width: 140px;
+}
+
+
+
+.character{
+    padding: 10px;
+    height: 15px;
+}
+.character_img{
+    height: 24px;
+}
+
+.section_2 {
+    padding: 50px;
+}
+
+table {
+    padding: 50px;
+    width: 100%;
+    border-collapse: separate;
+}
+
+
+
+.tr_tomate {
+    background-color: #f1f1f1;
+}
+
+.tr_Oliven {
+    background-color: #f1f1f1;
+}
+
+.tr_Petersilie {
+    background-color: #f1f1f1;
+}
+
+.tr_Olivenöl {
+    background-color: #f1f1f1;
+}
+
+td {
+    padding: 20px;
+    border-top-left-radius: 10px;
+    border-bottom-left-radius: 10px;
+    border-radius: 10px;
+    width: 100%;
+}
+
+
+.tomate_div {
+    background-color: #f1f1f1;
+    border-radius: 150px;
+}
+.preperation_text{
+    padding: 50px;
+}
+
+@media screen and (max-width: 850px) {
+
+    .main_image {
+        height: 150px;
+    }
+}
+
+@media screen and (max-width: 750px) {
+    a {
+        font-size: 16px;
+    }
+
+    .start_responsive {
+        display: none;
+    }
+
+    .rezept_des_tages_responsive {
+        display: none;
+    }
+}
+
+@media screen and (max-width: 640px) {
+    .section_2_and_4_column {
+        height: fit-content;
+    }
+
+    .overlay {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .pick {
+        text-align: center;
+    }
+
+    .recept_page {
+        margin-top: 224px;
+        height: 365px;
+    }
+
+    .section_2_and_4_column {
+        display: flex;
+        flex-direction: column;
+    }
+}
+
+@media screen and (max-width: 550px) {
+    .section_2_and_4_column {
+        margin-bottom: auto;
+    }
+}
+
+@media screen and (max-width: 500px) {
+    h1 {
+        font-size: 24px;
+        display: flex;
+        justify-content: center;
+    }
+
+    a {
+        font-size: 16px;
+    }
+
+    .section_2_and_4_column {
+        flex-direction: column;
+    }
+}
+
+@media screen and (max-width: 400px) {
+    h1 {
+        font-size: 20px;
+    }
+
+    .section_2_and_4_column {
+        padding: 0;
+    }
+
+    .recept_page {
+        margin-top: 280px;
+    }
+}
+
+@media (max-width:730px) {
+    img {
+        height: 68px;
+
+
+    }
+}
+
+@media (max-width:640px) {
+
+    .overlay {
+        gap: 20px;
+    }
+
+    .recept_page {
+        margin-top: 180px;
+    }
+
+    .recipe_p {
+        font-size: 12px;
+    }
+
+}
+
+@media (max-width:400px) {
+
+    h2 {
+        font-size: 16px;
+    }
+
+    nav {
+        display: flex;
+    }
+
+    .recept_page {
+        margin-top: 200px;
+        height: 380px;
+    }
+}
+
+@media(max-width:492px) {
+    .section_2_and_4_column {
+        margin-top: 10px;
+    }
+}
+
+@media (max-width:320px) {
+    .characteristic_container{
+        flex-direction: column;
+        gap: 10px;
+    }
+    .character{
+        width: 40%;
+    }
+    .section_1 {
+        padding-left: 32px;
+        padding-right: 32px;
+    }
+
+    .section_2 {
+        padding-left: 32px;
+        padding-right: 32px;
+    }
+
+    .salad_img {
+        height: 100px;
+    }
+
+    .character {
+        margin-right: 1px;
+    }
+
+    .input_button {
+        margin-bottom: 8px;
+    }
+
+    table {
+        padding: 24px;
+    }
+
+    p {
+        font-size: 12px;
+    }
+
+}
+
+@media(max-width:404px){
+    .characteristic_container{
+        flex-direction: column;
+        gap: 10px;
+    }
+}
+
+@media(max-width:730px) {
+    img {
+        height: 18px;
+    }
+}
+
+@media(max-width:546px) {
+    .character {
+        font-size: 12px;
+    }
+}
+
+@media(max-width:405px) {
+    .character {
+        margin: 0px;
+    }
+}
+
+@media(max-width:450px) {
+    .salad_img {
+        height: 100px;
+    }
+}
+@media(max-width:438px){
+    .character{
+        margin-right: 24px;
+    }
+}
+@media(max-width:386px){
+    .character{
+        font-size: 8px;
+    }
+}
+@media(max-width:514px){
+    span{
+        margin-right: 24px ;
+    }
+    .socialmedia_icon{
+        height: 32px;
+    }
+}
+
+@media(max-width:800px){
+    .preperation_text{
+        font-size: 12px;
+    }
+}
+@media(max-width:500px){
+    .preperation_text{
+        font-size: 10px;
+    }
+}
+@media(min-width:1440px){
+    .section_1{
+        max-width: 1440px;
+        margin: 0 auto;
+    }
+    .table{
+        max-width: 1440px;
+        margin:0 auto;
+    }
+    .section_2{
+        max-width: 1440px;
+        margin: 0 auto;
+    }
+    .recipe_p{
+        max-width: 1440px;
+        margin: 0 auto;
+    }
+    footer{
+        padding: 27px;
+    }
+    .div_content_table{
+        min-height: 120vh;
+        max-width: 1440px;
+        margin: 0 auto;
+    }
+}
+@media(min-width:1920px){
+    .div_content_table{
+        min-height: 78vh;
+    }
+}
+@media(max-width:501px){
+    .input_button{
+        height: 24px;
+        width: 72px;
+    }
+    .portion_button{
+        height: 32px;
+        width: 72px;
+    }
+}
+@media(max-width:365px){
+    .portion_container{
+        font-size: 14px;
+    }
+}
+@media(max-width:509px){
+    .portion_container{
+        display: flex;
+    }
+}
+@media(max-width:1440px){
+    footer{
+        position: static;
+    }
+}
+
+
+@media screen and (min-width: 1440px) {
+    .footer{
+        position: fixed;
+        width: 100%;
+    }
+    .footer_under_div{
+        max-width: 1440px;
+        margin: 0 auto;
+    }
+    .footer_img-datenschutz_div{
+        max-width: 1440px;
+        margin: 0 auto;
+    }
+
+}
+@media screen and (max-width: 450px) {
+    .footer_socialmedia_img {
+        padding-top: 8px;
+        height: 24px;
+        width: fit-content;
+    }
+    .footer_img {
+        height: 45px;
+        width: fit-content;
+    }
+}
+
+
+@media(max-width:700px){
+    .footer_img{
+        height: 72px;
+    }
+}
+@media(max-width:500px){
+    a{
+        font-size: 16px;
+    }
+    .footer_img{
+        height: 54px;
+    }
+}
+@media(max-width:400px){
+    .footer_img{
+        height: 48px;
+    }
+    .socialmedias_div{
+        padding: 0px;
+        margin-right: 8px;
+        height: 24px;
+    }
+}
+
+
+/* footer responsive */
+
+
+@media ((min-height: 1600px)) {
+    footer {
+        position: fixed;
+    }
+}
+@media ((min-height: 1100px) and (min-width: 640px)) {
+}
+@media ((max-height: 800px) and (min-width: 1440px)) {
+    footer {
+        position: static;
+
+    }
+}
+@media ((min-height: 1600) and (max-height: 650px)) {
+    footer {
+        position: static;
+    }
+}
+
+
+------------------------------------------------------
+style -----------------------------------------
+body {
+    margin: 0;
+    padding: 0;
+    max-width: 100%;
+    overflow-x: hidden;
+    font-family: "Raleway", serif;
+    font-optical-sizing: auto;
+    font-style: normal;
+}
+
+h2 {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+}
+
+a {
+    text-decoration: none;
+    color: black;
+
+}
+
+img {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: fit-content;
+    height: 100px;
+}
+
+button {
+    background-color: green;
+    color: #ffffff;
+    border-radius: 8px;
+    width: 140px;
+    height: 32px;
+}
+.button_margin:hover{
+    cursor: pointer;
+}
+
+.subtitle_margin {
+    padding-top: 16px;
+}
+
+
+/* section 2 and 4 */
+
+section {
+    display: flex;
+}
+
+.part_2_4 {
+    display: flex;
+    margin-bottom: 40px;
+}
+
+.main_image {
+    height: 200px;
+    border-radius: 8px;
+    margin-right: 16px;
+}
+
+.main_image_two {
+    height: 128px;
+    border-radius: 8px;
+}
+
+.page_2_and_4_text {
+    flex-direction: column;
+}
+
+.section_2_and_4_column {
+    display: flex;
+    justify-content: space-evenly;
+    align-items: center;
+    margin: 48px;
+}
+
+.text {
+    height: fit-content;
+    width: 100%;
+}
+
+.margin-top {
+    margin-top: 20px;
+}
+
+/* Part 3 */
+
+.recept_page {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    max-width: 100%;
+    height: 200px;
+    background-color: #efefef;
+    padding-bottom: 20px;
+}
+
+.receptpage_content {
+    margin-left: 10px;
+}
+
+.pfanne {
+    margin-top: 30px;
+}
+
+.overlay {
+    display: flex;
+    justify-content: space-between;
+    width: 80%;
+    align-items: center;
+}
+
+.pick {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+}
+
+.recept_div {
+    width: fit-content;
+    justify-items: center;
+}
+
+.recept_img {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    border-radius: 20px;
+}
+
+.section1_content {
+    max-width: 1440px;
+    margin: 0 auto;
+    justify-content: center;
+    display: flex;
+    align-items: end;
+}
+
+@media screen and (max-width: 850px) {
+
+    .main_image {
+        height: 150px;
+    }
+}
+
+@media screen and (max-width: 750px) {
+    a {
+        font-size: 16px;
+    }
+
+    .start_responsive {
+        display: none;
+    }
+
+    .rezept_des_tages_responsive {
+        display: none;
+    }
+}
+
+@media screen and (max-width: 640px) {
+    .section_2_and_4_column {
+        height: fit-content;
+    }
+
+    .overlay {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .pick {
+        text-align: center;
+    }
+
+    .recept_page {
+        margin-top: 224px;
+        height: 365px;
+    }
+
+    .section_2_and_4_column {
+        display: flex;
+        flex-direction: column;
+    }
+}
+
+@media screen and (max-width: 550px) {
+    .section_2_and_4_column {
+        margin-bottom: auto;
+    }
+}
+
+@media screen and (max-width: 500px) {
+    h1 {
+        font-size: 24px;
+        display: flex;
+        justify-content: center;
+    }
+
+    a {
+        font-size: 16px;
+    }
+
+    .section_2_and_4_column {
+        flex-direction: column;
+    }
+}
+
+@media screen and (max-width: 400px) {
+    h1 {
+        font-size: 20px;
+    }
+
+    .section_2_and_4_column {
+        padding: 0;
+    }
+
+    .recept_page {
+        margin-top: 280px;
+    }
+}
+
+@media (max-width:730px) {
+    img {
+        height: 68px;
+    }
+}
+
+@media (max-width:640px) {
+    .overlay {
+        gap: 20px;
+    }
+
+    .recept_page {
+        margin-top: 180px;
+    }
+
+}
+
+@media (max-width:400px) {
+
+    h2 {
+        font-size: 16px;
+    }
+
+    nav {
+        display: flex;
+    }
+
+    .recept_page {
+        margin-top: 200px;
+        height: 380px;
+    }
+}
+
+@media(max-width:388px) {
+    .section_2_and_4_column {
+        margin-top: 48px;
+    }
+}
+
+@media(max-width:492px) {
+    .section_2_and_4_column {
+        margin-top: 10px;
+    }
+}
+
+@media(min-width:1440px) {
+    .section_2_and_4_column {
+        max-width: 1440px;
+        margin: 0 auto;
+    }
+
+    .lust_auf_was_neues {
+        max-width: 1440px;
+        margin: 0 auto;
+    }
+
+    .overlay {
+        max-width: 1440px;
+        margin: 0 auto;
+    }
+
+    .margin-top {
+        max-width: 1440px;
+        margin: 0 auto;
+    }
+
+    .section_2_and_4_column {
+        padding-left: 50px;
+        padding-right: 50px;
+        margin-top: 50px;
+    }
+    .content_div_index{
+        min-height: 92vh;
+    }
+    .footer_under_div{
+        max-width: 1440px;
+        margin: 0 auto;     
+    }
+    .footer_calc_bottom_div {
+        height: calc(100vh - 269px);
+    }
+    .footer_div {
+        position: fixed;
+        width: 100%;
+    }
+}
+@media(max-width:1440px){
+    .content_div_index{
+        min-height: 92vh;
+    }
+}
+
+
+
+/* footer responsive */
+
+
+@media ((min-height: 1600px)) {
+    footer {
+        position: fixed;
+    }
+}
+@media ((min-height: 1100px) and (min-width: 640px)) {
+    footer {
+        position: fixed;
+    }
+}
+@media ((max-height: 800px) and (min-width: 1440px)) {
+    footer {
+        position: static;
+
+    }
+}
+@media ((min-height: 1600) and (max-height: 650px)) {
+    footer {
+        position: static;
+    }
+}
+@media ((min-height: 1600px)) {
+    footer {
+        position: fixed;
+    }
+}
+@media ((min-height: 1100px) and (min-width: 640px)) {
+    footer {
+        position: fixed;
+    }
+}
+@media ((max-height: 800px) and (min-width: 1440px)) {
+    footer {
+        position: static;
+
+    }
+}
+@media ((min-height: 1600) and (max-height: 650px)) {
+    footer {
+        position: static;
+    }
+}

@@ -1,0 +1,23 @@
+
+
+/* Globale Styles */
+
+
+*{
+    font-family: 'Grill Sans', 'Grill Sans MT', 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+}
+
+.notebox{
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    padding: 8px;
+}
+.inputbox{
+    padding: 16px;
+    display: flex;
+    gap: 8px;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: center;
+}

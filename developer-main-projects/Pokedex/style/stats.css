@@ -1,0 +1,20 @@
+.stat {
+  margin: 10px 0;
+}
+
+.stat-name {
+  font-weight: bold;
+  margin-bottom: 5px;
+}
+
+.stat-bar {
+  background-color: #ddd;
+  border-radius: 8px;
+  overflow: hidden;
+  height: 16px;
+}
+
+.stat-bar-fill {
+  height: 100%;
+  background-color: #66bb6a;
+}

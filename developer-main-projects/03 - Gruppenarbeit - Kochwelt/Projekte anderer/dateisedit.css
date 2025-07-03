@@ -1,0 +1,137 @@
+body {
+    margin: 0;
+    padding: 0;
+    max-width: 100%;
+    font-family: "Raleway", serif;
+    font-optical-sizing: auto;
+    font-style: normal;    
+}
+
+
+header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    height: 88px;
+    padding-left: 48px;
+    padding-right: 48px;
+    padding-bottom: 8px;
+    border-bottom: 4px groove rgba(0,0,0,0.1);
+    
+}
+
+h2 {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+}
+
+a {
+    text-decoration: none;
+    color:black;
+
+}
+
+img {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: fit-content;
+    height: 68px;
+}
+
+button {
+   background-color: green;
+   color: #ffffff;
+   border-radius: 8px;
+   width: 140px;
+   height: 32px;
+}
+
+.kochwelt_imgage_div {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.header_pic {
+    padding-bottom: 8px;
+    height: 68px;
+}
+
+.navlink-header {
+    margin: 8px;
+    color: black;
+    font-size: 18px;
+}
+
+.navlink-header:hover {
+    text-decoration: 4px underline;
+    text-underline-offset: 10px; 
+    color: green;
+}
+
+.section_1{
+    padding-left: 50px;
+    padding-right: 50px;
+}
+
+.salad_img{
+    height:230px;
+    width: 100%;
+    object-fit: cover;
+    border-radius : 10px;
+    
+}
+.characteristic_container{
+    display: flex;
+    padding-top: 50px;
+
+}
+
+.character{
+    margin-right: 50px;
+    display: flex;
+    background-color: rgba(221, 221, 221);
+    align-items: center;
+    border-radius: 20px;
+    padding-left: 16px; 
+    padding-right: 16px; 
+}
+img{
+    margin-right: 5px;
+    height: 20px;
+}
+
+.seperator{
+    height: 1px;
+    width: 100%;
+    background-color: grey;
+    margin-top: 70px;
+}
+.portion_container{
+    margin-top: 8px;
+}
+.portion_button{
+    background-color: green;
+    color: #ffffff;
+    border-radius: 8px;
+    width: 140px;
+    height: 44px;
+    box-shadow: 0 5px #999;
+}
+
+.portion_button:hover{
+    background-color: rgb(26, 157, 114);
+    cursor: pointer;
+}
+.portion_button:active {
+    background-color: #3e8e41;
+    box-shadow: 0 1px #666;
+    transform: translateY(4px);
+  }
+.input_button{
+    height: 38px;
+    border-radius: 8px;
+}

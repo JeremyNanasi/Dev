@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lasagne</title>
+    <link rel="icon" type="./img/png" href="./img/pasty.png">
+    <link rel="stylesheet" href="./style/header.css">
+    <link rel="stylesheet" href="./style/footer.css">
+    <link rel="stylesheet" href="style/Lasagne.css">
+    
+    <link href="https://fonts.googleapis.com/css2?family=Raleway:ital,wght@0,100..900;1,100..900&display=swap"
+        rel="stylesheet">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Economica:ital,wght@0,400;0,700;1,400;1,700&family=Open+Sans:ital,wght@0,300..800;1,300..800&family=Raleway:ital,wght@0,100..900;1,100..900&display=swap"
+        rel="stylesheet">
+
+</head>
+
+<body>
+    <header class="header_all">
+        <a href="./index.html">
+            <div class="kochwelt_head_imgage_div">
+            <img class="header_pic_img" src="./img/logo.png" alt="Kochwelt logo">
+            </div>
+        </a>
+        <nav>
+            <a href="./index.html" class="navlink-header_all">Start</a>
+            <a href="./recipe.html" class="navlink-header_all">Rezept des Tages</a>
+            <a href="./email.html" class="navlink-header_all">Kontakt</a>
+            <a href="./Impressum.html" class="navlink-header_all">Impressum</a>
+        </nav>
+
+        
+        <div onclick="openClose()" class="navication_burger_img_div">
+            <div id="img_toogle" class="menu_white_div active">
+                <img class="menu_img" src="./img/menu.png">
+            </div>
+    </header>
+    <div class="header_seperator">
+
+    </div>
+<div class="content_div_lasagne">    
+        <div id="myLinks">
+            <nav class="navbar_burger">
+                <td><a href="./index.html" class="nav_link">Start</a></td>
+                <td><a href="./recipe.html" class="nav_link">Rezept des Tages</a></td>
+                <td><a href="./email.html" class="nav_link">Kontakt</a></td>
+                <td><a href="./Impressum.html" class="nav_link">Impressum</a></td>
+            </nav>
+        </div>
+    
+
+    <script src="./javascript/burgermenu.js"></script>
+    <section>
+        <div class="picture">
+            <h1>Lasagne</h1>
+            <img class="empanadas_pic" src="./img/lasagne.jpg" alt="ecuadorianische Empanadas"><br><br>
+            <span><img class="charakter" src="./img/icons/clock-regular.svg">30 min</span>
+            <span><img class="charakter" src="./img/icons/brain-solid.svg">normal</span>
+            <span><img class="charakter" src="./img/icons/calendar-alt-regular.svg"><a id="current_date"></a></span>
+            <span><img class="charakter" src="./img/calories.png">1122 kcal</span><br>
+
+            <div class="seperator"></div>
+            <div class="datahead">
+                <a>Zutaten für</a>
+                <form>
+                    <input id="portionsInput" class="input_class" aria-label="Anzahl der Portionen" type="number" step="any" min="1"
+                        max="1000" name="portionen" autocomplete="off" value="1">
+                    <button id="button_radius" class="button_class" type="button" onclick="meinePortion()">Portionen</button>
+                </form>
+            </div>
+            <table class="table">
+                <tbody>
+
+                    <td>Olivenöl</td>
+                    <tr class="tr_grey">
+                        <td id="ergebnisHackfleisch">500g Hackfleisch, gemischtes</td>
+                    </tr>
+                    <td id="ergebnisZwiebel">1 Zwiebel(n)</td>
+                    <tr class="tr_grey">
+                        <td id="ergebnisKnoblauch">2 Knoblauchzehen</td>
+                    </tr>
+                    <td id="ergebnisPetersilie">1 Bund Petersilie oder TK</td>
+                    <tr class="tr_grey">
+                        <td id="ergebnisTomatenmark">1 EL Tomatenmark</td>
+                    </tr>
+                    <td id="ergebnisTomaten">1 Dose Tomaten, geschälte (800g)</td>
+                    <tr class="tr_grey">
+                        <td id="ergebnisRotwein">etwas Rotwein</td>
+                    </tr>
+                    
+                </tbody>
+            </table>
+    </section>
+    <section class="section_preparation">
+        <h2>Zubereitung</h2>
+        <span>ca. 15 Minuten</span>
+        <span>Gesamtzeit ca. 15 Minuten</span>
+
+        <div class="padding_text">
+            <p class="text_preperation">
+                In einem Topf das Olivenöl erhitzen, das Hackfleisch darin rundherum anbraten und die gehackten Zwiebeln
+                und die gehackte Petersilie dazugeben. Knoblauch in feinen Scheiben und Tomatenmark dazu rühren und
+                mitbraten. Mit den Dosentomaten aufgießen, salzen und pfeffern. Rotwein nach Belieben beifügen. Das Ragú
+                mindestens eine halbe Stunde lang bei geöffnetem Topf einkochen lassen.
+            </p><br>
+        </div>
+        
+    </section>
+</div>
+<footer>
+    <div class="footer_under_div">
+        <div class="footer_img-datenschutz_div">
+            <img class="footer_img" src="./img/logo.png">
+            <a class="datenschutz_footer" href="./datenschutzDE.html">Datenschutz</a>
+        </div>
+        <div class="socialmedias_footer">
+            <img class="footer_socialmedia_img footer_facebook" src="./img/facebook.png">
+            <img class="footer_socialmedia_img footer_instagram" src="./img/instagram.png">
+            <img class="footer_socialmedia_img footer_twitter" src="./img/twitter.png">
+        </div>
+    </div>
+</footer>
+
+
+
+    <script src="./javascript/Lasagne.js"></script>
+</body>
+
+</html>

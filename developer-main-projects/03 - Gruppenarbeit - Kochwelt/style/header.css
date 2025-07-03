@@ -1,0 +1,191 @@
+body {
+    margin: 0;
+    padding: 0;
+    max-width: 100%;
+
+    font-family: "Raleway", serif;
+    font-optical-sizing: auto;
+    font-style: normal;
+}
+
+.header_pic_img {
+    height: 70px;
+    width: fit-content;
+}
+
+
+header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    height: 88px;
+    padding-left: 48px;
+    padding-right: 48px;
+    padding-bottom: 8px;
+    max-width: 1440px;
+    height: 100px;
+}
+
+.header_seperator{
+    height: 1px;
+    border-bottom: 4px groove rgba(0, 0, 0, 0.1);
+}
+
+h2 {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+}
+
+ a {
+    text-decoration: none;
+    color: black;
+}
+
+img {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: fit-content;
+}
+
+button {
+    background-color: green;
+    color: #ffffff;
+    border-radius: 8px;
+    width: 140px;
+    height: 32px;
+}
+
+.subtitle_margin {
+    padding-top: 16px;
+}
+
+.header_pic_img_div {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+}
+
+.kochwelt_imgage_div {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.header_pic {
+    padding-bottom: 8px;
+    height: 68px;
+}
+
+.navlink-header {
+    margin: 8px;
+    color: black;
+    font-size: 18px;
+}
+
+.navlink-header_all {
+    cursor: pointer;
+    padding-left: 12px;
+    font-size: 20px;
+}
+
+.navlink-header_all:hover {
+    text-decoration: 4px underline;
+    text-underline-offset: 10px;
+    color: green;
+}
+
+/* js */
+
+.menu_white_div {
+    display: flex;
+    height: 43px;
+    width: fit-content;
+    
+}
+
+.navication_burger_img_div {
+    display: none;
+}
+
+.menu_img {
+    display: flex;
+    height: 26px;
+    width: fit-content;
+}
+
+#myLinks {
+    display: none;
+    justify-content: flex-end;
+    height: fit-content;
+    padding-left: 20px;
+    cursor: pointer;
+} 
+
+.active {
+    display: flex;
+    flex-direction: column;
+}
+
+.nav_link {
+    text-decoration: none;
+    flex-direction: column;
+    display: flex;
+    width: 93px;
+}
+
+.nav_link_width {
+    width: 100%;
+}
+
+.navbar_burger{
+    display: flex;
+    position: absolute;
+    flex-direction: column;
+    padding: 8px;
+    border-radius: 8px 0px 0px 8px;
+    background-color: hwb(0deg 46.25% 53.75%);
+}
+
+@media screen and (min-width: 1440px) {
+    header {
+        max-width: 1440px;
+        margin: 0 auto;
+    }
+}
+
+@media screen and (max-width: 953px) {
+    .navlink-header_all {
+        display: none;
+    }
+    .navication_burger_img_div {
+        display: flex;
+    }
+    .nav_link {
+        display: flex;
+        justify-content: flex-end;
+        width: 140px;
+    }
+}
+@media(min-width:953px){
+    .navbar_burger{
+        display: none;
+    }
+}
+@media screen and (max-width: 600px) {
+    header {
+       height: 62px;
+       padding-left: 20px;
+       padding-right: 20px;
+       align-items: baseline;
+    }
+    .header_pic_img {
+        height: 53px;
+    }
+    .menu_img {
+        height: 20px;
+    }
+}

@@ -1,0 +1,86 @@
+.image_bestellapp {
+    width: 160px;
+    height: fit-content;
+}
+
+.menu_font {
+    display: none;
+    width: 50px;
+    height: fit-content;
+}
+
+.image_huge {
+    object-fit: cover;
+    width: 100%;
+    height: 200px;
+}
+
+.image_logo {
+    width: 100px;
+    height: 100px;
+}
+
+.image_logo {
+    position: absolute;
+    left: 50%;
+    right: 50%;
+    top: 36%;
+    transform: translate(-50%, 0%);
+    border-radius: 100%;
+}
+
+.arrow_orange {
+    height: 40px;
+}
+
+.second_img {
+    object-fit: cover;
+    width: 95%;
+    height: 100px;
+}
+.second_img_div{
+    display: flex;
+    justify-content: center;
+}
+
+.add_button_bucket {
+    width: 20px;
+    height: 20px;
+}
+
+.burger_ground {
+    object-fit: cover;
+    width: 100%;
+    height: 150px;
+}
+
+.add_button_meals {
+    width: 40px;
+    height: 40px;
+    display: none;
+}
+
+.add_button_meals_mobil {
+    width: 40px;
+    height: 40px;
+    display: none; 
+}
+
+
+@media (min-width: 701px) {
+    .add_button_meals {
+        display: flex;
+    }
+}
+
+@media (max-width: 700px) {
+    .add_button_meals_mobil {
+        display: flex;
+    }
+}
+
+@media (min-width: 701px) {
+    .menu_font {
+        display: flex;
+    }
+}

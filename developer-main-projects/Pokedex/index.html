@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pokedex</title>
+    <link rel="icon" type="./img/png" href="./materials/favicons/pokemon.png">
+    <link rel="stylesheet" href="style/standard.css">
+    <link rel="stylesheet" href="style/java.css">
+    <link rel="stylesheet" href="style/stats.css">
+    <link rel="stylesheet" href="style/info.css">
+    <link rel="stylesheet" href="style/background_type.css">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body onload="getPokemonData()">
+    <div id="body_onclick">
+    <div class="wrapper">
+        <header>
+            <div class="min_width_div">
+                <h1>Pokedex</h1>
+                <input class="search" id="searchPokedex" type="text" placeholder="Search for a Pokedex">
+            </div>
+        </header>
+        <section>
+            <div class="min_width_div">
+                <div id="pokedex">
+
+                </div>
+                <div id="info_pokedex" class="info_pokedex">
+
+                </div>
+                <div id="block_click_overlay"></div>
+                <div class="pokedex_button_div">
+                <button class="pokedex_button" id="pokedex_button" onclick="addPokedex()"><h3>Mehr Pokedex</h3></button>
+                </div>
+            </div>
+            </section> 
+            <div id="custom-loader">
+                <div class="spinner"></div>
+            </div>
+            <footer>
+            <div class="min_width_div">
+                <p class="footer_pokedex">Pokedex</p>
+            </div>
+            </footer>
+        </div>
+        </div>
+</body>
+    <script src="script/template.js"></script>
+    <script src="script.js"></script>
+    <sxript src="https://remotestorage-80f69-default-rtdb.europe-west1.firebasedatabase.app/"></script>
+</html>

@@ -1,0 +1,33 @@
+
+/* Damit body und html die volle Höhe haben */
+body {
+  height: 100%;
+  margin: 0;
+}
+
+
+
+/* Flex-Layout für die ganze Seite */
+.wrapper {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh; /* volle Höhe des Bildschirms */
+}
+
+
+
+/* Hauptinhalt soll sich ausdehnen */
+section {
+  flex: 1;
+  padding: 20px;
+}
+
+
+
+/* Footer immer ganz unten */
+footer {
+  background-color: #ef5350;
+  color: white;
+  text-align: center;
+  padding: 10px;
+}
