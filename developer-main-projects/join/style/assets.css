@@ -1,0 +1,14 @@
+.logo {
+    width: 56px;
+    height: fit-content;
+}
+
+.sign-up-button {
+    border-radius: 8px;
+    padding-top: 15px;
+    padding-right: 16px;
+    padding-bottom: 15px;
+    padding-left: 16px;
+    color: #FFFFFF;
+    margin-left: 20px;
+}
