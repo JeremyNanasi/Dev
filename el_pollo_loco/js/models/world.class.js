@@ -9,7 +9,7 @@ class World {
         new Cloud()
     ];
     backgroundObjects = [
-        new BackgroundObject('./img/5_background/layers/3_third_layer/2.png', 0, 100)
+        new BackgroundObject('./img/5_background/layers/3_third_layer/2.png', 0)
     ];
     canvas;
     ctx;
@@ -32,7 +32,7 @@ class World {
             // Draw() wird immer wieder aufgerufen
             let self = this;
             requestAnimationFrame(function() {
-                // self.draw();
+                self.draw();
             });
         }
 
