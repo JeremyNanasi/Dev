@@ -8,6 +8,9 @@ class World {
     clouds = [
         new Cloud()
     ];
+    backgroundObjects = [
+        new BackgroundObject('./img/5_background/layers/3_third_layer/2.png', 0, 100)
+    ];
     canvas;
     ctx;
 
@@ -19,14 +22,12 @@ class World {
 
         draw() {
             this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.heigt);
-            this.ctx.drawImage(this.character.img, this.character.x, this.character.y, this.character.height, this.character.width);
-            this.enemies.forEach(enemy => {
-                this.ctx.drawImage(enemy.img, enemy.x, enemy.y, enemy.height, enemy.width);
-            });
 
-            this.clouds.forEach(cloud => {
-            this.ctx.drawImage(cloud.img, cloud.x, cloud.y, cloud.height, cloud.width);
-            });
+            this.addToMap(this.character);
+            this.addobjectsToMap(this.clouds);
+            this.addobjectsToMap(this.enemies);
+            this.addobjectsToMap(this.backgroundObjects);
+
 
             // Draw() wird immer wieder aufgerufen
             let self = this;
@@ -34,4 +35,14 @@ class World {
                 // self.draw();
             });
         }
-}
+
+        addobjectsToMap(objects) {
+            objects.forEach(o => {
+                this.addToMap(o);
+            });
+        }
+
+        addToMap(mo) {
+            this.ctx.drawImage(mo.img, mo.x, mo.y, mo.height, mo.width);
+        }
+    }
