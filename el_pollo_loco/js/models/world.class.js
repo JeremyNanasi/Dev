@@ -42,7 +42,7 @@ class World {
             // Draw() wird immer wieder aufgerufen
             let self = this;
             requestAnimationFrame(function() {
-                // self.draw();
+                self.draw();
             });
         }
 
@@ -53,6 +53,32 @@ class World {
         }
 
         addToMap(mo) {
+            if(mo.otherDirection) {
+                this.ctx.save();
+                this.ctx.translate(mo.width, 0);
+                this.ctx.scale(-1, 1);
+                mo.x = mo.x * - 1;
+            }
             this.ctx.drawImage(mo.img, mo.x, mo.y, mo.height, mo.width);
+            if(mo.otherDirection) {
+                mo.x = mo.x * - 1;
+                this.ctx.restore();
+            }
         }
     }
+
+
+
+        //     addToMap(mo) {
+        //     if(mo.otherDirection) {
+        //         this.ctx.save();
+        //         this.ctx.translate(mo.width, 0);
+        //         this.ctx.scale(-1, 1);
+        //         mo.x = mo.x * - 1;
+        //     }
+        //     this.ctx.drawImage(mo.img, mo.x, mo.y, mo.height, mo.width);
+        //     if(mo.otherDirection) {
+        //         mo.x = mo.x * - 1;
+        //         this.ctx.restore();
+        //     }
+        // }
