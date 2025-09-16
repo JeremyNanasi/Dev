@@ -57,7 +57,7 @@ class World {
                 this.ctx.save();
                 this.ctx.translate(mo.width, 0);
                 this.ctx.scale(-1, 1);
-                mo.x = mo.x * - 1;
+                mo.x = mo.x * - 1;   //character is teleporting
             }
             this.ctx.drawImage(mo.img, mo.x, mo.y, mo.height, mo.width);
             if(mo.otherDirection) {
