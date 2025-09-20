@@ -1,6 +1,6 @@
 class Character extends MoveableObject {
 
-    height = 100;
+    height = 200;
     width = 240;
     y = 190;
     x = 40;
@@ -33,10 +33,10 @@ class Character extends MoveableObject {
                 this.x -= this.speed;
                 this.otherDirection = true;
             }
+            this.world.camera_x = -this.x;
         }, 1000 / 60)
 
         setInterval(() => {
-
             if(this.world.keyboard.RIGHT || this.world.keyboard.LEFT) {
                 // walk animation
                 let i = this.currentImage % this.IMAGES_WALKING.length;  // let i = 7 % 6; => 1, Rest 1     // i = 0, 1, 2, 3, 4, 5, 0  //endlose Schleife
