@@ -1,10 +1,8 @@
 class World {
     character = new Character();
-    enemies = level1.enemies;
-    clouds = level1.clouds;
-    backgroundObjects = level1.backgroundObjects;
-    ctx;
+    level = level1;
     canvas;
+    ctx;
     keyboard;
     camera_x = 0;
 
@@ -25,11 +23,11 @@ class World {
 
             this.ctx.translate(this.camera_x, 0);
 
-            this.addobjectsToMap(this.backgroundObjects);
+            this.addobjectsToMap(this.level.backgroundObjects);
 
             this.addToMap(this.character);
-            this.addobjectsToMap(this.clouds);
-            this.addobjectsToMap(this.enemies);
+            this.addobjectsToMap(this.level.clouds);
+            this.addobjectsToMap(this.level.enemies);
 
             this.ctx.translate(-this.camera_x, 0);
 
@@ -37,7 +35,7 @@ class World {
             // Draw() wird immer wieder aufgerufen
             let self = this;
             requestAnimationFrame(function() {
-                self.draw();
+                // self.draw();
             });
         }
 
