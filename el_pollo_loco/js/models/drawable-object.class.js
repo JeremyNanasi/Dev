@@ -1,6 +1,6 @@
 class drawableObject {
     img;
-    imageChache = {};
+    imageCache = {};
     currentImage = 0;
     x = 120;
     y = 250;
@@ -17,6 +17,16 @@ class drawableObject {
         ctx.drawImage(this.img, this.x, this.y, this.height, this.width);
     }
 
+    drawFrame(ctx) {
+        if(this instanceof Character || this instanceof Chicken) {
+        ctx.beginPath();
+        ctx.lineWidth = "5";
+        ctx.strokeStyle = 'blue';
+        ctx.rect(this.x, this.y, this.height, this.width);
+        ctx.stroke();
+        }
+    }
+
     /**
      * 
      * @param {Array} arr - ['img/image1.png', 'img/image2.png', ...] 
@@ -25,7 +35,7 @@ class drawableObject {
         arr.forEach((path) => {
             let img = new Image();
             img.src = path;
-            this.imageChache[path] = img;
+            this.imageCache[path] = img;
         })
     }
 

@@ -19,16 +19,6 @@ class MoveableObject extends drawableObject {
         return this.y < 180;
     }
 
-    drawFrame(ctx) {
-        if(this instanceof Character || this instanceof Chicken) {
-        ctx.beginPath();
-        ctx.lineWidth = "5";
-        ctx.strokeStyle = 'blue';
-        ctx.rect(this.x, this.y, this.height, this.width);
-        ctx.stroke();
-        }
-    }
-
     // character.isColliding(Chicken);
     isColliding(mo) {
         return this.x + this.width > mo.x &&
@@ -59,7 +49,7 @@ class MoveableObject extends drawableObject {
     playAnimation(images) {
         let i = this.currentImage % images.length;  // let i = 7 % 6; => 1, Rest 1     // i = 0, 1, 2, 3, 4, 5, 0  //endlose Schleife
         let path = images[i];
-        this.img = this.imageChache[path];
+        this.img = this.imageCache[path];
         this.currentImage++;
     }
 
