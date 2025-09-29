@@ -6,9 +6,32 @@ body {
     flex-direction: column;
     min-height: 100vh;
     margin: 0;
-    background-image: url('el_pollo_loco/img/5_background/second_half_background.png');
+
+    background-image: url('./img/10_page_background/desert.jpg');
+    background-size: cover;
+    background-position: center;
+    overflow: hidden;
+    background-repeat: no-repeat;
+}
+
+h1 {
+    font-size: 50px;
+    margin: 20px;
 }
 
 canvas {
     background-color: black;
+    display: block;
+}
+
+@media only screen and (max-width: 720px) {
+    canvas {
+        width: 100%;
+    }
+}
+
+@media only screen and (max-height: 480px) {
+    canvas {
+        height: 100vh;
+    }
 }
