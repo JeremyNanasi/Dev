@@ -1,7 +1,12 @@
 body {
+    font-family: "New Rocker", Arial, Helvetica, sans-serif;
     display: flex;
-    flex-direction: column;
+    justify-content: center;
     align-items: center;
+    flex-direction: column;
+    min-height: 100vh;
+    margin: 0;
+    background-image: url('el_pollo_loco/img/5_background/second_half_background.png');
 }
 
 canvas {
