@@ -47,6 +47,8 @@ class MoveableObject extends DrawableObject {
     }
 
     isDead() {
+        if(this.IMAGES_DEAD < 7)
+        this.IMAGES_DEAD + 1;
         return this.energy == 0;
     }
 
@@ -56,6 +58,16 @@ class MoveableObject extends DrawableObject {
         this.img = this.imageCache[path];
         this.currentImage++;
     }
+
+    // playAnimationDead() {
+    //     if(this.IMAGES_DEAD > 7) {
+    //         this.currentImage + 1; 
+    //         console.log(this.IMAGES_DEAD);
+             
+    //     } else {
+    //         console.log("you are Dead" + this.currentImage);
+    //     }
+    // }
 
     moveRight() {
         this.x += this.speed;

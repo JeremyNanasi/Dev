@@ -81,14 +81,16 @@ class Character extends MoveableObject {
 
             if(this.isDead()) {
                 this.playAnimation(this.IMAGES_DEAD);
-            } else if(this.isHurt()) {
-                this.playAnimation(this.IMAGES_HURT);
-            } else if(this.isAboveGround()) {
-                this.playAnimation(this.IMAGES_JUMPING);
-            } else {
+            } else if(this.energy !== 0) {
+                if(this.isHurt()) {
+                    this.playAnimation(this.IMAGES_HURT);
+                } else if(this.isAboveGround()) {
+                    this.playAnimation(this.IMAGES_JUMPING);
+                } else {
 
-                if(this.world.keyboard.RIGHT || this.world.keyboard.LEFT) {
-                    this.playAnimation(this.IMAGES_WALKING);
+                    if(this.world.keyboard.RIGHT || this.world.keyboard.LEFT) {
+                        this.playAnimation(this.IMAGES_WALKING);
+                    }
                 }
             }
         }, 50);

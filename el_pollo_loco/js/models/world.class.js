@@ -68,7 +68,7 @@ class World {
             // Draw() wird immer wieder aufgerufen
             let self = this;
             requestAnimationFrame(function() {
-                // self.draw();
+                self.draw();
             });
         }
 
