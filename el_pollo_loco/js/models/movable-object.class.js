@@ -59,12 +59,15 @@ class MoveableObject extends DrawableObject {
 
     playAnimationDead(images) {
         setInterval(() => {
-        for (let i = 0; i < images.length; i++) {
-            let path = images[i];
-            this.img = this.imageCache[path];
-            this.currentImage++;
-        }
-        }, 10);
+            if(this.currentImage >= 7) { 
+                let i = this.currentImage <= images.length;
+                let path = images[i];
+                this.img = this.imageCache[path];
+                this.currentImage++;
+            } else {
+                clearInterval(images[6]);
+            }
+        }, 1000);
     }
 
     moveRight() {
