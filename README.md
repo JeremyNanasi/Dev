@@ -1,25 +1,25 @@
-<strong># 👋 Hallo, ich bin Jeremy Nánási</strong>
+<strong># 👋 Hello, I'm Jeremy Nánási</strong>
 <br>
-<p>Ich bin ein angehender Softwareentwickler mit Fokus auf <strong>Webentwicklung</strong>.</p>  
-<p>Derzeit lerne ich <strong>JavaScript</strong>, <strong>PHP</strong> und arbeite an eigenen Projekten, um meine Fähigkeiten stetig zu verbessern.</p>
+<p>I am an aspiring software developer with a focus on <strong>web development</strong>.<br>  
+Currently, I am learning <strong>JavaScript</strong> and <strong>PHP</strong>, and I work on my own projects to continuously improve my skills.</p>
 <br>
-## 🧰 Technologien & Werkzeuge<br>
+## 🧰 Technologies & Tools<br>
 <ul>
     <li> 🖥️ HTML, CSS, JavaScript</li>  
-    <li> 🐘 PHP (erste Projekte)</li>  
+    <li> 🐘 PHP (initial projects)</li>  
     <li> 🧪 Git & GitHub</li>
     <li>Trello</li>
     <li>Firebase</li>
-    <li>Arbeiten mit Figma Layouts</li>
-    <li> 🧠 Interesse an Datenbanken (MySQL) & Frameworks</li>
+    <li>Working with Figma layouts</li>
+    <li> 🧠 Interest in databases (MySQL) & frameworks</li>
 </ul>
 <br>
-## 🚀 Aktuelle Projekte<br>
+## 🚀 Current Projects<br>
 <ul>
-    <li> 📝 <strong>Grocery Notes</strong> – eine kleine Notiz-App mit PHP zum Speichern von Einkaufslisten</li>
-    <li> 📖 <strong>El Pollo Loco</strong> – ein JavaScript-Projekt Game mit OOP</li>
+    <li> 📝 <strong>Grocery Notes</strong> – a small PHP note app to save shopping lists</li>
+    <li> 📖 <strong>El Pollo Loco</strong> – a JavaScript 2D game project using OOP</li>
 </ul>
 <br>
-## 🎯 Ziele<br>
-<p>Ich möchte meine Kenntnisse in der <strong>Anwendungsentwicklung</strong> weiter ausbauen und in echten Projekten anwenden.<br>
-Mein Ziel ist es, langfristig als Softwareentwickler in einem Team zu wachsen.</p>
+## 🎯 Goals<br>
+<p>I want to further develop my skills in <strong>application development</strong> and apply them in real projects.<br>
+My long-term goal is to grow as a software developer within a team environment.</p>
