@@ -10,10 +10,11 @@
 - 🧠 Interesse an Datenbanken (MySQL) & Frameworks
 <br>
 ## 🚀 Aktuelle Projekte<br>
-<p>- 📝 <p>Grocery Notes</p> – eine kleine Notiz-App mit PHP zum Speichern von Einkaufslisten</p>  
-<p>- 📖 <p>El Pollo Loco</p> – ein JavaScript-Projekt Game mit OOP</p>
+<p>- 📝 <strong>Grocery Notes</strong> – eine kleine Notiz-App mit PHP zum Speichern von Einkaufslisten</p>
+<p>- 📖 <strong>El Pollo Loco</strong> – ein JavaScript-Projekt Game mit OOP</p>
 <br>
 ## 🎯 Ziele<br>
 <p>Ich möchte meine Kenntnisse in der <strong>Anwendungsentwicklung</strong> weiter ausbauen und in echten Projekten anwenden.</p>  
 <p>Mein Ziel ist es, langfristig als Softwareentwickler in einem Team zu wachsen.</p>
+
 
