@@ -1,2 +1,0 @@
-# Join
-Join Gruppenarbeit
