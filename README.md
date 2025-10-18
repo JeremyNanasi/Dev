@@ -7,7 +7,10 @@
 <ul>
     <li> 🖥️ HTML, CSS, JavaScript</li>  
     <li> 🐘 PHP (erste Projekte)</li>  
-    <li> 🧪 Git & GitHub</li>  
+    <li> 🧪 Git & GitHub</li>
+    <li>Trello</li>
+    <li>Firebase</li>
+    <li>Arbeiten mit Figma Layouts</li>
     <li> 🧠 Interesse an Datenbanken (MySQL) & Frameworks</li>
 </ul>
 <br>
