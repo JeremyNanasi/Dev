@@ -5,6 +5,11 @@ class Character extends MoveableObject {
     y = 190;
     x = 40;
     speed = 10;
+    currentFrameTime = 0;
+    deadFrameDuration = 200;
+    currentDeadFrameTime = 0;
+    
+
     IMAGES_WALKING = [
             './img/2_character_pepe/2_walk/W-21.png',
             './img/2_character_pepe/2_walk/W-22.png',
@@ -78,23 +83,32 @@ class Character extends MoveableObject {
         }, 1000 / 60)
 
         setInterval(() => {
+        const now = Date.now();
 
-            if(this.isDead()) {
+        if(this.isDead()) {
+            if(now - this.lastFrameTime.dead > this.frameTimers.dead) {
+                this.lastFrameTime.dead = now;
                 this.playAnimationDead(this.IMAGES_DEAD);
-            } else if(this.energy !== 0) {
-                if(this.isHurt()) {
+            }
+        } else if(this.energy !== 0) {
+            if(this.isHurt()) {
+                if(now - this.lastFrameTime.hurt > this.frameTimers.hurt) {
+                    this.lastFrameTime.hurt = now;
                     this.playAnimation(this.IMAGES_HURT);
-                } else if(this.isAboveGround()) {
+                }
+            } else if(this.isAboveGround()) {
+                if(now - this.lastFrameTime.jumping > this.frameTimers.jumping) {
+                    this.lastFrameTime.jumping = now;
                     this.playAnimation(this.IMAGES_JUMPING);
-                } else {
-
-                    if(this.world.keyboard.RIGHT || this.world.keyboard.LEFT) {
-                        this.playAnimation(this.IMAGES_WALKING);
-                    }
+                }
+            } else {
+                if(this.world.keyboard.RIGHT || this.world.keyboard.LEFT) {
+                    this.playAnimation(this.IMAGES_WALKING);
                 }
             }
-        }, 50);
-    }
+        }
+    }, 50);
+}
 
     jump() {
         this.speedY = 30;

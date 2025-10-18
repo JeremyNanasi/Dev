@@ -5,6 +5,21 @@ class MoveableObject extends DrawableObject {
     acceleration = 2.5;
     energy = 100;
     lastHit = 0;
+    lastFrameChange = 0;
+    
+    frameTimers = {
+        walking: 100,
+        jumping: 100,
+        hurt: 150,
+        dead: 200
+    };
+
+    lastFrameTime = {
+        walking: 0,
+        jumping: 0,
+        hurt: 0,
+        dead: 0
+    };
 
     applyGravity() {
         setInterval(() => {
@@ -50,24 +65,23 @@ class MoveableObject extends DrawableObject {
         return this.energy == 0;
     }
 
-    playAnimation(images) {
-        let i = this.currentImage % images.length;  // let i = 7 % 6; => 1, Rest 1     // i = 0, 1, 2, 3, 4, 5, 0  //endlose Schleife
-        let path = images[i];
-        this.img = this.imageCache[path];
-        this.currentImage++;
+    playAnimation(images) {            
+            let i = this.currentImage % images.length;  // let i = 7 % 6; => 1, Rest 1     // i = 0, 1, 2, 3, 4, 5, 0  //endlose Schleife
+            let path = images[i];
+            this.img = this.imageCache[path];
+            this.currentImage++;
     }
 
     playAnimationDead(images) {
-        setInterval(() => {
-            if(this.currentImage >= 7) { 
-                let i = this.currentImage <= images.length;
-                let path = images[i];
-                this.img = this.imageCache[path];
-                this.currentImage++;
-            } else {
-                clearInterval(images[6]);
-            }
-        }, 1000);
+        if(!this.currentImage) this.currentImage = 0;
+
+        if(this.currentImage < images.length) {
+            this.img = this.imageCache[images[this.currentImage]];
+            this.currentImage++;
+        } else {
+            // Bleibt beim letzten Bild
+            this.img = this.imageCache[images[images.length - 1]];
+        }
     }
 
     moveRight() {
