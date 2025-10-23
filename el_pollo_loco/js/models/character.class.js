@@ -81,7 +81,6 @@ updateJumpAnimation() {
         }
     }
 
-    // Wenn wir wieder auf dem Boden sind, currentImage zurücksetzen für nächsten Sprung
     if (!this.isAboveGround()) {
         this.currentImage = 0;
     }
