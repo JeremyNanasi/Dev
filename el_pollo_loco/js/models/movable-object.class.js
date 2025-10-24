@@ -10,7 +10,7 @@ class MoveableObject extends DrawableObject {
 
     frameTimers = {
         walking: 111.1,
-        jumping: 118.4,
+        jumping: 250,
         hurt: 150,
         dead: 200
     };

@@ -19,14 +19,20 @@ class Character extends MoveableObject {
         './img/2_character_pepe/2_walk/W-26.png'
     ];
 
-    IMAGES_JUMPING = [
+    IMAGES_JUMP_START = [
         './img/2_character_pepe/3_jump/J-31.png',
         './img/2_character_pepe/3_jump/J-32.png',
-        './img/2_character_pepe/3_jump/J-33.png',
+        './img/2_character_pepe/3_jump/J-33.png'
+    ];
+
+    IMAGES_JUMP_MIDAIR = [
         './img/2_character_pepe/3_jump/J-34.png',
         './img/2_character_pepe/3_jump/J-35.png',
         './img/2_character_pepe/3_jump/J-36.png',
-        './img/2_character_pepe/3_jump/J-37.png',
+        './img/2_character_pepe/3_jump/J-37.png'
+    ];
+
+    IMAGES_JUMP_LANDING = [
         './img/2_character_pepe/3_jump/J-38.png',
         './img/2_character_pepe/3_jump/J-39.png'
     ];
@@ -54,44 +60,56 @@ class Character extends MoveableObject {
     constructor() {
         super().loadImage('./img/2_character_pepe/2_walk/W-21.png');
         this.loadImages(this.IMAGES_WALKING);
-        this.loadImages(this.IMAGES_JUMPING);
+        this.loadImages(this.IMAGES_JUMP_START);
+        this.loadImages(this.IMAGES_JUMP_MIDAIR);
+        this.loadImages(this.IMAGES_JUMP_LANDING);
         this.loadImages(this.IMAGES_DEAD);
         this.loadImages(this.IMAGES_HURT);
         this.applyGravity();
         this.animate();
     }
 
-updateJumpAnimation() {
-    const now = Date.now();
+    updateJumpAnimationPhased() {
+        const now = Date.now();
 
-    // Prüfen, ob genug Zeit seit letztem Frame vergangen ist
-    if (now - this.lastFrameTime.jumping > this.frameTimers.jumping) {
-        this.lastFrameTime.jumping += this.frameTimers.jumping;
+        // Animation während des Sprungs
+        if (now - this.lastFrameTime.jumping >= this.frameTimers.jumping) {
+            this.lastFrameTime.jumping = now;
 
-        // Wenn kein currentImage gesetzt, 0
-        if (this.currentImage === undefined || this.currentImage === null) this.currentImage = 0;
+            if (this.speedY > 20) {
+                this.playAnimation(this.IMAGES_JUMP_START);
+            } else if (this.speedY > -10) {
+                this.playAnimation(this.IMAGES_JUMP_MIDAIR);
+            } else {
+                this.playAnimation(this.IMAGES_JUMP_LANDING);
+            }
+        }
 
-        // Solange wir nicht beim letzten Bild sind
-        if (this.currentImage < this.IMAGES_JUMPING.length - 1) {
-            this.img = this.imageCache[this.IMAGES_JUMPING[this.currentImage]];
-            this.currentImage++;
-        } else {
-            // Bleibt beim letzten Frame stehen
-            this.img = this.imageCache[this.IMAGES_JUMPING[this.IMAGES_JUMPING.length - 1]];
+        // Prüfe, ob Pepe gerade gelandet ist (also: war in der Luft, jetzt am Boden)
+        if (!this.isAboveGround() && this.wasInAir) {
+            this.wasInAir = false; // wieder auf dem Boden
+            this.onLanding(); // Animation nach Landung starten
+        }
+
+        // Wenn er springt, merken, dass er in der Luft war
+        if (this.isAboveGround()) {
+            this.wasInAir = true;
         }
     }
 
-    if (!this.isAboveGround()) {
-        this.currentImage = 0;
+    onLanding() {
+        // Nach kurzer Verzögerung zum Standbild wechseln
+        setTimeout(() => {
+            this.currentImage = 0;
+            this.img = this.imageCache[this.IMAGES_WALKING[0]];
+        }, 150); // 150ms nach der Landung
     }
-}
 
     animate() {
         setInterval(() => {
             const now = Date.now();
 
-
-            // Bewegung
+            // === BEWEGUNG ===
             if (this.world.keyboard.RIGHT && this.x < this.world.level.level_end_x) {
                 this.moveRight();
                 this.otherDirection = false;
@@ -104,12 +122,10 @@ updateJumpAnimation() {
                 this.jump();
             }
 
-
-            // Kamera
+            // === KAMERA ===
             this.world.camera_x = -this.x + 100;
 
-
-            // Animationen
+            // === ANIMATIONEN ===
             if (this.isDead()) {
                 if (now - this.lastFrameTime.dead > this.frameTimers.dead) {
                     this.lastFrameTime.dead = now;
@@ -122,9 +138,16 @@ updateJumpAnimation() {
                         this.playAnimation(this.IMAGES_HURT);
                     }
                 } else if (this.isAboveGround()) {
-                    this.updateJumpAnimation();
+                    // === SPRUNG ANIMATION ===
+                    this.updateJumpAnimationPhased();
                 } else {
-                    if (this.world.keyboard.RIGHT || this.world.keyboard.LEFT) {
+                    // === LANDUNG ===
+                    if (!this.world.keyboard.RIGHT && !this.world.keyboard.LEFT) {
+                        // Charakter steht still → letztes Landungsbild zeigen
+                        this.currentImage = this.IMAGES_JUMP_LANDING.length - 1; // Index von J-39
+                        this.img = this.imageCache[this.IMAGES_JUMP_LANDING[this.currentImage]];
+                    } else {
+                        // Bewegung = Laufanimation
                         if (now - this.lastFrameTime.walking > this.frameTimers.walking) {
                             this.lastFrameTime.walking = now;
                             this.playAnimation(this.IMAGES_WALKING);
@@ -135,7 +158,11 @@ updateJumpAnimation() {
         }, 1000 / 60);
     }
 
-jump() {
-    this.speedY = 30;
-}
+    jump() {
+        if (!this.isAboveGround()) {
+            this.speedY = 30;
+            this.currentImage = 0;
+            this.lastFrameTime.jumping = Date.now(); // Timer zurücksetzen
+        }
+    }
 }
