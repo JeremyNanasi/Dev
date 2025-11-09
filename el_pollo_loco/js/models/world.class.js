@@ -44,7 +44,18 @@ class World {
                     this.statusBar.setPercentage(this.character.energy);
                 }
             });
+
+            for (let i = this.level.icons.length - 1; i >= 0; i--) {
+                const icon = this.level.icons[i];
+                if (this.character.isColliding(icon)) {
+                    this.collectIcon(i);
+                }
+            }
         }, 200);
+    }
+
+    collectIcon(index) {
+        this.level.icons.splice(index, 1);
     }
 
         draw() {
@@ -60,6 +71,7 @@ class World {
             this.addToMap(this.character);
             this.addobjectsToMap(this.level.clouds);
             this.addobjectsToMap(this.level.enemies);
+            this.addobjectsToMap(this.level.icons);
             this.addobjectsToMap(this.throwableObject);
 
             this.ctx.translate(-this.camera_x, 0);

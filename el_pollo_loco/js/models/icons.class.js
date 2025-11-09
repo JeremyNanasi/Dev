@@ -14,4 +14,6 @@ class Icons extends MoveableObject {
         this.speed = 0.15 + Math.random() * 0.5;
     }
 
+
+    // pepe stirb bei berührung 
 }
