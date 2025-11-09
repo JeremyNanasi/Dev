@@ -1,36 +1,5 @@
 class ThrowableObject extends MoveableObject {
 
-//     IMAGE_SALSA_GROUND = [
-//         'el_pollo_loco/img/6_salsa_bottle/1_salsa_bottle_on_ground.png',
-//         'el_pollo_loco/img/6_salsa_bottle/2_salsa_bottle_on_ground.png'
-//     ]
-    
-//     constructor(x, y) {
-//         super().loadImage('./img/6_salsa_bottle/bottle_rotation/1_bottle_rotation.png');        
-//         super().loadImage('./img/7_statusbars/3_icons/icon_coin.png');
-//         this.loadImages(this.IMAGE_SALSA_GROUND);
-
-//         this.x = 200 + Math.random() * 500;
-//         this.speed = 0.15 + Math.random() * 0.5;
-
-//         // this.x = x;
-//         // this.y = y;
-//         this.height = 100;
-//         this.width = 100;
-//         // this.throw(this.x, this.y);
-//     }
-
-//     throw(x, y) {
-//         this.x = x;
-//         this.y = y;
-//         this.speedY = 30;
-//         this.applyGravity();
-//         setInterval(() => {
-//             this.x += 10;
-//         }, 25);
-//     } 
-// }
-
     IMAGE_ROTATION = [
         './img/6_salsa_bottle/bottle_rotation/1_bottle_rotation.png',
         './img/6_salsa_bottle/bottle_rotation/2_bottle_rotation.png',

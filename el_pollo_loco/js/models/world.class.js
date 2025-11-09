@@ -67,14 +67,12 @@ class World {
         this.level.icons.splice(index, 1);
     }
 
-    // new 
     collectSalsa(index) {
         const [bottle] = this.level.salsa.splice(index, 1);
         if (bottle && typeof bottle.stopGroundAnimation === 'function') {
             bottle.stopGroundAnimation();
         }
     }
-    /////////////////
 
         draw() {
             this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
