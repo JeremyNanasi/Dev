@@ -9,8 +9,23 @@ level1 = new Level(
         new Cloud()
     ],
     [
+        new Icons(),
+        new Icons(),
+        new Icons(),
+        new Icons(),
         new Icons()
     ],
+    [
+        new ThrowableObject(450, 360, { isCollectible: true }),
+        new ThrowableObject(900, 360, { isCollectible: true }),
+        new ThrowableObject(900, 360, { isCollectible: true }),
+        new ThrowableObject(900, 360, { isCollectible: true }),
+        new ThrowableObject(900, 360, { isCollectible: true }),
+        new ThrowableObject(900, 360, { isCollectible: true }),
+        new ThrowableObject(900, 360, { isCollectible: true }),
+        new ThrowableObject(900, 360, { isCollectible: true })
+    ],
+        
     [
         new BackgroundObject('./img/5_background/layers/air.png', -750),
         new BackgroundObject('./img/5_background/layers/3_third_layer/2.png', -750),

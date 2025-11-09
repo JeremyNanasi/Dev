@@ -51,12 +51,30 @@ class World {
                     this.collectIcon(i);
                 }
             }
+
+            // new 
+            for (let i = this.level.salsa.length - 1; i >= 0; i--) {
+                const salsaBottle = this.level.salsa[i];
+                if (this.character.isColliding(salsaBottle)) {
+                    this.collectSalsa(i);
+                }
+            }
+            //////////////
         }, 200);
     }
 
     collectIcon(index) {
         this.level.icons.splice(index, 1);
     }
+
+    // new 
+    collectSalsa(index) {
+        const [bottle] = this.level.salsa.splice(index, 1);
+        if (bottle && typeof bottle.stopGroundAnimation === 'function') {
+            bottle.stopGroundAnimation();
+        }
+    }
+    /////////////////
 
         draw() {
             this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
@@ -72,6 +90,7 @@ class World {
             this.addobjectsToMap(this.level.clouds);
             this.addobjectsToMap(this.level.enemies);
             this.addobjectsToMap(this.level.icons);
+            this.addobjectsToMap(this.level.salsa);
             this.addobjectsToMap(this.throwableObject);
 
             this.ctx.translate(-this.camera_x, 0);
@@ -85,6 +104,9 @@ class World {
         }
 
         addobjectsToMap(objects) {
+            if (!objects) {
+                return;
+            }
             objects.forEach(o => {
                 this.addToMap(o);
             });
