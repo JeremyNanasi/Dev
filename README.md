@@ -16,10 +16,10 @@ Currently, I am learning <strong>JavaScript</strong> and <strong>PHP</strong>, a
 <br>
 ## 🚀 Current Projects<br>
 <ul>
-    <li> 📝 <strong>Grocery Notes</strong> – a small PHP note app to save shopping lists</li>
     <li> 📖 <strong>El Pollo Loco</strong> – a JavaScript 2D game project using OOP</li>
 </ul>
 <br>
 ## 🎯 Goals<br>
 <p>I want to further develop my skills in <strong>application development</strong> and apply them in real projects.<br>
 My long-term goal is to grow as a software developer within a team environment.</p>
+
