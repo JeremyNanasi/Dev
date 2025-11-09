@@ -26,40 +26,76 @@ class StatusBar extends DrawableObject {
         './img/7_statusbars/1_statusbar/3_statusbar_bottle/green/100.png'
     ];
 
-
-
     percentage = 100;
 
-    constructor() {
+    constructor(type = 'health', overrides = {}) {
         super();
-        this.loadImages(this.IMAGES);
-        this.loadImages(this.IMAGES_ICONS_STATUSBAR);
-        this.loadImages(this.IMAGES_BOTTLES_STATUSBAR);
-        this.x = 40;
-        this.y = 0;
-        this.width = 200;
-        this.height = 60;
-        this.setPercentage(100);
+        this.type = type;
+        const config = this.getConfiguration(type, overrides);
+        this.images = config.images;
+        this.loadImages(this.images);
+        this.x = config.x;
+        this.y = config.y;
+        this.width = config.width;
+        this.height = config.height;
+        this.percentage = config.percentage;
+        this.setPercentage(this.percentage);
+    }
+
+    getConfiguration(type, overrides) {
+        const defaults = {
+            health: {
+                images: this.IMAGES,
+                x: 40,
+                y: 10,
+                width: 60,
+                height: 230,
+                percentage: 100
+            },
+            icons: {
+                images: this.IMAGES_ICONS_STATUSBAR,
+                x: 40,
+                y: 80,
+                width: 48,
+                height: 200,
+                percentage: 0
+            },
+            bottles: {
+                images: this.IMAGES_BOTTLES_STATUSBAR,
+                x: 40,
+                y: 140,
+                width: 48,
+                height: 200,
+                percentage: 0
+            }
+        };
+
+        const baseConfig = defaults[type] || defaults.health;
+
+        return {
+            ...baseConfig,
+            ...overrides,
+            images: overrides.images || baseConfig.images,
+            percentage: overrides.percentage ?? baseConfig.percentage
+        };
     }
 
     setPercentage(percentage) {
-        this.percentage = percentage;
-        let path = this.IMAGES[this.resolveImageIndex()];
-        path = this.IMAGES_ICONS_STATUSBAR[this.resolveImageIndex()];
-        path = this.IMAGES_BOTTLES_STATUSBAR[this.resolveImageIndex()];
+        this.percentage = Math.max(0, Math.min(percentage, 100));
+        const path = this.images[this.resolveImageIndex()];
         this.img = this.imageCache[path];
     }
 
-        resolveImageIndex() {
-        if(this.percentage == 100) {
+    resolveImageIndex() {
+        if (this.percentage == 100) {
             return 5;
-        } else if(this.percentage > 80) {
+        } else if (this.percentage > 80) {
             return 4;
-        } else if(this.percentage > 60) {
+        } else if (this.percentage > 60) {
             return 3; 
-        } else if(this.percentage > 40) {
+        } else if (this.percentage > 40) {
             return 2;
-        } else if(this.percentage > 20) {
+        } else if (this.percentage > 20) {
             return 1;
         } else {
             return 0;
