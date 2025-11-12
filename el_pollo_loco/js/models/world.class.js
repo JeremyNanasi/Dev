@@ -84,8 +84,8 @@ class World {
             this.addToMap(this.statusBar);
             this.ctx.translate(this.camera_x, 0);
 
-            this.addToMap(this.character);
             this.addobjectsToMap(this.level.clouds);
+            this.addToMap(this.character);
             this.addobjectsToMap(this.level.enemies);
             this.addobjectsToMap(this.level.icons);
             this.addobjectsToMap(this.level.salsa);

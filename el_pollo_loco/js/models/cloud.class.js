@@ -7,7 +7,8 @@ class Cloud extends MoveableObject {
         super();
         this.loadImage('./img/5_background/layers/4_clouds/1.png');
         this.x = Math.random() * 2500;
-        this.speed = 0.15; // Geschwindigkeit der Wolke
+        this.y = Math.random() * this.y;
+        this.speed = Math.random() * 0.15;
         this.animate();
     }
 
