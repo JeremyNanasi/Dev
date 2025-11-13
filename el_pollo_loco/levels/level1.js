@@ -24,6 +24,11 @@ level1 = new Level(
         new Icons(),
         new Icons(),
         new Icons(),
+        new Icons(),
+        new Icons(),
+        new Icons(),
+        new Icons(),
+        new Icons(),
         new Icons()
     ],
     [

@@ -10,7 +10,7 @@ class Icons extends MoveableObject {
         super().loadImage('./img/7_statusbars/3_icons/icon_coin.png');
         this.loadImages(this.ICONSOBJECTS);
 
-        this.x = 200 + Math.random() * 500;
+        this.x = 500 + Math.random() * 1000;
         this.speed = 0.15 + Math.random() * 0.5;
     }
 }
