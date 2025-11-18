@@ -51,15 +51,12 @@ class World {
                     this.collectIcon(i);
                 }
             }
-
-            // new 
             for (let i = this.level.salsa.length - 1; i >= 0; i--) {
                 const salsaBottle = this.level.salsa[i];
                 if (this.character.isColliding(salsaBottle)) {
                     this.collectSalsa(i);
                 }
             }
-            //////////////
         }, 200);
     }
 
@@ -93,8 +90,6 @@ class World {
 
             this.ctx.translate(-this.camera_x, 0);
 
-
-            // Draw() wird immer wieder aufgerufen
             let self = this;
             requestAnimationFrame(function() {
                 self.draw();

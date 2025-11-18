@@ -85,31 +85,27 @@ class Character extends MoveableObject {
             }
         }
 
-        // Prüfe, ob Pepe gerade gelandet ist (also: war in der Luft, jetzt am Boden)
         if (!this.isAboveGround() && this.wasInAir) {
-            this.wasInAir = false; // wieder auf dem Boden
-            this.onLanding(); // Animation nach Landung starten
+            this.wasInAir = false;
+            this.onLanding();
         }
 
-        // Wenn er springt, merken, dass er in der Luft war
         if (this.isAboveGround()) {
             this.wasInAir = true;
         }
     }
 
     onLanding() {
-        // Nach kurzer Verzögerung zum Standbild wechseln
         setTimeout(() => {
             this.currentImage = 0;
             this.img = this.imageCache[this.IMAGES_WALKING[0]];
-        }, 150); // 150ms nach der Landung
+        }, 150); 
     }
 
     animate() {
         setInterval(() => {
             const now = Date.now();
 
-            // === BEWEGUNG ===
             if (this.world.keyboard.RIGHT && this.x < this.world.level.level_end_x) {
                 this.moveRight();
                 this.otherDirection = false;
@@ -122,10 +118,8 @@ class Character extends MoveableObject {
                 this.jump();
             }
 
-            // === KAMERA ===
             this.world.camera_x = -this.x + 100;
 
-            // === ANIMATIONEN ===
             if (this.isDead()) {
                 if (now - this.lastFrameTime.dead > this.frameTimers.dead) {
                     this.lastFrameTime.dead = now;
@@ -138,16 +132,12 @@ class Character extends MoveableObject {
                         this.playAnimation(this.IMAGES_HURT);
                     }
                 } else if (this.isAboveGround()) {
-                    // === SPRUNG ANIMATION ===
                     this.updateJumpAnimationPhased();
                 } else {
-                    // === LANDUNG ===
                     if (!this.world.keyboard.RIGHT && !this.world.keyboard.LEFT) {
-                        // Charakter steht still → letztes Landungsbild zeigen
-                        this.currentImage = this.IMAGES_JUMP_LANDING.length - 1; // Index von J-39
+                        this.currentImage = this.IMAGES_JUMP_LANDING.length - 1;
                         this.img = this.imageCache[this.IMAGES_JUMP_LANDING[this.currentImage]];
                     } else {
-                        // Bewegung = Laufanimation
                         if (now - this.lastFrameTime.walking > this.frameTimers.walking) {
                             this.lastFrameTime.walking = now;
                             this.playAnimation(this.IMAGES_WALKING);
@@ -162,7 +152,7 @@ class Character extends MoveableObject {
         if (!this.isAboveGround()) {
             this.speedY = 30;
             this.currentImage = 0;
-            this.lastFrameTime.jumping = Date.now(); // Timer zurücksetzen
+            this.lastFrameTime.jumping = Date.now();
         }
     }
 }
