@@ -16,10 +16,9 @@ class Cloud extends MoveableObject {
         setInterval(() => {
             this.moveLeft();
 
-            // Optional: Wolke wieder rechts starten, wenn sie aus dem Bildschirm ist
             if (this.x + this.width < 0) {
-                this.x = 800 + Math.random() * 300; // Bildschirmbreite + Zufall
+                this.x = 800 + Math.random() * 300;
             }
-        }, 1000 / 60); // 60 FPS
+        }, 1000 / 60);
     }
 }

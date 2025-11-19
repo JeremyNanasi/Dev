@@ -1,10 +1,12 @@
 class Endboss extends MoveableObject {
     
     height = 400;
-    width = 385; 
+    width = 385;
     y = 60;
-    // x = 40;
-    // speed = 20;
+    speed = 0.8;
+    startMovingDistance = 1000;
+    stopDistance = 1500;
+    world;
 
     IMAGES_ENDBOSS_WALKING = [
         './img/4_enemie_boss_chicken/1_walk/G1.png',
@@ -59,17 +61,36 @@ class Endboss extends MoveableObject {
 
     animate() {
         setInterval(() => {
-            this.moveLeftenboss();
+            if (this.shouldMove()) {
+                this.updateMovement();
+                this.moveLeftenboss();
+            }
         }, 1000 / 60);
+    }
 
-        setInterval(() => {
-            this.playAnimation(this.IMAGES_ENDBOSS_WALKING);
-            if()
-        }, 200);
+    shouldMove() {
+        return this.world && this.world.character && this.world.character.x >= this.activationX;
     }
 
 
-    moveLeftenboss() {
-        this.x -= this.speed; 
-    }
+     updateMovement() {
+        if (!this.world || !this.world.character) {
+            return;
+        }
+
+        const distanceToCharacter = this.world.character.x - this.x;
+        const absoluteDistance = Math.abs(distanceToCharacter);
+
+        if (absoluteDistance > this.startMovingDistance || absoluteDistance <= this.stopDistance) {
+            return;
+        }
+
+        if (distanceToCharacter > 0) {
+            this.otherDirection = false;
+            this.moveRight();
+        } else {
+            this.otherDirection = true;
+            this.moveLeft();
+        }
+     }
 }
