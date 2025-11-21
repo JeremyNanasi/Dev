@@ -55,42 +55,23 @@ class Endboss extends MoveableObject {
         this.loadImages(this.ATTACK_ENDBOSS);
         this.loadImages(this.HURT_ENDBOSS);
         this.loadImages(this.DEAD_ENDBOSS);
-        this.x = 300;
+        this.x = 2500;
         this.animate();
     }
 
     animate() {
         setInterval(() => {
-            if (this.shouldMove()) {
-                this.updateMovement();
-                this.moveLeftenboss();
-            }
+            this.moveLeft();
         }, 1000 / 60);
+
+        setInterval(() => {
+            this.playAnimation(this.ALERT_ENBOSS);
+        }, 200);
     }
+
+
 
     shouldMove() {
         return this.world && this.world.character && this.world.character.x >= this.activationX;
     }
-
-
-     updateMovement() {
-        if (!this.world || !this.world.character) {
-            return;
-        }
-
-        const distanceToCharacter = this.world.character.x - this.x;
-        const absoluteDistance = Math.abs(distanceToCharacter);
-
-        if (absoluteDistance > this.startMovingDistance || absoluteDistance <= this.stopDistance) {
-            return;
-        }
-
-        if (distanceToCharacter > 0) {
-            this.otherDirection = false;
-            this.moveRight();
-        } else {
-            this.otherDirection = true;
-            this.moveLeft();
-        }
-     }
 }
