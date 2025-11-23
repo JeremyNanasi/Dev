@@ -19,7 +19,7 @@ class Endboss extends MoveableObject {
     attackInterval = null;
     isAttacking = false;
     attackOnCooldown = false;
-    attackDistance = 60;
+    attackDistance = 5;
     attackCooldownDuration = 1400;
     attackDamageApplied = false;
 
@@ -108,7 +108,7 @@ class Endboss extends MoveableObject {
         this.movementInterval = setInterval(() => {
             this.updateFacingDirection();
             const distanceAhead = this.getDistanceAhead();
-            const withinAttackRange = this.canStartAttack(distanceAhead);
+            const withinAttackRange = this.canStartAttack();
             const withinAlertRange = this.isCharacterWithinAlertRange(distanceAhead);
 
             if (withinAttackRange) {
@@ -137,7 +137,7 @@ class Endboss extends MoveableObject {
         if (!this.world || !this.world.character || this.isAlerting || this.isAttacking) return false;
 
         const distanceAhead = this.getDistanceAhead();
-        const stillAheadOfCharacter = distanceAhead >= 0;
+        const stillAheadOfCharacter = distanceAhead >= - 100;
         const withinStartRange = distanceAhead <= this.startMovingDistance;
         const withinStopRange = distanceAhead <= this.stopDistance;
 
@@ -295,7 +295,7 @@ class Endboss extends MoveableObject {
 
         const endbossCenter = this.x + this.width / 2;
         const characterCenter = this.world.character.x + this.world.character.width / 2;
-        this.otherDirection = characterCenter < endbossCenter;
+        this.otherDirection = characterCenter > endbossCenter;
     }
 
     applyAttackDamage() {
