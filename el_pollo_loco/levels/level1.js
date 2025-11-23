@@ -1,8 +1,10 @@
 level1 = new Level(
     [
         new Chicken(),
-        // new Chicken(),
-        // new Chicken(),
+        new Chicken(),
+        new Chicken(),
+        new Chicken({ isSmall: true }),
+        new Chicken({ isSmall: true }),
         new Endboss(),
     ],
     [

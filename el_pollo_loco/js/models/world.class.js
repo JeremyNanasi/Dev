@@ -54,16 +54,27 @@ class World {
         }
     }
 
-    checkCollisions() {
+   checkCollisions() {
         setInterval(() => {
             this.level.enemies.forEach((enemy) => {
                 if (enemy instanceof Endboss) {
                     return;
                 }
 
+                if (typeof enemy.isDead === 'function' && enemy.isDead()) {
+                    return;
+                }
+
                 if(this.character.isColliding(enemy)) {
-                    this.character.hit();
-                    this.statusBar.setPercentage(this.character.energy);
+                    const isJumpAttack = this.character.speedY < 0
+                        && this.character.y + this.character.height <= enemy.y + (enemy.height * 0.75);
+
+                    if (isJumpAttack && typeof enemy.die === 'function') {
+                        enemy.die();
+                    } else {
+                        this.character.hit();
+                        this.statusBar.setPercentage(this.character.energy);
+                    }
                 }
             });
 
