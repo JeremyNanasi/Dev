@@ -93,10 +93,12 @@ class World {
 
             this.ctx.translate(-this.camera_x, 0);
 
-            let self = this;
-            requestAnimationFrame(function() {
-                self.draw();
-            });
+            const animationFrame = window.requestAnimationFrame
+                || window.webkitRequestAnimationFrame
+                || window.mozRequestAnimationFrame
+                || ((callback) => setTimeout(callback, 1000 / 60));
+
+            animationFrame(() => this.draw());
         }
 
         addobjectsToMap(objects) {
