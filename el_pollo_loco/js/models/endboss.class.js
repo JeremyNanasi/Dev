@@ -14,6 +14,12 @@ class Endboss extends MoveableObject {
     isAlerting = false;
     alertOnCooldown = false;
     alertDistance = 80;
+    attackInterval = null;
+    isAttacking = false;
+    attackOnCooldown = false;
+    attackDistance = 60;
+    attackCooldownDuration = 1400;
+    attackDamageApplied = false;
 
     IMAGES_ENDBOSS_WALKING = [
         './img/4_enemie_boss_chicken/1_walk/G1.png',
@@ -98,8 +104,15 @@ class Endboss extends MoveableObject {
         }
 
         this.movementInterval = setInterval(() => {
+            this.updateFacingDirection();
             const distanceAhead = this.getDistanceAhead();
+            const withinAttackRange = this.canStartAttack(distanceAhead);
             const withinAlertRange = this.isCharacterWithinAlertRange(distanceAhead);
+
+            if (withinAttackRange) {
+                this.startAttackAnimation();
+                return;
+            }
 
             if (withinAlertRange && !this.isAlerting && !this.alertOnCooldown) {
                 this.startAlertAnimation();
@@ -119,7 +132,7 @@ class Endboss extends MoveableObject {
     }
 
     shouldMove() {
-        if (!this.world || !this.world.character || this.isAlerting) return false;
+        if (!this.world || !this.world.character || this.isAlerting || this.isAttacking) return false;
 
         const distanceAhead = this.getDistanceAhead();
         const stillAheadOfCharacter = distanceAhead >= 0;
@@ -159,9 +172,91 @@ class Endboss extends MoveableObject {
         return distanceAhead >= 0 && distanceAhead <= this.alertDistance;
     }
 
+    canStartAttack(distanceAhead) {
+        return !this.isAttacking
+            && !this.attackOnCooldown
+            && !this.isAlerting
+            && distanceAhead >= 0
+            && distanceAhead <= this.attackDistance
+            && this.world
+            && this.world.character;
+    }
+
+    startAttackAnimation() {
+        if (this.attackInterval) {
+            clearInterval(this.attackInterval);
+        }
+
+        this.isAttacking = true;
+        this.attackDamageApplied = false;
+        this.stopWalkingAnimation();
+        this.currentImage = 0;
+
+        const frameDelay = this.frameTimers.attack || 150;
+        let frameIndex = 0;
+
+        this.attackInterval = setInterval(() => {
+            this.img = this.imageCache[this.ATTACK_ENDBOSS[frameIndex]];
+            this.handleDamageDuringAttack();
+            frameIndex++;
+
+            if (frameIndex >= this.ATTACK_ENDBOSS.length) {
+                clearInterval(this.attackInterval);
+                this.attackInterval = null;
+                this.finishAttackAnimation();
+            }
+        }, frameDelay);
+    }
+
+    handleDamageDuringAttack() {
+        if (this.attackDamageApplied || !this.isCharacterWithinAttackRange()) {
+            return;
+        }
+
+        this.attackDamageApplied = true;
+
+        if (!this.world || !this.world.character) return;
+
+        if (!this.world.character.isColliding(this)) {
+            return;
+        }
+
+        this.world.character.hit();
+        this.world.statusBar?.setPercentage(this.world.character.energy);
+    }
+
+    finishAttackAnimation() {
+        this.isAttacking = false;
+        this.currentImage = 0;
+        this.attackOnCooldown = true;
+
+        setTimeout(() => {
+            this.attackOnCooldown = false;
+        }, this.attackCooldownDuration);
+
+        this.startWalkingAnimation();
+    }
+
+    isCharacterWithinAttackRange() {
+        const distanceAhead = this.getDistanceAhead();
+        return distanceAhead >= 0 && distanceAhead <= this.attackDistance;
+    }
+
     getDistanceAhead() {
         if (!this.world || !this.world.character) return Infinity;
 
-        return this.x - this.world.character.x;
+        return this.x - (this.world.character.x + this.world.character.width);
+    }
+
+    updateFacingDirection() {
+        if (!this.world || !this.world.character) return;
+
+        const endbossCenter = this.x + this.width / 2;
+        const characterCenter = this.world.character.x + this.world.character.width / 2;
+        const centersAligned = Math.abs(characterCenter - endbossCenter) < 1;
+
+        if (!centersAligned) {
+            this.otherDirection = characterCenter > endbossCenter;
+        }
     }
 }
