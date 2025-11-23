@@ -49,27 +49,29 @@ class Endboss extends MoveableObject {
         './img/4_enemie_boss_chicken/5_dead/G26.png'
     ];
 
+    alertAnimationPlayed = false;
+    alertIntervalId = null;
+
     constructor() {
         super().loadImage(this.IMAGES_ENDBOSS_WALKING[0]);
+        this.loadImage(this.IMAGES_ENDBOSS_WALKING);
         this.loadImages(this.ALERT_ENBOSS);
         this.loadImages(this.ATTACK_ENDBOSS);
         this.loadImages(this.HURT_ENDBOSS);
         this.loadImages(this.DEAD_ENDBOSS);
         this.x = 2500;
-        this.animate();
+        this.animateEnboss();
     }
 
-    animate() {
+    animateEnboss() {
         setInterval(() => {
             this.moveLeft();
         }, 1000 / 60);
 
         setInterval(() => {
-            this.playAnimation(this.ALERT_ENBOSS);
+                this.playAnimation(this.IMAGES_ENDBOSS_WALKING);
         }, 200);
     }
-
-
 
     shouldMove() {
         return this.world && this.world.character && this.world.character.x >= this.activationX;

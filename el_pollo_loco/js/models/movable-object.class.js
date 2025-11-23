@@ -72,7 +72,6 @@ class MoveableObject extends DrawableObject {
         this.currentImage++;
     }
 
-
     playAnimationDead(images) {
         if (!this.currentImage) this.currentImage = 0;
         if (this.currentImage < images.length) {
