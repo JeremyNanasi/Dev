@@ -88,8 +88,12 @@ class World {
 
                     if (bottle.isColliding(enemy)) {
                         enemy.hit(10);
-                        if (enemy instanceof Endboss && typeof enemy.playHurtAnimation === 'function') {
-                            enemy.playHurtAnimation();
+                        if (enemy instanceof Endboss) {
+                            if (enemy.energy <= 0 && typeof enemy.playDeathAnimation === 'function') {
+                                enemy.playDeathAnimation();
+                            } else if (typeof enemy.playHurtAnimation === 'function') {
+                                enemy.playHurtAnimation();
+                            }
                         }
                         this.throwableObject.splice(i, 1);
                         break;
