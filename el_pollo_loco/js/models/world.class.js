@@ -55,29 +55,32 @@ class World {
     }
 
     checkCollisions() {
-        this.level.enemies.forEach((enemy) => {
-            if (enemy instanceof Endboss) {
-                return;
+        setInterval(() => {
+            this.level.enemies.forEach((enemy) => {
+                if (enemy instanceof Endboss) {
+                    return;
+                }
+
+                if(this.character.isColliding(enemy)) {
+                    this.character.hit();
+                    this.statusBar.setPercentage(this.character.energy);
+                }
+            });
+
+            for (let i = this.level.icons.length - 1; i >= 0; i--) {
+                const icon = this.level.icons[i];
+                if (this.character.isColliding(icon)) {
+                    this.collectIcon(i);
+                }
+            }
+            for (let i = this.level.salsa.length - 1; i >= 0; i--) {
+                const salsaBottle = this.level.salsa[i];
+                if (this.character.isColliding(salsaBottle)) {
+                    this.collectSalsa(i);
+                }
             }
 
-            if(this.character.isColliding(enemy)) {
-                this.character.hit();
-                this.statusBar.setPercentage(this.character.energy);
-            }
-        });
-
-        for (let i = this.level.icons.length - 1; i >= 0; i--) {
-            const icon = this.level.icons[i];
-            if (this.character.isColliding(icon)) {
-                this.collectIcon(i);
-            }
-        }
-        for (let i = this.level.salsa.length - 1; i >= 0; i--) {
-            const salsaBottle = this.level.salsa[i];
-            if (this.character.isColliding(salsaBottle)) {
-                this.collectSalsa(i);
-            }
-        for (let i = this.throwableObject.length - 1; i >= 0; i--) {
+            for (let i = this.throwableObject.length - 1; i >= 0; i--) {
                 const bottle = this.throwableObject[i];
 
                 for (let j = 0; j < this.level.enemies.length; j++) {
@@ -93,9 +96,7 @@ class World {
                     }
                 }
             }
-        }
-
-        this.handleThrowableCollisions();
+        }, 200);
     }
 
     collectIcon(index) {

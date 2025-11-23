@@ -4,7 +4,7 @@ class Endboss extends MoveableObject {
     width = 385;
     y = 60;
     speed = 0.8;
-    energy = 120;  //leben endboss
+    energy = 20;  //leben endboss
     startMovingDistance = 1000;
     stopDistance = 1500;
     world;
@@ -19,6 +19,7 @@ class Endboss extends MoveableObject {
     isAttacking = false;
     attackOnCooldown = false;
     hurtInterval = null;
+    isHurting = false;
     attackDistance = 0;
     attackCooldownDuration = 1400;
     attackDamageApplied = false;
@@ -109,6 +110,10 @@ class Endboss extends MoveableObject {
         }
 
         this.movementInterval = setInterval(() => {
+            if (this.isHurting) {
+                return;
+            }
+
             this.updateFacingDirection();
             this.applyContactDamageIfColliding();
             const distanceAhead = this.getDistanceAhead();
@@ -138,8 +143,8 @@ class Endboss extends MoveableObject {
     }
 
     shouldMove() {
-        if (!this.world || !this.world.character || this.isAlerting || this.isAttacking) return false;
-
+        if (!this.world || !this.world.character || this.isAlerting || this.isAttacking || this.isHurting) return false;
+        
         const distanceAhead = this.getDistanceAhead();
         const stillAheadOfCharacter = distanceAhead >= - 100;
         const withinStartRange = distanceAhead <= this.startMovingDistance;
@@ -266,11 +271,17 @@ class Endboss extends MoveableObject {
             this.hurtInterval = null;
         }
 
+        this.isHurting = true;
         this.stopWalkingAnimation();
         if (this.attackInterval) {
             clearInterval(this.attackInterval);
             this.attackInterval = null;
             this.isAttacking = false;
+        }
+        if (this.alertInterval) {
+            clearInterval(this.alertInterval);
+            this.alertInterval = null;
+            this.isAlerting = false;
         }
 
         const frameDelay = this.frameTimers.hurt || 150;
@@ -284,6 +295,7 @@ class Endboss extends MoveableObject {
                 clearInterval(this.hurtInterval);
                 this.hurtInterval = null;
                 this.currentImage = 0;
+                this.isHurting = false;
                 this.startWalkingAnimation();
             }
         }, frameDelay);
