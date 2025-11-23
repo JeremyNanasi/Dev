@@ -4,7 +4,7 @@ class Endboss extends MoveableObject {
     width = 385;
     y = 60;
     speed = 0.8;
-    energy = 120;
+    energy = 120;  //leben endboss
     startMovingDistance = 1000;
     stopDistance = 1500;
     world;
@@ -18,6 +18,7 @@ class Endboss extends MoveableObject {
     attackInterval = null;
     isAttacking = false;
     attackOnCooldown = false;
+    hurtInterval = null;
     attackDistance = 0;
     attackCooldownDuration = 1400;
     attackDamageApplied = false;
@@ -257,6 +258,35 @@ class Endboss extends MoveableObject {
         this.lastContactDamageTime = now;
         this.world.character.hit(this.contactDamageAmount);
         this.world.statusBar?.setPercentage(this.world.character.energy);
+    }
+
+    playHurtAnimation() {
+        if (this.hurtInterval) {
+            clearInterval(this.hurtInterval);
+            this.hurtInterval = null;
+        }
+
+        this.stopWalkingAnimation();
+        if (this.attackInterval) {
+            clearInterval(this.attackInterval);
+            this.attackInterval = null;
+            this.isAttacking = false;
+        }
+
+        const frameDelay = this.frameTimers.hurt || 150;
+        let frameIndex = 0;
+
+        this.hurtInterval = setInterval(() => {
+            this.img = this.imageCache[this.HURT_ENDBOSS[frameIndex]];
+            frameIndex++;
+
+            if (frameIndex >= this.HURT_ENDBOSS.length) {
+                clearInterval(this.hurtInterval);
+                this.hurtInterval = null;
+                this.currentImage = 0;
+                this.startWalkingAnimation();
+            }
+        }, frameDelay);
     }
 
     finishAttackAnimation() {

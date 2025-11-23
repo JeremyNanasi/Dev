@@ -77,6 +77,22 @@ class World {
             if (this.character.isColliding(salsaBottle)) {
                 this.collectSalsa(i);
             }
+        for (let i = this.throwableObject.length - 1; i >= 0; i--) {
+                const bottle = this.throwableObject[i];
+
+                for (let j = 0; j < this.level.enemies.length; j++) {
+                    const enemy = this.level.enemies[j];
+
+                    if (bottle.isColliding(enemy)) {
+                        enemy.hit(10);
+                        if (enemy instanceof Endboss && typeof enemy.playHurtAnimation === 'function') {
+                            enemy.playHurtAnimation();
+                        }
+                        this.throwableObject.splice(i, 1);
+                        break;
+                    }
+                }
+            }
         }
 
         this.handleThrowableCollisions();
