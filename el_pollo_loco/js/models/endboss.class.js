@@ -19,9 +19,12 @@ class Endboss extends MoveableObject {
     attackInterval = null;
     isAttacking = false;
     attackOnCooldown = false;
-    attackDistance = 5;
+    attackDistance = 0;
     attackCooldownDuration = 1400;
     attackDamageApplied = false;
+    contactDamageAmount = 20;
+    contactDamageCooldown = 1000;
+    lastContactDamageTime = 0;
 
     IMAGES_ENDBOSS_WALKING = [
         './img/4_enemie_boss_chicken/1_walk/G1.png',
@@ -107,6 +110,7 @@ class Endboss extends MoveableObject {
 
         this.movementInterval = setInterval(() => {
             this.updateFacingDirection();
+            this.applyContactDamageIfColliding();
             const distanceAhead = this.getDistanceAhead();
             const withinAttackRange = this.canStartAttack();
             const withinAlertRange = this.isCharacterWithinAlertRange(distanceAhead);
@@ -171,6 +175,26 @@ class Endboss extends MoveableObject {
         }, frameDelay);
     }
 
+    isCharacterWithinAlertRange(distanceAhead) {
+        return distanceAhead >= 0 && distanceAhead <= this.alertDistance;
+    }
+
+    isCharacterWithinAttackRange(distanceAhead) {
+        return distanceAhead >= 0 && distanceAhead <= this.attackDistance;
+    }
+
+    canStartAttack(distanceAhead) {
+        if (!this.world?.character) return false;
+
+        const withinDistance = distanceAhead >= 0 && distanceAhead <= this.attackDistance;
+        const isColliding = this.world.character.isColliding(this);
+
+        return !this.isAttacking
+            && !this.attackOnCooldown
+            && !this.isAlerting
+            && (withinDistance || isColliding);
+    }
+
     startAttackAnimation() {
         if (this.attackInterval) {
             clearInterval(this.attackInterval);
@@ -180,53 +204,6 @@ class Endboss extends MoveableObject {
             clearInterval(this.alertInterval);
             this.alertInterval = null;
             this.isAlerting = false;
-        }
-
-        this.isAttacking = true;
-        this.stopWalkingAnimation();
-        this.currentImage = 0;
-
-        const frameDelay = this.frameTimers.attack || 200;
-
-        this.img = this.imageCache[this.ATTACK_ENDBOSS[0]];
-        this.applyAttackDamage();
-
-        let frameIndex = 1;
-
-        this.attackInterval = setInterval(() => {
-            this.img = this.imageCache[this.ATTACK_ENDBOSS[frameIndex]];
-            frameIndex++;
-
-            if (frameIndex >= this.ATTACK_ENDBOSS.length) {
-                clearInterval(this.attackInterval);
-                this.attackInterval = null;
-                this.isAttacking = false;
-                this.currentImage = 0;
-            }
-        }, frameDelay);
-    }
-
-    isCharacterWithinAlertRange(distanceAhead) {
-        return distanceAhead >= 0 && distanceAhead <= this.alertDistance;
-    }
-
-    isCharacterWithinAttackRange(distanceAhead) {
-        return distanceAhead >= 0 && distanceAhead <= this.attackDistance;
-    }
-
-        canStartAttack(distanceAhead) {
-        return !this.isAttacking
-            && !this.attackOnCooldown
-            && !this.isAlerting
-            && distanceAhead >= 0
-            && distanceAhead <= this.attackDistance
-            && this.world
-            && this.world.character;
-    }
-
-    startAttackAnimation() {
-        if (this.attackInterval) {
-            clearInterval(this.attackInterval);
         }
 
         this.isAttacking = true;
@@ -250,20 +227,36 @@ class Endboss extends MoveableObject {
         }, frameDelay);
     }
 
-    handleDamageDuringAttack() {
-        if (this.attackDamageApplied || !this.isCharacterWithinAttackRange()) {
+        handleDamageDuringAttack() {
+        if (this.attackDamageApplied || !this.world?.character) {
             return;
         }
-
-        this.attackDamageApplied = true;
-
-        if (!this.world || !this.world.character) return;
 
         if (!this.world.character.isColliding(this)) {
             return;
         }
 
+        this.attackDamageApplied = true;
         this.world.character.hit();
+        this.world.statusBar?.setPercentage(this.world.character.energy);
+    }
+
+        applyContactDamageIfColliding() {
+        if (!this.world?.character) {
+            return;
+        }
+
+        if (!this.world.character.isColliding(this)) {
+            return;
+        }
+
+        const now = Date.now();
+        if (now - this.lastContactDamageTime < this.contactDamageCooldown) {
+            return;
+        }
+
+        this.lastContactDamageTime = now;
+        this.world.character.hit(this.contactDamageAmount);
         this.world.statusBar?.setPercentage(this.world.character.energy);
     }
 
@@ -279,11 +272,6 @@ class Endboss extends MoveableObject {
         this.startWalkingAnimation();
     }
 
-    isCharacterWithinAttackRange() {
-        const distanceAhead = this.getDistanceAhead();
-        return distanceAhead >= 0 && distanceAhead <= this.attackDistance;
-    }
-
     getDistanceAhead() {
         if (!this.world || !this.world.character) return Infinity;
 
@@ -296,21 +284,5 @@ class Endboss extends MoveableObject {
         const endbossCenter = this.x + this.width / 2;
         const characterCenter = this.world.character.x + this.world.character.width / 2;
         this.otherDirection = characterCenter > endbossCenter;
-    }
-
-    applyAttackDamage() {
-        const character = this.world?.character;
-        const statusBar = this.world?.statusBar;
-
-        if (!character) {
-            return;
-        }
-
-        character.energy = Math.max(0, character.energy - 20);
-        character.lastHit = Date.now();
-
-        if (statusBar) {
-            statusBar.setPercentage(character.energy);
-        }
     }
 }

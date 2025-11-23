@@ -49,8 +49,8 @@ class MoveableObject extends DrawableObject {
     }
 
 
-    hit() {
-        this.energy -= 5;
+    hit(amount = 5) {
+        this.energy -= amount;
         if (this.energy < 0) this.energy = 0;
         else this.lastHit = Date.now();
     }
