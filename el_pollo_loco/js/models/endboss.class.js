@@ -10,6 +10,10 @@ class Endboss extends MoveableObject {
     walkInterval = null;
     movementInterval = null;
     walkFrameIndex = 0;
+    alertInterval = null;
+    isAlerting = false;
+    alertOnCooldown = false;
+    alertDistance = 80;
 
     IMAGES_ENDBOSS_WALKING = [
         './img/4_enemie_boss_chicken/1_walk/G1.png',
@@ -55,6 +59,7 @@ class Endboss extends MoveableObject {
     constructor() {
         super().loadImage(this.IMAGES_ENDBOSS_WALKING[0]);
         this.loadImages(this.IMAGES_ENDBOSS_WALKING);
+        this.img = this.imageCache[this.IMAGES_ENDBOSS_WALKING[0]];
         this.loadImages(this.ALERT_ENBOSS);
         this.loadImages(this.ATTACK_ENDBOSS);
         this.loadImages(this.HURT_ENDBOSS);
@@ -65,17 +70,18 @@ class Endboss extends MoveableObject {
     }
 
     animate() {
-        this.startMovement();
+       this.startMovement();
     }
 
     startWalkingAnimation() {
         if (this.walkInterval) return;
 
+        this.currentImage = 0;
+        const frameDelay = this.frameTimers.walking || 200;
+
         this.walkInterval = setInterval(() => {
-            this.walkFrameIndex = (this.walkFrameIndex + 1) % this.IMAGES_ENDBOSS_WALKING.length;
-            const framePath = this.IMAGES_ENDBOSS_WALKING[this.walkFrameIndex];
-            this.img = this.imageCache[framePath];
-        }, 200);
+            this.playAnimation(this.IMAGES_ENDBOSS_WALKING);
+        }, frameDelay);
     }
 
     stopWalkingAnimation() {
@@ -92,22 +98,70 @@ class Endboss extends MoveableObject {
         }
 
         this.movementInterval = setInterval(() => {
+            const distanceAhead = this.getDistanceAhead();
+            const withinAlertRange = this.isCharacterWithinAlertRange(distanceAhead);
+
+            if (withinAlertRange && !this.isAlerting && !this.alertOnCooldown) {
+                this.startAlertAnimation();
+                this.alertOnCooldown = true;
+                return;
+            }
+
+            if (!withinAlertRange && this.alertOnCooldown) {
+                this.alertOnCooldown = false;
+            }
+
             if (this.shouldMove()) {
+                this.startWalkingAnimation();
                 this.moveLeft();
             }
         }, 1000 / 60);
     }
 
-
-
     shouldMove() {
-        if (!this.world || !this.world.character) return false;
+        if (!this.world || !this.world.character || this.isAlerting) return false;
 
-        const distanceAhead = this.x - this.world.character.x;
+        const distanceAhead = this.getDistanceAhead();
         const stillAheadOfCharacter = distanceAhead >= 0;
         const withinStartRange = distanceAhead <= this.startMovingDistance;
         const withinStopRange = distanceAhead <= this.stopDistance;
 
         return stillAheadOfCharacter && withinStartRange && withinStopRange;
+    }
+
+    startAlertAnimation() {
+        if (this.alertInterval) {
+            clearInterval(this.alertInterval);
+        }
+
+        this.isAlerting = true;
+        this.stopWalkingAnimation();
+        this.currentImage = 0;
+
+        const frameDelay = this.frameTimers.alert || 200;
+        let frameIndex = 0;
+
+        this.alertInterval = setInterval(() => {
+            this.img = this.imageCache[this.ALERT_ENBOSS[frameIndex]];
+            frameIndex++;
+
+            if (frameIndex >= this.ALERT_ENBOSS.length) {
+                clearInterval(this.alertInterval);
+                this.alertInterval = null;
+                this.isAlerting = false;
+                this.currentImage = 0;
+                this.startWalkingAnimation();
+            }
+        }, frameDelay);
+    }
+
+    isCharacterWithinAlertRange(distanceAhead) {
+        return distanceAhead >= 0 && distanceAhead <= this.alertDistance;
+    }
+
+    getDistanceAhead() {
+        if (!this.world || !this.world.character) return Infinity;
+
+        return this.x - this.world.character.x;
     }
 }
