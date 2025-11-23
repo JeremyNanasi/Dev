@@ -4,6 +4,7 @@ class Endboss extends MoveableObject {
     width = 385;
     y = 60;
     speed = 0.8;
+    energy = 120;
     startMovingDistance = 1000;
     stopDistance = 1500;
     world;
@@ -13,8 +14,6 @@ class Endboss extends MoveableObject {
     alertInterval = null;
     isAlerting = false;
     alertOnCooldown = false;
-    // alertDistance = 350;
-    // attackDistance = 150;
     alertDistance = 80;
     attackInterval = null;
     isAttacking = false;
