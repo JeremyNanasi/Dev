@@ -1,0 +1,1284 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8" />
+  <title>Nexus – Mail Cockpit (Test)</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <style>
+    :root {
+      --bg: #050816;
+      --bg-elevated: #0b1120;
+      --bg-elevated-soft: #111827;
+      --border-subtle: rgba(148, 163, 184, 0.35);
+      --accent: #6366f1;
+      --accent-soft: rgba(99, 102, 241, 0.1);
+      --accent-strong: rgba(99, 102, 241, 0.3);
+      --text: #e5e7eb;
+      --text-soft: #9ca3af;
+      --danger: #f97373;
+      --danger-soft: rgba(248, 113, 113, 0.1);
+      --success: #22c55e;
+      --success-soft: rgba(34, 197, 94, 0.1);
+      --warning: #facc15;
+      --warning-soft: rgba(250, 204, 21, 0.08);
+      --radius-lg: 18px;
+      --radius-md: 10px;
+      --radius-pill: 999px;
+      --shadow-soft: 0 18px 45px rgba(15, 23, 42, 0.7);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      padding: 0;
+      background: radial-gradient(circle at top, #1f2937 0, #020617 40%, #020617 100%);
+      color: var(--text);
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "SF Pro Text", sans-serif;
+    }
+
+    .app-shell {
+      min-height: 100vh;
+      display: grid;
+      grid-template-columns: 260px minmax(0, 1fr);
+      gap: 18px;
+      padding: 18px;
+    }
+
+    @media (max-width: 900px) {
+      .app-shell {
+        grid-template-columns: minmax(0, 1fr);
+      }
+    }
+
+    .card {
+      background: linear-gradient(145deg, rgba(15, 23, 42, 0.96), rgba(17, 24, 39, 0.98));
+      border-radius: var(--radius-lg);
+      border: 1px solid var(--border-subtle);
+      box-shadow: var(--shadow-soft);
+      padding: 16px;
+    }
+
+    .sidebar {
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    .sidebar-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 6px;
+      margin-bottom: 4px;
+    }
+
+    .sidebar-title {
+      font-size: 0.9rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--text-soft);
+    }
+
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 2px 8px;
+      border-radius: var(--radius-pill);
+      background: rgba(15, 23, 42, 0.8);
+      border: 1px solid rgba(148, 163, 184, 0.5);
+      font-size: 0.68rem;
+      color: var(--text-soft);
+    }
+
+    .pill-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 999px;
+      background: var(--accent);
+      box-shadow: 0 0 12px rgba(129, 140, 248, 0.85);
+    }
+
+    .account-list {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      margin-top: 6px;
+    }
+
+    .account-item {
+      padding: 8px 10px;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      cursor: pointer;
+      transition: background 0.15s ease, border-color 0.15s ease, transform 0.1s ease;
+      border: 1px solid transparent;
+    }
+
+    .account-item:hover {
+      background: rgba(15, 23, 42, 0.9);
+      border-color: rgba(148, 163, 184, 0.6);
+      transform: translateY(-1px);
+    }
+
+    .account-item.active {
+      background: radial-gradient(circle at top left, rgba(129, 140, 248, 0.18), rgba(15, 23, 42, 0.98));
+      border-color: var(--accent);
+    }
+
+    .account-email {
+      font-size: 0.8rem;
+    }
+
+    .account-label {
+      font-size: 0.7rem;
+      color: var(--text-soft);
+    }
+
+    .badge-count {
+      font-size: 0.72rem;
+      padding: 2px 8px;
+      border-radius: 999px;
+      background: var(--accent-soft);
+      color: #c7d2fe;
+      border: 1px solid var(--accent-strong);
+    }
+
+    .input-row {
+      display: flex;
+      gap: 6px;
+      margin-top: 10px;
+    }
+
+    .input {
+      flex: 1;
+      padding: 6px 8px;
+      border-radius: 9px;
+      border: 1px solid rgba(148, 163, 184, 0.7);
+      background: rgba(15, 23, 42, 0.8);
+      color: var(--text);
+      font-size: 0.78rem;
+    }
+
+    .input::placeholder {
+      color: #6b7280;
+    }
+
+    .btn {
+      border-radius: 10px;
+      border: 1px solid rgba(148, 163, 184, 0.8);
+      background: rgba(15, 23, 42, 0.9);
+      color: var(--text);
+      font-size: 0.75rem;
+      padding: 6px 10px;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      white-space: nowrap;
+      transition: background 0.12s ease, border-color 0.12s ease, transform 0.08s ease;
+    }
+
+    .btn:hover {
+      background: rgba(30, 64, 175, 0.4);
+      border-color: rgba(129, 140, 248, 0.9);
+      transform: translateY(-0.5px);
+    }
+
+    .btn-secondary {
+      border-color: rgba(75, 85, 99, 0.9);
+      background: rgba(17, 24, 39, 0.9);
+      color: var(--text-soft);
+    }
+
+    .btn-danger {
+      border-color: rgba(248, 113, 113, 0.9);
+      background: rgba(69, 10, 10, 0.9);
+      color: #fecaca;
+    }
+
+    .section-separator {
+      height: 1px;
+      background: rgba(31, 41, 55, 0.9);
+      margin: 10px 0;
+    }
+
+    .chip-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-top: 8px;
+    }
+
+    .chip {
+      font-size: 0.7rem;
+      padding: 2px 8px;
+      border-radius: 999px;
+      border: 1px solid rgba(148, 163, 184, 0.7);
+      background: rgba(15, 23, 42, 0.9);
+      color: var(--text-soft);
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .chip.active {
+      border-color: var(--accent);
+      background: var(--accent-soft);
+      color: #c7d2fe;
+    }
+
+    .chip-dot {
+      width: 9px;
+      height: 9px;
+      border-radius: 999px;
+      background: #6366f1;
+    }
+
+    .chip-dot.green {
+      background: var(--success);
+    }
+
+    .chip-dot.yellow {
+      background: var(--warning);
+    }
+
+    .chip-dot.red {
+      background: var(--danger);
+    }
+
+    .chip-dot.gray {
+      background: #6b7280;
+    }
+
+    .chip-dot.blue {
+      background: #38bdf8;
+    }
+
+    .main {
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    .main-header {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      gap: 10px;
+      align-items: center;
+    }
+
+    .main-title-block {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+
+    .main-title {
+      font-size: 1.35rem;
+      font-weight: 600;
+      letter-spacing: -0.02em;
+    }
+
+    .main-subtitle {
+      font-size: 0.78rem;
+      color: var(--text-soft);
+    }
+
+    .search-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .search-input {
+      min-width: 200px;
+      padding: 7px 10px;
+      border-radius: 999px;
+      border: 1px solid rgba(148, 163, 184, 0.7);
+      background: rgba(15, 23, 42, 0.9);
+      color: var(--text);
+      font-size: 0.78rem;
+    }
+
+    .search-input::placeholder {
+      color: #6b7280;
+    }
+
+    .overview-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 10px;
+    }
+
+    @media (max-width: 1100px) {
+      .overview-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+    }
+
+    @media (max-width: 700px) {
+      .overview-grid {
+        grid-template-columns: minmax(0, 1fr);
+      }
+    }
+
+    .overview-card {
+      background: var(--bg-elevated-soft);
+      border-radius: var(--radius-md);
+      border: 1px solid var(--border-subtle);
+      padding: 10px 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      font-size: 0.78rem;
+    }
+
+    .overview-label {
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--text-soft);
+    }
+
+    .overview-value {
+      font-size: 1.1rem;
+      font-weight: 600;
+    }
+
+    .overview-caption {
+      font-size: 0.7rem;
+      color: var(--text-soft);
+    }
+
+    .content-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 2.1fr) minmax(0, 1.2fr);
+      gap: 12px;
+      margin-top: 4px;
+    }
+
+    @media (max-width: 1050px) {
+      .content-grid {
+        grid-template-columns: minmax(0, 1fr);
+      }
+    }
+
+    .email-panel {
+      background: var(--bg-elevated-soft);
+      border-radius: var(--radius-lg);
+      border: 1px solid var(--border-subtle);
+      padding: 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      min-height: 260px;
+    }
+
+    .email-filters {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .email-filters-left {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      align-items: center;
+    }
+
+    .email-list {
+      margin-top: 6px;
+      border-radius: 12px;
+      border: 1px solid rgba(31, 41, 55, 0.95);
+      background: radial-gradient(circle at top left, rgba(15, 23, 42, 0.95), #020617);
+      max-height: 360px;
+      overflow: auto;
+    }
+
+    .email-item {
+      display: grid;
+      grid-template-columns: minmax(0, 1.7fr) minmax(0, 1.1fr) auto;
+      gap: 8px;
+      padding: 8px 10px;
+      border-bottom: 1px solid rgba(31, 41, 55, 0.9);
+      font-size: 0.78rem;
+      align-items: center;
+    }
+
+    @media (max-width: 900px) {
+      .email-item {
+        grid-template-columns: minmax(0, 1fr);
+      }
+    }
+
+    .email-item:last-child {
+      border-bottom: none;
+    }
+
+    .email-from-line {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      margin-bottom: 2px;
+    }
+
+    .email-from-name {
+      font-weight: 500;
+    }
+
+    .email-from-email {
+      font-size: 0.7rem;
+      color: var(--text-soft);
+    }
+
+    .email-subject {
+      font-size: 0.8rem;
+    }
+
+    .email-preview {
+      font-size: 0.72rem;
+      color: var(--text-soft);
+      margin-top: 2px;
+    }
+
+    .email-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 4px;
+      align-items: center;
+      justify-content: flex-start;
+    }
+
+    .tag {
+      font-size: 0.68rem;
+      padding: 1px 7px;
+      border-radius: 999px;
+      border: 1px solid rgba(148, 163, 184, 0.6);
+      background: rgba(17, 24, 39, 0.95);
+      color: var(--text-soft);
+    }
+
+    .tag.high {
+      border-color: rgba(248, 250, 252, 0.6);
+      background: rgba(248, 250, 252, 0.05);
+      color: #facc15;
+    }
+
+    .tag.category {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    .tag-category-dot {
+      width: 9px;
+      height: 9px;
+      border-radius: 999px;
+    }
+
+    .tag-category-dot.blue { background: #38bdf8; }
+    .tag-category-dot.pink { background: #ec4899; }
+    .tag-category-dot.green { background: #22c55e; }
+    .tag-category-dot.orange { background: #fb923c; }
+    .tag-category-dot.gray { background: #6b7280; }
+
+    .email-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      justify-content: flex-end;
+    }
+
+    .btn-icon {
+      border-radius: 999px;
+      border: 1px solid rgba(148, 163, 184, 0.7);
+      background: rgba(15, 23, 42, 0.9);
+      color: var(--text-soft);
+      padding: 3px 7px;
+      font-size: 0.72rem;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      min-width: 0;
+    }
+
+    .btn-icon.starred {
+      color: #facc15;
+      border-color: #facc15;
+      background: rgba(250, 204, 21, 0.1);
+    }
+
+    .btn-icon.blocked {
+      color: #fecaca;
+      border-color: rgba(248, 113, 113, 0.9);
+      background: rgba(69, 10, 10, 0.9);
+    }
+
+    .btn-icon:hover {
+      transform: translateY(-0.5px);
+      border-color: rgba(129, 140, 248, 0.9);
+    }
+
+    .rules-panel, .stats-panel {
+      background: var(--bg-elevated-soft);
+      border-radius: var(--radius-lg);
+      border: 1px solid var(--border-subtle);
+      padding: 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      font-size: 0.78rem;
+    }
+
+    .panel-title {
+      font-size: 0.85rem;
+      font-weight: 600;
+    }
+
+    .panel-subtitle {
+      font-size: 0.74rem;
+      color: var(--text-soft);
+    }
+
+    .rules-list, .stats-list {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .rules-item, .stats-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 6px;
+      padding: 4px 6px;
+      border-radius: 9px;
+      background: rgba(15, 23, 42, 0.7);
+      border: 1px solid rgba(31, 41, 55, 0.9);
+    }
+
+    .rules-label {
+      display: flex;
+      flex-direction: column;
+      gap: 1px;
+    }
+
+    .rules-label-main {
+      font-size: 0.76rem;
+    }
+
+    .rules-label-sub {
+      font-size: 0.7rem;
+      color: var(--text-soft);
+    }
+
+    .stats-email {
+      font-size: 0.72rem;
+      color: var(--text-soft);
+    }
+
+    .stats-count {
+      font-size: 0.8rem;
+      font-weight: 500;
+    }
+
+    .badge-soft {
+      font-size: 0.68rem;
+      padding: 1px 7px;
+      border-radius: 999px;
+      background: rgba(15, 23, 42, 0.9);
+      border: 1px solid rgba(148, 163, 184, 0.7);
+      color: var(--text-soft);
+    }
+
+    .hint {
+      font-size: 0.7rem;
+      color: var(--text-soft);
+    }
+
+    .text-link {
+      color: #a5b4fc;
+      text-decoration: none;
+      border-bottom: 1px dotted rgba(129, 140, 248, 0.8);
+    }
+
+    .text-link:hover {
+      color: #c7d2fe;
+      border-bottom-style: solid;
+    }
+  </style>
+</head>
+<body>
+  <div class="app-shell">
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <div class="card">
+        <div class="sidebar-header">
+          <div class="sidebar-title">Mailkonten</div>
+          <div class="pill">
+            <span class="pill-dot"></span>
+            Nexus Mail
+          </div>
+        </div>
+
+        <div id="account-list" class="account-list"></div>
+
+        <div class="input-row">
+          <input
+            id="new-account-input"
+            type="email"
+            class="input"
+            placeholder="Weitere E-Mail hinzufügen"
+          />
+          <button class="btn" id="add-account-btn">+</button>
+        </div>
+
+        <div class="section-separator"></div>
+
+        <div class="sidebar-header">
+          <div class="sidebar-title">Bereiche (Labels)</div>
+          <span class="badge-soft" id="category-count-badge">0 aktiv</span>
+        </div>
+        <div id="category-chips" class="chip-row"></div>
+
+        <div class="input-row">
+          <input
+            id="new-category-input"
+            type="text"
+            class="input"
+            placeholder="Neuen Bereich anlegen (z.B. IHK, Arbeit)"
+          />
+          <button class="btn btn-secondary" id="add-category-btn">Label</button>
+        </div>
+
+      </div>
+    </aside>
+
+    <!-- Main -->
+    <main class="main">
+      <div class="card">
+        <div class="main-header">
+          <div class="main-title-block">
+            <div class="main-title">Mail Cockpit</div>
+            <div class="main-subtitle">
+              Sammle E-Mails aus mehreren Konten, blockiere Störer, markiere Wichtiges
+              und bereite alles für eine spätere KI-Auswertung vor.
+            </div>
+          </div>
+          <div class="search-row">
+            <input
+              id="search-input"
+              class="search-input"
+              type="text"
+              placeholder="In Betreff / Vorschauteil suchen..."
+            />
+            <button class="btn btn-secondary" id="reset-filters-btn">Filter zurücksetzen</button>
+          </div>
+        </div>
+
+        <div class="overview-grid" id="overview-grid">
+          <!-- Wird per JS mit Daten gefüllt -->
+        </div>
+
+        <div class="content-grid">
+          <!-- Email-Panel -->
+          <section class="email-panel">
+            <div class="email-filters">
+              <div class="email-filters-left">
+                <div id="folder-chips" class="chip-row"></div>
+              </div>
+              <div class="chip-row">
+                <div id="star-filter-chip" class="chip">
+                  ★ Nur markierte
+                </div>
+              </div>
+            </div>
+
+            <div class="email-list" id="email-list">
+              <!-- Emails werden per JS gerendert -->
+            </div>
+          </section>
+
+          <!-- Rules + Stats -->
+          <section class="rules-stats">
+            <div class="rules-panel">
+              <div class="panel-title">Regeln & KI (zukünftig)</div>
+              <div class="panel-subtitle">
+                Hier kannst du Bereiche definieren, nach Absender oder Stichworten filtern
+                und später eine KI entscheiden lassen, was wichtig ist.
+              </div>
+
+              <ul class="rules-list">
+                <li class="rules-item">
+                  <div class="rules-label">
+                    <span class="rules-label-main">Blockieren nach Absender</span>
+                    <span class="rules-label-sub">
+                      Absender landen direkt im Archiv / Spam-Bereich.
+                    </span>
+                  </div>
+                  <span class="badge-soft">aktiv über Button</span>
+                </li>
+                <li class="rules-item">
+                  <div class="rules-label">
+                    <span class="rules-label-main">Label nach Stichwort</span>
+                    <span class="rules-label-sub">
+                      z.B. Betreff enthält „IHK“ ⇒ Bereich „Prüfung“.
+                    </span>
+                  </div>
+                  <span class="badge-soft">geplant</span>
+                </li>
+                <li class="rules-item">
+                  <div class="rules-label">
+                    <span class="rules-label-main">KI-Priorisierung</span>
+                    <span class="rules-label-sub">
+                      KI bewertet Wichtigkeit anhand Inhalt & Absender.
+                    </span>
+                  </div>
+                  <span class="badge-soft">geplant</span>
+                </li>
+              </ul>
+
+              <div class="hint">
+                Später könnte ein Agent über
+                <span class="text-link">n8n + OpenAI</span> die Mails regelmäßig scannen,
+                sortieren und dir nur eine saubere Übersicht im Nexus zeigen.
+              </div>
+            </div>
+
+            <div class="stats-panel" style="margin-top: 12px;">
+              <div class="panel-title">Top-Absender & Häufigkeit</div>
+              <div class="panel-subtitle">
+                Wie oft haben sich bestimmte Absender gemeldet (basierend auf den
+                aktuell gefilterten Mails)?
+              </div>
+              <ul class="stats-list" id="stats-list">
+                <!-- per JS -->
+              </ul>
+            </div>
+          </section>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <script>
+    // -----------------------------------
+    // Mock-Daten & Zustand
+    // -----------------------------------
+
+    const accounts = [
+      { id: "acc-1", email: "jeremynanasi@gmx.de", label: "Privat" },
+      { id: "acc-2", email: "jn2002xox@gmail.com", label: "Haupt-Gmail" },
+      { id: "acc-3", email: "njeremy2002@gmail.com", label: "Zweit-Gmail" },
+    ];
+
+    const baseCategories = [
+      { id: "cat-all", name: "Alle", color: "gray" },
+      { id: "cat-privat", name: "Privat", color: "blue" },
+      { id: "cat-arbeit", name: "Arbeit", color: "green" },
+      { id: "cat-ihk", name: "IHK / Prüfung", color: "orange" },
+      { id: "cat-sonst", name: "Sonstiges", color: "pink" },
+    ];
+
+    // folder = inbox | archive | all
+    const folders = [
+      { id: "inbox", label: "Eingang" },
+      { id: "archive", label: "Archiv" },
+      { id: "all", label: "Alles" },
+    ];
+
+    // kleine Demo-E-Mails
+    const emails = [
+      {
+        id: "mail-1",
+        accountId: "acc-2",
+        fromName: "IHK Schwaben",
+        fromEmail: "info@ihk-schwaben.de",
+        subject: "Einladung zur Zwischenprüfung",
+        preview: "Sehr geehrter Herr Nánási, hiermit laden wir Sie zur Zwischenprüfung ein...",
+        categoryId: "cat-ihk",
+        importance: "hoch",
+        date: "2025-11-22T10:15:00Z",
+        archived: false,
+        starred: true,
+      },
+      {
+        id: "mail-2",
+        accountId: "acc-1",
+        fromName: "GMX Team",
+        fromEmail: "service@gmx.de",
+        subject: "Ihr Postfach ist fast voll",
+        preview: "Lieber Nutzer, Ihr Speicherplatz nähert sich dem Limit...",
+        categoryId: "cat-privat",
+        importance: "mittel",
+        date: "2025-11-21T09:00:00Z",
+        archived: false,
+        starred: false,
+      },
+      {
+        id: "mail-3",
+        accountId: "acc-3",
+        fromName: "Developer Akademie",
+        fromEmail: "support@developer-akademie.de",
+        subject: "Neue Aufgaben in deinem Kurs",
+        preview: "Hallo Jeremy, es gibt neue Inhalte im Fach JavaScript...",
+        categoryId: "cat-arbeit",
+        importance: "hoch",
+        date: "2025-11-20T18:30:00Z",
+        archived: false,
+        starred: true,
+      },
+      {
+        id: "mail-4",
+        accountId: "acc-2",
+        fromName: "Newsletter XY",
+        fromEmail: "spam@random-news.de",
+        subject: "Sie haben gewonnen!!!",
+        preview: "Klicken Sie jetzt hier und holen Sie sich Ihren Preis...",
+        categoryId: "cat-sonst",
+        importance: "niedrig",
+        date: "2025-11-19T12:45:00Z",
+        archived: false,
+        starred: false,
+      },
+      {
+        id: "mail-5",
+        accountId: "acc-1",
+        fromName: "PPE Stores GmbH",
+        fromEmail: "hr@ppe-stores.de",
+        subject: "Ausbildungsplan & Unterlagen",
+        preview: "Hallo Jeremy, im Anhang findest du den aktuellen Ausbildungsplan...",
+        categoryId: "cat-arbeit",
+        importance: "hoch",
+        date: "2025-11-18T08:10:00Z",
+        archived: true,
+        starred: true,
+      },
+    ];
+
+    let categories = [...baseCategories];
+    let selectedAccountId = "all"; // "all" oder accountId
+    let selectedFolderId = "inbox";
+    let selectedCategoryId = "cat-all";
+    let blockedSenders = new Set(); // fromEmail
+    let starFilterOnly = false;
+    let searchQuery = "";
+
+    // -----------------------------------
+    // Hilfsfunktionen
+    // -----------------------------------
+
+    function $(id) {
+      return document.getElementById(id);
+    }
+
+    function getCategoryById(id) {
+      return categories.find((c) => c.id === id) || categories[0];
+    }
+
+    function computeFilteredEmails() {
+      return emails.filter((mail) => {
+        // Account-Filter
+        if (selectedAccountId !== "all" && mail.accountId !== selectedAccountId) {
+          return false;
+        }
+        // Blocked
+        if (blockedSenders.has(mail.fromEmail)) {
+          return false;
+        }
+        // Folder-Filter
+        if (selectedFolderId === "inbox" && mail.archived) {
+          return false;
+        }
+        if (selectedFolderId === "archive" && !mail.archived) {
+          return false;
+        }
+        // Kategorie-Filter
+        if (selectedCategoryId !== "cat-all" && mail.categoryId !== selectedCategoryId) {
+          return false;
+        }
+        // Star-Filter
+        if (starFilterOnly && !mail.starred) {
+          return false;
+        }
+        // Such-Filter
+        if (searchQuery.trim() !== "") {
+          const q = searchQuery.toLowerCase();
+          const inSubject = mail.subject.toLowerCase().includes(q);
+          const inPreview = mail.preview.toLowerCase().includes(q);
+          if (!inSubject && !inPreview) return false;
+        }
+
+        return true;
+      });
+    }
+
+    function computeOverviewStats() {
+      const relevantEmails = computeFilteredEmails();
+      const total = relevantEmails.length;
+      const archivedCount = emails.filter((m) => m.archived).length;
+      const blockedCount = blockedSenders.size;
+      const starredCount = relevantEmails.filter((m) => m.starred).length;
+
+      return {
+        total,
+        archivedCount,
+        blockedCount,
+        starredCount,
+      };
+    }
+
+    function computeSenderStats() {
+      const relevantEmails = computeFilteredEmails();
+      const map = new Map(); // key: fromEmail, value: {email, name, count}
+      for (const mail of relevantEmails) {
+        const key = mail.fromEmail;
+        if (!map.has(key)) {
+          map.set(key, { email: key, name: mail.fromName, count: 0 });
+        }
+        map.get(key).count++;
+      }
+      return Array.from(map.values()).sort((a, b) => b.count - a.count);
+    }
+
+    function countEmailsForAccount(accountId) {
+      if (accountId === "all") return emails.length;
+      return emails.filter((m) => m.accountId === accountId && !m.archived).length;
+    }
+
+    // -----------------------------------
+    // Rendering
+    // -----------------------------------
+
+    function renderAccounts() {
+      const container = $("account-list");
+      container.innerHTML = "";
+
+      // "Alle Konten"-Item
+      const allItem = document.createElement("div");
+      allItem.className = "account-item" + (selectedAccountId === "all" ? " active" : "");
+      allItem.onclick = () => {
+        selectedAccountId = "all";
+        renderAll();
+      };
+      allItem.innerHTML = `
+        <div>
+          <div class="account-email">Alle Konten</div>
+          <div class="account-label">Gesamtübersicht</div>
+        </div>
+        <span class="badge-count">${emails.length}</span>
+      `;
+      container.appendChild(allItem);
+
+      // Einzel-Konten
+      for (const acc of accounts) {
+        const div = document.createElement("div");
+        div.className =
+          "account-item" + (selectedAccountId === acc.id ? " active" : "");
+        div.onclick = () => {
+          selectedAccountId = acc.id;
+          renderAll();
+        };
+        div.innerHTML = `
+          <div>
+            <div class="account-email">${acc.email}</div>
+            <div class="account-label">${acc.label || "Konto"}</div>
+          </div>
+          <span class="badge-count">${countEmailsForAccount(acc.id)}</span>
+        `;
+        container.appendChild(div);
+      }
+    }
+
+    function renderCategories() {
+      const container = $("category-chips");
+      container.innerHTML = "";
+
+      categories.forEach((cat) => {
+        const div = document.createElement("div");
+        div.className = "chip" + (selectedCategoryId === cat.id ? " active" : "");
+        const dotColor = cat.color || "gray";
+        div.innerHTML = `
+          <span class="chip-dot ${dotColor}"></span>
+          <span>${cat.name}</span>
+        `;
+        div.onclick = () => {
+          selectedCategoryId = cat.id;
+          renderAll();
+        };
+        container.appendChild(div);
+      });
+
+      $("category-count-badge").textContent = `${categories.length} aktiv`;
+    }
+
+    function renderFolderChips() {
+      const container = $("folder-chips");
+      container.innerHTML = "";
+
+      folders.forEach((f) => {
+        const div = document.createElement("div");
+        div.className = "chip" + (selectedFolderId === f.id ? " active" : "");
+        div.textContent = f.label;
+        div.onclick = () => {
+          selectedFolderId = f.id;
+          renderAll();
+        };
+        container.appendChild(div);
+      });
+    }
+
+    function renderOverview() {
+      const grid = $("overview-grid");
+      grid.innerHTML = "";
+      const stats = computeOverviewStats();
+
+      // Karte: sichtbare Mails
+      const card1 = document.createElement("div");
+      card1.className = "overview-card";
+      card1.innerHTML = `
+        <div class="overview-label">Sichtbare E-Mails</div>
+        <div class="overview-value">${stats.total}</div>
+        <div class="overview-caption">
+          Filtert nach Konto, Bereich, Ordner & Suche.
+        </div>
+      `;
+      grid.appendChild(card1);
+
+      // Karte: markierte & blockierte
+      const card2 = document.createElement("div");
+      card2.className = "overview-card";
+      card2.innerHTML = `
+        <div class="overview-label">Markiert & Blockiert</div>
+        <div class="overview-value">★ ${stats.starredCount}</div>
+        <div class="overview-caption">
+          Blockierte Absender: ${stats.blockedCount}
+        </div>
+      `;
+      grid.appendChild(card2);
+
+      // Karte: Archiv
+      const card3 = document.createElement("div");
+      card3.className = "overview-card";
+      card3.innerHTML = `
+        <div class="overview-label">Archiv</div>
+        <div class="overview-value">${stats.archivedCount}</div>
+        <div class="overview-caption">
+          Alles, was keine Regel trifft oder manuell verschoben wird.
+        </div>
+      `;
+      grid.appendChild(card3);
+    }
+
+    function renderEmails() {
+      const list = $("email-list");
+      list.innerHTML = "";
+
+      const items = computeFilteredEmails();
+      if (items.length === 0) {
+        const empty = document.createElement("div");
+        empty.style.padding = "12px";
+        empty.style.fontSize = "0.78rem";
+        empty.style.color = "var(--text-soft)";
+        empty.textContent = "Keine E-Mails für diese Filter gefunden.";
+        list.appendChild(empty);
+        return;
+      }
+
+      for (const mail of items) {
+        const row = document.createElement("div");
+        row.className = "email-item";
+
+        const cat = getCategoryById(mail.categoryId);
+        const colorClass = cat.color || "gray";
+
+        const importanceTag =
+          mail.importance === "hoch"
+            ? '<span class="tag high">Wichtig</span>'
+            : '<span class="tag">Normal</span>';
+
+        row.innerHTML = `
+          <div>
+            <div class="email-from-line">
+              <span class="email-from-name">${mail.fromName}</span>
+              <span class="email-from-email">&lt;${mail.fromEmail}&gt;</span>
+            </div>
+            <div class="email-subject">${mail.subject}</div>
+            <div class="email-preview">${mail.preview}</div>
+          </div>
+          <div class="email-meta">
+            ${importanceTag}
+            <span class="tag category">
+              <span class="tag-category-dot ${colorClass}"></span>
+              <span>${cat.name}</span>
+            </span>
+            <span class="tag">${mail.archived ? "Archiviert" : "Eingang"}</span>
+          </div>
+          <div class="email-actions">
+            <button class="btn-icon ${mail.starred ? "starred" : ""}" data-mail-id="${mail.id}" data-action="toggle-star">
+              ★
+            </button>
+            <button class="btn-icon" data-mail-id="${mail.id}" data-action="toggle-archive">
+              ⇄
+            </button>
+            <button class="btn-icon ${blockedSenders.has(mail.fromEmail) ? "blocked" : ""}" data-mail-id="${mail.id}" data-action="toggle-block">
+              🚫
+            </button>
+          </div>
+        `;
+
+        list.appendChild(row);
+      }
+    }
+
+    function renderStats() {
+      const list = $("stats-list");
+      list.innerHTML = "";
+      const stats = computeSenderStats();
+      if (stats.length === 0) {
+        const li = document.createElement("li");
+        li.className = "stats-item";
+        li.innerHTML =
+          '<span class="stats-email">Keine Daten für aktuelle Filter.</span>';
+        list.appendChild(li);
+        return;
+      }
+
+      stats.slice(0, 6).forEach((s) => {
+        const li = document.createElement("li");
+        li.className = "stats-item";
+        li.innerHTML = `
+          <div class="stats-email">
+            <div>${s.name}</div>
+            <div>${s.email}</div>
+          </div>
+          <div class="stats-count">${s.count}×</div>
+        `;
+        list.appendChild(li);
+      });
+    }
+
+    function renderStarFilterChip() {
+      const chip = $("star-filter-chip");
+      if (starFilterOnly) {
+        chip.classList.add("active");
+      } else {
+        chip.classList.remove("active");
+      }
+    }
+
+    function renderAll() {
+      renderAccounts();
+      renderCategories();
+      renderFolderChips();
+      renderOverview();
+      renderEmails();
+      renderStats();
+      renderStarFilterChip();
+    }
+
+    // -----------------------------------
+    // Events
+    // -----------------------------------
+
+    function setupEvents() {
+      $("add-account-btn").addEventListener("click", () => {
+        const val = $("new-account-input").value.trim();
+        if (!val) return;
+        const newAcc = {
+          id: "acc-" + (accounts.length + 1),
+          email: val,
+          label: "Neues Konto",
+        };
+        accounts.push(newAcc);
+        $("new-account-input").value = "";
+        renderAll();
+      });
+
+      $("add-category-btn").addEventListener("click", () => {
+        const val = $("new-category-input").value.trim();
+        if (!val) return;
+        const colors = ["blue", "pink", "green", "orange", "gray"];
+        const color = colors[categories.length % colors.length] || "gray";
+        const newCat = {
+          id: "cat-custom-" + (categories.length + 1),
+          name: val,
+          color,
+        };
+        categories.push(newCat);
+        $("new-category-input").value = "";
+        renderAll();
+      });
+
+      $("email-list").addEventListener("click", (e) => {
+        const btn = e.target.closest(".btn-icon");
+        if (!btn) return;
+        const mailId = btn.dataset.mailId;
+        const action = btn.dataset.action;
+        const mail = emails.find((m) => m.id === mailId);
+        if (!mail) return;
+
+        if (action === "toggle-star") {
+          mail.starred = !mail.starred;
+        }
+        if (action === "toggle-archive") {
+          mail.archived = !mail.archived;
+        }
+        if (action === "toggle-block") {
+          if (blockedSenders.has(mail.fromEmail)) {
+            blockedSenders.delete(mail.fromEmail);
+          } else {
+            blockedSenders.add(mail.fromEmail);
+          }
+        }
+
+        renderAll();
+      });
+
+      $("star-filter-chip").addEventListener("click", () => {
+        starFilterOnly = !starFilterOnly;
+        renderAll();
+      });
+
+      $("search-input").addEventListener("input", (e) => {
+        searchQuery = e.target.value || "";
+        renderAll();
+      });
+
+      $("reset-filters-btn").addEventListener("click", () => {
+        selectedAccountId = "all";
+        selectedFolderId = "inbox";
+        selectedCategoryId = "cat-all";
+        starFilterOnly = false;
+        blockedSenders = new Set();
+        searchQuery = "";
+        $("search-input").value = "";
+        renderAll();
+      });
+    }
+
+    // -----------------------------------
+    // Init
+    // -----------------------------------
+    renderAll();
+    setupEvents();
+  </script>
+</body>
+</html>
+

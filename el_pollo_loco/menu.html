@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="./startmenu.css">
+    <title>Startmenu - El Pollo Loco </title>
+</head>
+<body>
+        <div id="start-screen" class="overlay">
+        <div class="start-card">
+            <h1>El Pollo Loco</h1>
+            <p>Starte dein Abenteuer, sobald du bereit bist.</p>
+            <button onclick="startgame()" id="start-button" class="start-button">Start</button>
+        </div>
+    </div>
+
+    <main id="game-container" class="hidden">
+        <h1>El Pollo Loco</h1>
+        <canvas id="canvas" width="720" height="480"></canvas>
+    </main>
+</body>
+</html>
