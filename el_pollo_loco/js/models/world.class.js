@@ -54,64 +54,62 @@ class World {
         }
     }
 
-   checkCollisions() {
-        setInterval(() => {
-            this.level.enemies.forEach((enemy) => {
-                if (enemy instanceof Endboss) {
-                    return;
-                }
-
-                if (typeof enemy.isDead === 'function' && enemy.isDead()) {
-                    return;
-                }
-
-                if(this.character.isColliding(enemy)) {
-                    const isJumpAttack = this.character.speedY < 0
-                        && this.character.y + this.character.height <= enemy.y + (enemy.height * 0.75);
-
-                    if (isJumpAttack && typeof enemy.die === 'function') {
-                        enemy.die();
-                    } else {
-                        this.character.hit();
-                        this.statusBar.setPercentage(this.character.energy);
-                    }
-                }
-            });
-
-            for (let i = this.level.icons.length - 1; i >= 0; i--) {
-                const icon = this.level.icons[i];
-                if (this.character.isColliding(icon)) {
-                    this.collectIcon(i);
-                }
-            }
-            for (let i = this.level.salsa.length - 1; i >= 0; i--) {
-                const salsaBottle = this.level.salsa[i];
-                if (this.character.isColliding(salsaBottle)) {
-                    this.collectSalsa(i);
-                }
+    checkCollisions() {
+        this.level.enemies.forEach((enemy) => {
+            if (enemy instanceof Endboss) {
+                return;
             }
 
-            for (let i = this.throwableObject.length - 1; i >= 0; i--) {
-                const bottle = this.throwableObject[i];
+            if (typeof enemy.isDead === 'function' && enemy.isDead()) {
+                return;
+            }
 
-                for (let j = 0; j < this.level.enemies.length; j++) {
-                    const enemy = this.level.enemies[j];
+            if (this.character.isColliding(enemy)) {
+                const isJumpAttack = this.character.speedY < 0
+                    && this.character.y + this.character.height <= enemy.y + (enemy.height * 0.75);
 
-                    if (bottle.isColliding(enemy)) {
-                        enemy.hit(10);
-                        if (enemy instanceof Endboss) {
-                            if (enemy.energy <= 0 && typeof enemy.playDeathAnimation === 'function') {
-                                enemy.playDeathAnimation();
-                            } else if (typeof enemy.playHurtAnimation === 'function') {
-                                enemy.playHurtAnimation();
-                            }
+                if (isJumpAttack && typeof enemy.die === 'function') {
+                    enemy.die();
+                } else {
+                    this.character.hit();
+                    this.statusBar.setPercentage(this.character.energy);
+                }
+            }
+        });
+
+        for (let i = this.level.icons.length - 1; i >= 0; i--) {
+            const icon = this.level.icons[i];
+            if (this.character.isColliding(icon)) {
+                this.collectIcon(i);
+            }
+        }
+        for (let i = this.level.salsa.length - 1; i >= 0; i--) {
+            const salsaBottle = this.level.salsa[i];
+            if (this.character.isColliding(salsaBottle)) {
+                this.collectSalsa(i);
+            }
+        }
+
+        for (let i = this.throwableObject.length - 1; i >= 0; i--) {
+            const bottle = this.throwableObject[i];
+
+            for (let j = 0; j < this.level.enemies.length; j++) {
+                const enemy = this.level.enemies[j];
+
+                if (bottle.isColliding(enemy)) {
+                    enemy.hit(10);
+                    if (enemy instanceof Endboss) {
+                        if (enemy.energy <= 0 && typeof enemy.playDeathAnimation === 'function') {
+                            enemy.playDeathAnimation();
+                        } else if (typeof enemy.playHurtAnimation === 'function') {
+                            enemy.playHurtAnimation();
                         }
-                        this.throwableObject.splice(i, 1);
-                        break;
                     }
+                    this.throwableObject.splice(i, 1);
+                    break;
                 }
             }
-        }, 200);
+        }
     }
 
     collectIcon(index) {

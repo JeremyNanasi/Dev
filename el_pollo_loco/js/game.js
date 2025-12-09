@@ -1,12 +1,34 @@
 let canvas;
 let world;
-let keyboard = new Keyboard(); 
+let keyboard = new Keyboard();
+let gameStarted = false;
 
 function init() {
     canvas = document.getElementById('canvas');
-    world = new World(canvas, keyboard);    
+    world = new World(canvas, keyboard);
 }
 
+function startGame() {
+    if (gameStarted) {
+        return;
+    }
+
+    gameStarted = true;
+    document.getElementById('game-container')?.classList.remove('hidden');
+    init();
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+    const params = new URLSearchParams(window.location.search);
+    const shouldStart = params.get('start') === '1';
+
+    if (!shouldStart) {
+        window.location.replace('menu.html');
+        return;
+    }
+
+    startGame();
+});
 
 window.addEventListener("keydown", (e) => {
     if(e.keyCode == 39) {

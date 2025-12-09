@@ -1,23 +1,37 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="de" translate="no">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="./startmenu.css">
-    <title>Startmenu - El Pollo Loco </title>
+    <link rel="stylesheet" href="./style.css">
+    <title>El Pollo Loco - Start</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=New+Rocker&display=swap" rel="stylesheet">
 </head>
 <body>
-        <div id="start-screen" class="overlay">
-        <div class="start-card">
-            <h1>El Pollo Loco</h1>
-            <p>Starte dein Abenteuer, sobald du bereit bist.</p>
-            <button onclick="startgame()" id="start-button" class="start-button">Start</button>
-        </div>
-    </div>
+    <main class="menu-page">
+        <section class="menu-grid">
+            <section class="menu-card">
+                <h1>El Pollo Loco</h1>
+                <p>Alles ist geladen. Drücke auf Start, um dein Abenteuer zu beginnen.</p>
+                <div class="menu-actions">
+                    <a href="index.html?start=1" class="start-button" role="button">Start</a>
+                </div>
+            </section>
 
-    <main id="game-container" class="hidden">
-        <h1>El Pollo Loco</h1>
-        <canvas id="canvas" width="720" height="480"></canvas>
+            <section class="menu-card info-card">
+                <h2>Steuerung</h2>
+                <ul class="menu-list">
+                    <li><span class="key">← →</span> Bewegen</li>
+                    <li><span class="key">↑</span> Springen</li>
+                    <li><span class="key">Space</span> Wurf</li>
+                    <li><span class="key">D</span> Flasche werfen</li>
+                </ul>
+                <p class="hint">Tippe zuerst auf Start, damit das Spiel startet und die Welt geladen wird.</p>
+            </section>
+        </section>
     </main>
 </body>
 </html>
