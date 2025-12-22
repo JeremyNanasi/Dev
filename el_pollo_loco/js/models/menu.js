@@ -1,6 +1,6 @@
 document.addEventListener('DOMContentLoaded', () => {
     const toggleButton = document.getElementById('controls-toggle');
-    const menuList = document.querySelector('.menu-list');
+    const menuList = document.getElementById('controls-list');
 
     if (!toggleButton || !menuList) {
         return;
@@ -9,15 +9,10 @@ document.addEventListener('DOMContentLoaded', () => {
     let expanded = false;
 
     const updateUi = () => {
-        if (expanded) {
-            menuList.classList.remove('collapsed');
-            toggleButton.setAttribute('aria-expanded', 'true');
-            toggleButton.textContent = 'Steuerung verbergen';
-        } else {
-            menuList.classList.add('collapsed');
-            toggleButton.setAttribute('aria-expanded', 'false');
-            toggleButton.textContent = 'Steuerung anzeigen';
-        }
+        menuList.classList.toggle('collapsed', !expanded);
+        toggleButton.setAttribute('aria-expanded', expanded ? 'true' : 'false');
+        toggleButton.textContent = expanded ? 'Steuerung verbergen' : 'Steuerung anzeigen';
+        toggleButton.classList.toggle('is-expanded', expanded);
     };
 
     toggleButton.addEventListener('click', () => {

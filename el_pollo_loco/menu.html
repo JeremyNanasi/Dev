@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="./style.css">
     <link rel="stylesheet" href="./startmenu.css">
+    <script src="./menu.js" defer></script>
     <title>El Pollo Loco - Start</title>
 
     <script src="./js/models/menu.js"></script>
@@ -26,10 +27,10 @@
 
             <section class="menu-card info-card">
                 <h2>Steuerung</h2>
-                <button class="menu-toggle" id="controls-toggle" type="button" aria-expanded="false">
+                <button class="menu-toggle" id="controls-toggle" type="button" aria-expanded="false" aria-controls="controls-list">
                     Steuerung anzeigen
                 </button>
-                <ul class="menu-list">
+                <ul id="controls-list" class="menu-list">
                     <li><span class="key">← →</span> Bewegen</li>
                     <li><span class="key">↑</span> Springen</li>
                     <li><span class="key">Space</span> Wurf</li>

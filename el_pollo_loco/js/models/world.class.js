@@ -10,11 +10,20 @@ class World {
     collectedSalsa = 0;
     lastThrowTime = 0;
     throwCooldownMs = 500;
+    totalCoins = 0;
+    totalSalsaBottles = 0;
+    coinsCounterEl = null;
+    bottlesCounterEl = null;
 
     constructor(canvas, keyboard) {
         this.ctx = canvas.getContext('2d');
         this.canvas = canvas;
         this.keyboard = keyboard;
+        this.cacheHudElements();
+        this.totalCoins = this.level.icons?.length || 0;
+        this.totalSalsaBottles = this.level.salsa?.length || 0;
+        this.updateCoinCounter();
+        this.updateSalsaCounter();
         this.draw();
         this.setWorld();
         this.checkCollisions();
@@ -51,6 +60,7 @@ class World {
             this.throwableObject.push(bottle);
             this.collectedSalsa -= 1;
             this.lastThrowTime = now;
+            this.updateSalsaCounter();
         }
     }
 
@@ -114,6 +124,7 @@ class World {
 
     collectIcon(index) {
         this.level.icons.splice(index, 1);
+        this.updateCoinCounter();
     }
 
     collectSalsa(index) {
@@ -122,6 +133,7 @@ class World {
             bottle.stopGroundAnimation();
         }
         this.collectedSalsa += 1;
+        this.updateSalsaCounter();
     }
 
         handleThrowableCollisions() {
@@ -201,5 +213,28 @@ class World {
     flipImageBack(mo) {
         mo.x = mo.x * - 1;
         this.ctx.restore();
+    }
+
+    
+    cacheHudElements() {
+        this.coinsCounterEl = document.getElementById('coins-counter');
+        this.bottlesCounterEl = document.getElementById('bottles-counter');
+    }
+
+    updateCoinCounter() {
+        if (!this.coinsCounterEl) {
+            return;
+        }
+
+        const collected = this.totalCoins - (this.level.icons?.length || 0);
+        this.coinsCounterEl.textContent = `${collected}/${this.totalCoins}`;
+    }
+
+    updateSalsaCounter() {
+        if (!this.bottlesCounterEl) {
+            return;
+        }
+
+        this.bottlesCounterEl.textContent = `${this.collectedSalsa}/${this.totalSalsaBottles}`;
     }
 }
