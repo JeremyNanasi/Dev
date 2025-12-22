@@ -22,6 +22,9 @@ class ThrowableObject extends MoveableObject {
     ];
 
     groundAnimationInterval;
+    gravityInterval;
+    rotationInterval;
+    groundY = 360;
 
     constructor(x, y, options = {}) {
         super();
@@ -70,15 +73,65 @@ class ThrowableObject extends MoveableObject {
         }
     }
 
-    throw(x, y) {
+   throw(x, y) {
         this.stopGroundAnimation();
         this.x = x;
         this.y = y;
         this.speedY = 30;
         this.applyGravity();
-        setInterval(() => {
+        this.startRotation();
+    }   
+
+    startRotation() {
+        this.stopRotation();
+        this.rotationInterval = setInterval(() => {
             this.playAnimation(this.IMAGE_ROTATION);
             this.x += 10;
         }, 25);
-    }   
+    }
+
+    stopRotation() {
+        if (this.rotationInterval) {
+            clearInterval(this.rotationInterval);
+            this.rotationInterval = null;
+        }
+    }
+
+    applyGravity() {
+        this.stopGravity();
+        this.gravityInterval = setInterval(() => {
+            const isAboveGround = this.y < this.groundY || this.speedY > 0;
+
+            if (isAboveGround) {
+                this.y -= this.speedY;
+                this.speedY -= this.acceleration;
+            } else {
+                this.y = this.groundY;
+                this.speedY = 0;
+                this.stopGravity();
+                this.stopRotation();
+                this.playSplash();
+            }
+        }, 1000 / 25);
+    }
+
+    stopGravity() {
+        if (this.gravityInterval) {
+            clearInterval(this.gravityInterval);
+            this.gravityInterval = null;
+        }
+    }
+
+    playSplash() {
+        let frameIndex = 0;
+        const frameDelay = 80;
+        const splashInterval = setInterval(() => {
+            this.img = this.imageCache[this.IMAGE_SPLASH[frameIndex]];
+            frameIndex++;
+
+            if (frameIndex >= this.IMAGE_SPLASH.length) {
+                clearInterval(splashInterval);
+            }
+        }, frameDelay);
+    }
 }
