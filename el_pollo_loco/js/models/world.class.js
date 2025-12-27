@@ -26,6 +26,7 @@ class World {
         this.totalSalsaBottles = this.level.salsa?.length || 0;
         this.updateCoinCounter();
         this.updateSalsaCounter();
+        this.updateStatusBars();
         this.draw();
         this.setWorld();
         this.checkCollisions();
@@ -63,6 +64,7 @@ class World {
             this.collectedSalsa -= 1;
             this.lastThrowTime = now;
             this.updateSalsaCounter();
+            this.updateStatusBars();
         }
     }
 
@@ -127,6 +129,7 @@ class World {
     collectIcon(index) {
         this.level.icons.splice(index, 1);
         this.updateCoinCounter();
+        this.updateStatusBars();
     }
 
     collectSalsa(index) {
@@ -136,6 +139,7 @@ class World {
         }
         this.collectedSalsa += 1;
         this.updateSalsaCounter();
+        this.updateStatusBars();
     }
 
         handleThrowableCollisions() {
@@ -248,5 +252,30 @@ class World {
         }
 
         this.bottlesCounterEl.textContent = `${this.collectedSalsa}/${this.totalSalsaBottles}`;
+    }
+
+        updateStatusBars() {
+        if (this.iconsStatusBar) {
+            const collectedCoins = this.totalCoins - (this.level.icons?.length || 0);
+            this.iconsStatusBar.setPercentage(this.getSegmentedPercentage(collectedCoins, this.totalCoins));
+        }
+
+        if (this.bottlesStatusBar) {
+            this.bottlesStatusBar.setPercentage(
+                this.getSegmentedPercentage(this.collectedSalsa, this.totalSalsaBottles)
+            );
+        }
+    }
+
+    getSegmentedPercentage(collected, total) {
+        if (!total || total <= 0) {
+            return 0;
+        }
+
+        const segmentSize = total / 5;
+        const segmentIndex = Math.ceil(collected / segmentSize);
+        const percentage = segmentIndex * 20;
+
+        return Math.max(0, Math.min(100, percentage));
     }
 }

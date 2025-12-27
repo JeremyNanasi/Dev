@@ -6,6 +6,10 @@ let gameOverShown = false;
 let gameOverOverlay;
 let controlsLocked = false;
 const GAME_OVER_STYLE_ID = 'game-over-animations';
+let endOverlayShown = false;
+let endOverlayElement;
+const DEFAULT_CANVAS_WIDTH = 720;
+const DEFAULT_CANVAS_HEIGHT = 480;
 
 
 function init() {
@@ -13,6 +17,7 @@ function init() {
     world = new World(canvas, keyboard);
     ensureGameOverStyles();
     startGameOverWatcher();
+    resizeCanvas();
 }
 
 function startGame() {
@@ -34,25 +39,87 @@ document.addEventListener('DOMContentLoaded', () => {
         return;
     }
 
+    setupFullscreenToggle();
     startGame();
 });
 
+function setupFullscreenToggle() {
+    const toggleButton = document.getElementById('fullscreen-toggle');
+    if (!toggleButton) {
+        return;
+    }
+
+    const updateButtonState = () => {
+        const isFullscreen = Boolean(document.fullscreenElement);
+        toggleButton.textContent = isFullscreen ? 'Vollbild verlassen' : 'Vollbild';
+        toggleButton.classList.toggle('is-active', isFullscreen);
+    };
+
+    toggleButton.addEventListener('click', () => {
+        if (document.fullscreenElement) {
+            document.exitFullscreen?.();
+        } else {
+            canvas?.requestFullscreen?.();
+        }
+    });
+
+    document.addEventListener('fullscreenchange', () => {
+        updateButtonState();
+        resizeCanvas();
+    });
+    updateButtonState();
+}
+
+function resizeCanvas() {
+    if (!canvas) {
+        return;
+    }
+
+    if (document.fullscreenElement === canvas) {
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+    } else {
+        canvas.width = DEFAULT_CANVAS_WIDTH;
+        canvas.height = DEFAULT_CANVAS_HEIGHT;
+    }
+}
+
+window.addEventListener('resize', resizeCanvas);
+
 function startGameOverWatcher() {
-    if (gameOverOverlay) {
-        gameOverOverlay.remove();
+    if (endOverlayElement) {
+        endOverlayElement.remove();
     }
     gameOverOverlay = null;
+    endOverlayElement = null;
     gameOverShown = false;
+    endOverlayShown = false;
     controlsLocked = false;
+    resetKeyboard();
 
     const loop = () => {
         const isDead = world?.character?.isDead?.();
-        if (isDead && !gameOverShown) {
-            showGameOverOverlay();
+        const boss = world?.level?.enemies?.find((enemy) => enemy instanceof Endboss);
+        const bossDefeated = boss && (boss.isDeadState || boss.energy <= 0);
+
+        if (isDead && !endOverlayShown) {
+            showEndOverlay({
+                imgSrc: './img/9_intro_outro_screens/game_over/game over.png',
+                alt: 'Game Over',
+                hint: '⏎ Enter – zurück zum Menü'
+            });
             gameOverShown = true;
+            endOverlayShown = true;
+        } else if (bossDefeated && !endOverlayShown) {
+            showEndOverlay({
+                imgSrc: './img/You won, you lost/Game over A.png',
+                alt: 'You Won',
+                hint: '⏎ Enter – zurück zum Menü'
+            });
+            endOverlayShown = true;
         }
 
-        if (!gameOverShown) {
+        if (!endOverlayShown) {
             requestAnimationFrame(loop);
         }
     };
@@ -60,7 +127,7 @@ function startGameOverWatcher() {
     requestAnimationFrame(loop);
 }
 
-function showGameOverOverlay() {
+function showEndOverlay({ imgSrc, alt, hint }) {
     const overlay = document.createElement('div');
     overlay.id = 'game-over-overlay';
     overlay.style.position = 'fixed';
@@ -73,17 +140,35 @@ function showGameOverOverlay() {
     overlay.style.flexDirection = 'column';
 
     const img = document.createElement('img');
-    img.src = './img/9_intro_outro_screens/game_over/game over.png';
-    img.alt = 'Game Over';
+    img.src = imgSrc;
+    img.alt = alt;
     img.style.width = '600px';
     img.style.maxWidth = '90vw';
     img.style.height = 'auto';
     img.style.filter = 'drop-shadow(0 12px 24px rgba(0,0,0,0.55))';
     img.style.animation = 'gameOverPop 0.5s ease-out forwards, gameOverPulse 1.2s ease-in-out 0.5s infinite alternate';
 
+    const hintEl = document.createElement('div');
+    hintEl.textContent = hint;
+    hintEl.style.marginTop = '20px';
+    hintEl.style.padding = '10px 14px';
+    hintEl.style.borderRadius = '10px';
+    hintEl.style.background = 'rgba(0,0,0,0.55)';
+    hintEl.style.color = '#fff';
+    hintEl.style.fontFamily = 'Inter, Arial, sans-serif';
+    hintEl.style.fontWeight = '700';
+    hintEl.style.letterSpacing = '0.6px';
+    hintEl.style.boxShadow = '0 10px 20px rgba(0,0,0,0.35)';
+
     overlay.appendChild(img);
+    overlay.appendChild(hintEl);
+    const overlayRoot = document.fullscreenElement || document.body;
+    overlayRoot.appendChild(overlay);
     document.body.appendChild(overlay);
     gameOverOverlay = overlay;
+    endOverlayElement = overlay;
+    controlsLocked = true;
+    resetKeyboard();
 }
 
 function ensureGameOverStyles() {
@@ -107,7 +192,7 @@ function ensureGameOverStyles() {
 }
 
 window.addEventListener("keydown", (e) => {
-        if (controlsLocked && e.keyCode === 13) {
+    if (controlsLocked && e.keyCode === 13) {
         window.location.href = 'menu.html';
         return;
     }
@@ -115,6 +200,7 @@ window.addEventListener("keydown", (e) => {
     if (controlsLocked) {
         return;
     }
+
     if(e.keyCode == 39) {
         keyboard.RIGHT = true;
     }
