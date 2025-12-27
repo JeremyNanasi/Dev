@@ -81,23 +81,9 @@ function showGameOverOverlay() {
     img.style.filter = 'drop-shadow(0 12px 24px rgba(0,0,0,0.55))';
     img.style.animation = 'gameOverPop 0.5s ease-out forwards, gameOverPulse 1.2s ease-in-out 0.5s infinite alternate';
 
-    const hint = document.createElement('div');
-    hint.textContent = '⏎ Enter – zurück zum Menü';
-    hint.style.marginTop = '20px';
-    hint.style.padding = '10px 14px';
-    hint.style.borderRadius = '10px';
-    hint.style.background = 'rgba(0,0,0,0.55)';
-    hint.style.color = '#fff';
-    hint.style.fontFamily = 'Inter, Arial, sans-serif';
-    hint.style.fontWeight = '700';
-    hint.style.letterSpacing = '0.6px';
-    hint.style.boxShadow = '0 10px 20px rgba(0,0,0,0.35)';
-
     overlay.appendChild(img);
-    overlay.appendChild(hint);
     document.body.appendChild(overlay);
     gameOverOverlay = overlay;
-    controlsLocked = true;
 }
 
 function ensureGameOverStyles() {

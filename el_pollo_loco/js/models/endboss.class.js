@@ -4,7 +4,7 @@ class Endboss extends MoveableObject {
     width = 385;
     y = 60;
     speed = 0.8;
-    energy = 120;
+    energy = 50;
     startMovingDistance = 1000;
     stopDistance = 1500;
     world;
