@@ -160,17 +160,25 @@ class World {
         this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
 
         this.ctx.translate(this.camera_x, 0);
-        this.addobjectsToMap(this.level.backgroundObjects);
+        const backgroundObjects = this.level.backgroundObjects || [];
+        const airLayer = backgroundObjects.filter((obj) =>
+            typeof obj.img?.src === 'string'
+                ? obj.img.src.includes('/5_background/layers/air.png')
+                : obj.imagePath?.includes('/5_background/layers/air.png')
+        );
+        const otherLayers = backgroundObjects.filter((obj) => !airLayer.includes(obj));
+        this.addobjectsToMap(airLayer);
         this.addobjectsToMap(this.level.clouds);
+        this.addobjectsToMap(otherLayers);
 
         this.ctx.translate(-this.camera_x, 0);
         this.addToMap(this.statusBar);
         this.addToMap(this.iconsStatusBar);
         this.addToMap(this.bottlesStatusBar);
         this.ctx.translate(this.camera_x, 0);
-        
-        this.addobjectsToMap(this.level.enemies);
+
         this.addToMap(this.character);
+        this.addobjectsToMap(this.level.enemies);
         this.addobjectsToMap(this.level.icons);
         this.addobjectsToMap(this.level.salsa);
         this.addobjectsToMap(this.throwableObject);
