@@ -162,7 +162,8 @@ function showEndOverlay({ imgSrc, alt, hint }) {
 
     overlay.appendChild(img);
     overlay.appendChild(hintEl);
-    const overlayRoot = document.fullscreenElement || document.body;
+        const fullscreenRoot = document.fullscreenElement;
+    const overlayRoot = fullscreenRoot && fullscreenRoot !== canvas ? fullscreenRoot : document.body;
     overlayRoot.appendChild(overlay);
     document.body.appendChild(overlay);
     gameOverOverlay = overlay;
