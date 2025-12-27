@@ -113,6 +113,7 @@ class World {
                 if (bottle.isColliding(enemy)) {
                     enemy.hit(10);
                     if (enemy instanceof Endboss) {
+                        enemy.updateHealthBar?.();
                         if (enemy.energy <= 0 && typeof enemy.playDeathAnimation === 'function') {
                             enemy.playDeathAnimation();
                         } else if (typeof enemy.playHurtAnimation === 'function') {
@@ -180,6 +181,13 @@ class World {
         this.addToMap(this.iconsStatusBar);
         this.addToMap(this.bottlesStatusBar);
         this.ctx.translate(this.camera_x, 0);
+
+        this.level.enemies.forEach((enemy) => {
+            if (enemy instanceof Endboss && enemy.healthBar) {
+                enemy.updateHealthBar?.();
+                this.addToMap(enemy.healthBar);
+            }
+        });
 
         this.addToMap(this.character);
         this.addobjectsToMap(this.level.enemies);

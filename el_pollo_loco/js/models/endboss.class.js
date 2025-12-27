@@ -79,6 +79,7 @@ class Endboss extends MoveableObject {
         this.loadImages(this.HURT_ENDBOSS);
         this.loadImages(this.DEAD_ENDBOSS);
         this.x = 2500;
+        this.healthBar = new StatusBar('endboss');
         this.startWalkingAnimation();
         this.animate();
     }
@@ -313,6 +314,7 @@ class Endboss extends MoveableObject {
         }
 
         this.isDeadState = true;
+        this.healthBar?.setPercentage(0);
 
         if (this.walkInterval) {
             clearInterval(this.walkInterval);
@@ -381,5 +383,16 @@ class Endboss extends MoveableObject {
         const endbossCenter = this.x + this.width / 2;
         const characterCenter = this.world.character.x + this.world.character.width / 2;
         this.otherDirection = characterCenter > endbossCenter;
+    }
+
+    updateHealthBar() {
+        if (!this.healthBar) {
+            return;
+        }
+
+        const percentage = Math.max(0, Math.min(100, (this.energy / 50) * 100));
+        this.healthBar.setPercentage(percentage);
+        this.healthBar.x = this.x + (this.width / 2) - 35;
+        this.healthBar.y = this.y - 60;
     }
 }
