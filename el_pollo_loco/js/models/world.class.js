@@ -6,6 +6,8 @@ class World {
     keyboard;
     camera_x = 0;
     statusBar = new StatusBar();
+    iconsStatusBar = new StatusBar('icons');
+    bottlesStatusBar = new StatusBar('bottles');
     throwableObject = [];
     collectedSalsa = 0;
     lastThrowTime = 0;
@@ -159,14 +161,16 @@ class World {
 
         this.ctx.translate(this.camera_x, 0);
         this.addobjectsToMap(this.level.backgroundObjects);
+        this.addobjectsToMap(this.level.clouds);
 
         this.ctx.translate(-this.camera_x, 0);
         this.addToMap(this.statusBar);
+        this.addToMap(this.iconsStatusBar);
+        this.addToMap(this.bottlesStatusBar);
         this.ctx.translate(this.camera_x, 0);
-
-        this.addobjectsToMap(this.level.clouds);
-        this.addToMap(this.character);
+        
         this.addobjectsToMap(this.level.enemies);
+        this.addToMap(this.character);
         this.addobjectsToMap(this.level.icons);
         this.addobjectsToMap(this.level.salsa);
         this.addobjectsToMap(this.throwableObject);

@@ -136,26 +136,9 @@ class Character extends MoveableObject {
         }, 150); 
     }
 
-    animate() {
+ animate() {
         setInterval(() => {
             const now = Date.now();
-
-            if (this.world.keyboard.RIGHT && this.x < this.world.level.level_end_x) {
-                this.moveRight();
-                this.otherDirection = false;
-                this.registerMovement(now);
-            }
-            if (this.world.keyboard.LEFT && this.x > 0) {
-                this.moveLeft();
-                this.otherDirection = true;
-                this.registerMovement(now);
-            }
-            if (this.world.keyboard.UP && !this.isAboveGround()) {
-                this.jump();
-                this.registerMovement(now);
-            }
-
-            this.world.camera_x = -this.x + 100;
 
             if (this.isDead()) {
                 if (now - this.lastFrameTime.dead > this.frameTimers.dead) {
@@ -163,6 +146,23 @@ class Character extends MoveableObject {
                     this.playAnimationDead(this.IMAGES_DEAD);
                 }
             } else if (this.energy !== 0) {
+                if (this.world.keyboard.RIGHT && this.x < this.world.level.level_end_x) {
+                    this.moveRight();
+                    this.otherDirection = false;
+                    this.registerMovement(now);
+                }
+                if (this.world.keyboard.LEFT && this.x > 0) {
+                    this.moveLeft();
+                    this.otherDirection = true;
+                    this.registerMovement(now);
+                }
+                if (this.world.keyboard.UP && !this.isAboveGround()) {
+                    this.jump();
+                    this.registerMovement(now);
+                }
+
+                this.world.camera_x = -this.x + 100;
+
                 if (this.isHurt()) {
                     if (now - this.lastFrameTime.hurt > this.frameTimers.hurt) {
                         this.lastFrameTime.hurt = now;

@@ -48,24 +48,24 @@ class StatusBar extends DrawableObject {
                 images: this.IMAGES,
                 x: 40,
                 y: 10,
-                width: 60,
-                height: 230,
+                width: 50,
+                height: 180,
                 percentage: 100
             },
             icons: {
                 images: this.IMAGES_ICONS_STATUSBAR,
                 x: 40,
-                y: 80,
-                width: 48,
-                height: 200,
+                y: 50,
+                width: 50,
+                height: 180,
                 percentage: 0
             },
             bottles: {
                 images: this.IMAGES_BOTTLES_STATUSBAR,
                 x: 40,
-                y: 140,
-                width: 48,
-                height: 200,
+                y: 90,
+                width: 50,
+                height: 180,
                 percentage: 0
             }
         };
