@@ -75,9 +75,10 @@ function resizeCanvas() {
         return;
     }
 
-    if (document.fullscreenElement === canvas) {
-        canvas.width = window.innerWidth;
-        canvas.height = window.innerHeight;
+    if (document.fullscreenElement && fullscreenTarget && document.fullscreenElement === fullscreenTarget) {
+        const size = Math.min(window.innerWidth, window.innerHeight);
+        canvas.width = Math.max(1, Math.floor(size));
+        canvas.height = Math.max(1, Math.floor(size));
     } else {
         canvas.width = DEFAULT_CANVAS_WIDTH;
         canvas.height = DEFAULT_CANVAS_HEIGHT;
