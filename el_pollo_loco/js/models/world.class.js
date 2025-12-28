@@ -206,7 +206,7 @@ class World {
         if (this.character?.isDead?.() && this.gameOverImage.complete) {
                         this.drawEndScreen(this.gameOverImage, 'gameOverStartTime');
         } else if (this.isBossDefeated() && this.winImage.complete) {
-            this.drawEndScreen(this.winImage, 'winStartTime');
+            this.drawEndScreen(this.winImage, 'winStartTime', { baseScale: 0.92, pulseAmplitude: 0.02 });
         }
 
         const animationFrame = window.requestAnimationFrame
@@ -222,13 +222,13 @@ class World {
         return Boolean(boss && (boss.isDeadState || boss.energy <= 0));
     }
 
-    drawEndScreen(image, timerKey) {
+    drawEndScreen(image, timerKey, options = {}) {
+        const { baseScale = 1.05, pulseAmplitude = 0.03 } = options;
         if (!this[timerKey]) {
             this[timerKey] = Date.now();
         }
         const elapsed = (Date.now() - this[timerKey]) / 1000;
-        const pulse = Math.sin(elapsed * Math.PI) * 0.03;
-        const baseScale = 1.05;
+        const pulse = Math.sin(elapsed * Math.PI) * pulseAmplitude;
         const scale = baseScale + pulse;
         const drawWidth = this.canvas.width * scale;
         const drawHeight = this.canvas.height * scale;
