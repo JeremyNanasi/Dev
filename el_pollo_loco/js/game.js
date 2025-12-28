@@ -104,13 +104,7 @@ function startGameOverWatcher() {
         const bossDefeated = boss && (boss.isDeadState || boss.energy <= 0);
 
         if (isDead && !endOverlayShown) {
-            showEndOverlay({
-                imgSrc: './img/9_intro_outro_screens/game_over/game over.png',
-                alt: 'Game Over',
-                hint: '⏎ Enter – zurück zum Menü'
-            });
-            gameOverShown = true;
-            endOverlayShown = true;
+            triggerGameOverOverlay();
         } else if (bossDefeated && !endOverlayShown) {
             showEndOverlay({
                 imgSrc: './img/You won, you lost/Game over A.png',
@@ -126,6 +120,20 @@ function startGameOverWatcher() {
     };
 
     requestAnimationFrame(loop);
+}
+
+function triggerGameOverOverlay() {
+    if (endOverlayShown) {
+        return;
+    }
+
+    showEndOverlay({
+        imgSrc: './img/9_intro_outro_screens/game_over/game over.png',
+        alt: 'Game Over',
+        hint: '⏎ Enter – zurück zum Menü'
+    });
+    gameOverShown = true;
+    endOverlayShown = true;
 }
 
 function showEndOverlay({ imgSrc, alt, hint }) {
@@ -163,7 +171,7 @@ function showEndOverlay({ imgSrc, alt, hint }) {
 
     overlay.appendChild(img);
     overlay.appendChild(hintEl);
-        const fullscreenRoot = document.fullscreenElement;
+    const fullscreenRoot = document.fullscreenElement;
     const overlayRoot = fullscreenRoot && fullscreenRoot !== canvas ? fullscreenRoot : document.body;
     overlayRoot.appendChild(overlay);
     document.body.appendChild(overlay);

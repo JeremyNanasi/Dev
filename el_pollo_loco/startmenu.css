@@ -44,18 +44,10 @@ body {
     box-shadow: 0 18px 32px rgba(0, 0, 0, 0.35);
 }
 
-.menu-card,
-.start-card {
-    background: rgba(255, 255, 255, 0.9);
-    color: #111;
-    border-radius: 16px;
-    padding: 32px 40px;
-    margin-bottom: 20px;
-    text-align: center;
-    max-width: 520px;
-    width: 100%;
-    box-shadow: 0 18px 32px rgba(0, 0, 0, 0.35);
-}
+.list-style-none {
+    display: flex;
+    list-style: none;
+} 
 
 .menu-card p,
 .start-card p {

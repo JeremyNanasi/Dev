@@ -16,11 +16,17 @@ class World {
     totalSalsaBottles = 0;
     coinsCounterEl = null;
     bottlesCounterEl = null;
+    gameOverImage = new Image();
+    winImage = new Image();
+    gameOverStartTime = null;
+        winStartTime = null;
 
     constructor(canvas, keyboard) {
         this.ctx = canvas.getContext('2d');
         this.canvas = canvas;
         this.keyboard = keyboard;
+        this.gameOverImage.src = './img/9_intro_outro_screens/game_over/game over.png';
+        this.winImage.src = './img/You won, you lost/You Win A.png';
         this.cacheHudElements();
         this.totalCoins = this.level.icons?.length || 0;
         this.totalSalsaBottles = this.level.salsa?.length || 0;
@@ -197,12 +203,39 @@ class World {
 
         this.ctx.translate(-this.camera_x, 0);
 
+        if (this.character?.isDead?.() && this.gameOverImage.complete) {
+                        this.drawEndScreen(this.gameOverImage, 'gameOverStartTime');
+        } else if (this.isBossDefeated() && this.winImage.complete) {
+            this.drawEndScreen(this.winImage, 'winStartTime');
+        }
+
         const animationFrame = window.requestAnimationFrame
             || window.webkitRequestAnimationFrame
             || window.mozRequestAnimationFrame
             || ((callback) => setTimeout(callback, 1000 / 60));
 
         animationFrame(() => this.draw());
+    }
+
+        isBossDefeated() {
+        const boss = this.level.enemies?.find((enemy) => enemy instanceof Endboss);
+        return Boolean(boss && (boss.isDeadState || boss.energy <= 0));
+    }
+
+    drawEndScreen(image, timerKey) {
+        if (!this[timerKey]) {
+            this[timerKey] = Date.now();
+        }
+        const elapsed = (Date.now() - this[timerKey]) / 1000;
+        const pulse = Math.sin(elapsed * Math.PI) * 0.03;
+        const baseScale = 1.05;
+        const scale = baseScale + pulse;
+        const drawWidth = this.canvas.width * scale;
+        const drawHeight = this.canvas.height * scale;
+        const drawX = (this.canvas.width - drawWidth) / 2;
+        const drawY = (this.canvas.height - drawHeight) / 2;
+        this.ctx.fillStyle = '#000';
+        this.ctx.drawImage(image, drawX, drawY, drawWidth, drawHeight);
     }
 
     addobjectsToMap(objects) {

@@ -218,4 +218,11 @@ class Character extends MoveableObject {
 
         return true;
     }
+
+    hit(amount = 5) {
+        super.hit(amount);
+        if (this.energy <= 0 && typeof window.showGameOverOverlay === 'function') {
+            window.showGameOverOverlay();
+        }
+    }
 }
