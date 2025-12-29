@@ -105,12 +105,19 @@ function startGameOverWatcher() {
 
         if (isDead && !endOverlayShown) {
             triggerGameOverOverlay();
+            controlsLocked = true;
         } else if (bossDefeated && !endOverlayShown) {
             showEndOverlay({
-                imgSrc: './img/You won, you lost/Game over A.png',
+                imgSrc: './img/You won, you lost/You Win A.png',
                 alt: 'You Won',
-                hint: '⏎ Enter – zurück zum Menü'
+                hint: '⏎ Enter – zurück zum Menü',
+                fit: 'contain',
+                width: '85vw',
+                height: '85vh',
+                maxWidth: '900px',
+                maxHeight: '600px'
             });
+            controlsLocked = true;
             endOverlayShown = true;
         }
 
@@ -123,7 +130,7 @@ function startGameOverWatcher() {
 }
 
 function triggerGameOverOverlay() {
-    if (endOverlayShown) {
+    if (endOverlayShown || gameOverOverlay) {
         return;
     }
 
@@ -147,6 +154,9 @@ function showEndOverlay({ imgSrc, alt, hint }) {
     overlay.style.background = 'transparent';
     overlay.style.zIndex = '9999';
     overlay.style.flexDirection = 'column';
+    if (gameOverOverlay) {
+        return;
+    }
 
     const img = document.createElement('img');
     img.src = imgSrc;
@@ -201,8 +211,12 @@ function ensureGameOverStyles() {
     document.head.appendChild(style);
 }
 
+window.showGameOverOverlay = triggerGameOverOverlay;
+
 window.addEventListener("keydown", (e) => {
-    if (controlsLocked && e.keyCode === 13) {
+    const isEnter = e.key === 'Enter' || e.code === 'Enter' || e.code === 'NumpadEnter' || e.keyCode === 13;
+    if ((controlsLocked || endOverlayShown) && isEnter) {
+        e.preventDefault();
         window.location.href = 'menu.html';
         return;
     }
