@@ -214,6 +214,11 @@ function ensureGameOverStyles() {
 window.showGameOverOverlay = triggerGameOverOverlay;
 
 window.addEventListener("keydown", (e) => {
+        if (e.keyCode === 13 && world?.isBossDefeated?.()) {
+        window.location.href = 'menu.html';
+        return;
+    }
+
     const isEnter = e.key === 'Enter' || e.code === 'Enter' || e.code === 'NumpadEnter' || e.keyCode === 13;
     if ((controlsLocked || endOverlayShown) && isEnter) {
         e.preventDefault();

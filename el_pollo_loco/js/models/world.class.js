@@ -295,7 +295,7 @@ class World {
         this.bottlesCounterEl.textContent = `${this.collectedSalsa}/${this.totalSalsaBottles}`;
     }
 
-        updateStatusBars() {
+    updateStatusBars() {
         if (this.iconsStatusBar) {
             const collectedCoins = this.totalCoins - (this.level.icons?.length || 0);
             this.iconsStatusBar.setPercentage(this.getSegmentedPercentage(collectedCoins, this.totalCoins));

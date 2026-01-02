@@ -215,7 +215,6 @@ class Character extends MoveableObject {
             this.img = this.imageCache[frames[frameIndex]];
             this.lastIdleFrameTime = now;
         }
-
         return true;
     }
 
