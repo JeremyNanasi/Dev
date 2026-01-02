@@ -144,28 +144,21 @@ function triggerGameOverOverlay() {
 }
 
 function showEndOverlay({ imgSrc, alt, hint }) {
-    const overlay = document.createElement('div');
-    overlay.id = 'game-over-overlay';
-    overlay.style.position = 'fixed';
-    overlay.style.inset = '0';
-    overlay.style.display = 'flex';
-    overlay.style.alignItems = 'center';
-    overlay.style.justifyContent = 'center';
-    overlay.style.background = 'transparent';
-    overlay.style.zIndex = '9999';
-    overlay.style.flexDirection = 'column';
+    const overlay = document.createElement('div'); 
+    // overlay.id = 'game-over-overlay';
+    // overlay.style.position = 'fixed';
+    // overlay.style.inset = '0';
+    // overlay.style.display = 'flex';
+    // overlay.style.alignItems = 'center';
+    // overlay.style.justifyContent = 'center';
+    // overlay.style.background = 'transparent';
+    // overlay.style.zIndex = '9999';
+    // overlay.style.flexDirection = 'column';
     if (gameOverOverlay) {
         return;
     }
 
     const img = document.createElement('img');
-    img.src = imgSrc;
-    img.alt = alt;
-    img.style.width = '600px';
-    img.style.maxWidth = '90vw';
-    img.style.height = 'auto';
-    img.style.filter = 'drop-shadow(0 12px 24px rgba(0,0,0,0.55))';
-    img.style.animation = 'gameOverPop 0.5s ease-out forwards, gameOverPulse 1.2s ease-in-out 0.5s infinite alternate';
 
     const hintEl = document.createElement('div');
     hintEl.textContent = hint;
@@ -226,6 +219,10 @@ window.addEventListener("keydown", (e) => {
         return;
     }
 
+    if (world?.isBossDefeated?.()) {
+        return;
+    }
+
     if (controlsLocked) {
         return;
     }
@@ -256,7 +253,11 @@ window.addEventListener("keydown", (e) => {
 });
 
 window.addEventListener("keyup", (e) => {
-        if (controlsLocked) {
+    if (world?.isBossDefeated?.()) {
+        return;
+    }
+    
+    if (controlsLocked) {
         return;
     }
 
