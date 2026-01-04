@@ -187,10 +187,6 @@ class Endboss extends MoveableObject {
         return distanceAhead >= 0 && distanceAhead <= this.alertDistance;
     }
 
-    isCharacterWithinAttackRange(distanceAhead) {
-        return distanceAhead >= 0 && distanceAhead <= this.attackDistance;
-    }
-
     canStartAttack(distanceAhead) {
         if (!this.world?.character) return false;
 
