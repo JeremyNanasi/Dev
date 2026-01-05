@@ -85,8 +85,9 @@ class World {
             }
 
             if (this.character.isColliding(enemy)) {
+                const enemyHeight = enemy.getHitboxHeight?.() ?? enemy.height;
                 const isJumpAttack = this.character.speedY < 0
-                    && this.character.y + this.character.height <= enemy.y + (enemy.height * 0.75);
+                    && this.character.y + this.character.height <= enemy.y + (enemyHeight * 2.0);
 
                 if (isJumpAttack && typeof enemy.die === 'function') {
                     enemy.die();
