@@ -84,10 +84,16 @@ class World {
                 return;
             }
 
-            if (this.character.isColliding(enemy)) {
-                const enemyHeight = enemy.getHitboxHeight?.() ?? enemy.height;
+            const characterRect = this.getHitboxRect(this.character);
+            const enemyRect = this.getHitboxRect(enemy);
+            const isColliding = this.isRectOverlapping(characterRect, enemyRect);
+
+            if (isColliding) {
+                const stompWindow = Math.max(5, enemyRect.height * 0.2);
+                const characterBottom = characterRect.y + characterRect.height;
                 const isJumpAttack = this.character.speedY < 0
-                    && this.character.y + this.character.height <= enemy.y + (enemyHeight * 2.0);
+                    && characterBottom >= enemyRect.y
+                    && characterBottom <= enemyRect.y + stompWindow;
 
                 if (isJumpAttack && typeof enemy.die === 'function') {
                     enemy.die();
@@ -319,5 +325,25 @@ class World {
         const percentage = segmentIndex * 20;
 
         return Math.max(0, Math.min(100, percentage));
+    }
+
+        getHitboxRect(object) {
+        const x = object.getHitboxX?.() ?? object.x;
+        const y = object.getHitboxY?.() ?? object.y;
+        const width = object.getHitboxWidth?.() ?? object.width;
+        const height = object.getHitboxHeight?.() ?? object.height;
+        return {
+            x: x ?? 0,
+            y: y ?? 0,
+            width: width ?? 0,
+            height: height ?? 0
+        };
+    }
+
+    isRectOverlapping(a, b) {
+        return a.x + a.width > b.x
+            && a.x < b.x + b.width
+            && a.y + a.height > b.y
+            && a.y < b.y + b.height;
     }
 }
