@@ -61,10 +61,12 @@ class World {
             && now - this.lastThrowTime >= this.throwCooldownMs;
 
         if (canThrow) {
+            const throwDirection = this.character.otherDirection ? -1 : 1;
+            const offsetX = throwDirection === -1 ? -20 : 100;
             const bottle = new ThrowableObject(
-                this.character.x + 100,
+                this.character.x + offsetX,
                 this.character.y + 100,
-                { isCollectible: false }
+                { isCollectible: false, direction: throwDirection }
             );
             this.throwableObject.push(bottle);
             this.collectedSalsa -= 1;
@@ -106,13 +108,17 @@ class World {
 
         for (let i = this.level.icons.length - 1; i >= 0; i--) {
             const icon = this.level.icons[i];
-            if (this.character.isColliding(icon)) {
+            const characterRect = this.getHitboxRect(this.character);
+            const iconRect = this.getHitboxRect(icon);
+            if (this.isRectOverlapping(characterRect, iconRect)) {
                 this.collectIcon(i);
             }
         }
         for (let i = this.level.salsa.length - 1; i >= 0; i--) {
             const salsaBottle = this.level.salsa[i];
-            if (this.character.isColliding(salsaBottle)) {
+            const characterRect = this.getHitboxRect(this.character);
+            const salsaRect = this.getHitboxRect(salsaBottle);
+            if (this.isRectOverlapping(characterRect, salsaRect)) {
                 this.collectSalsa(i);
             }
         }

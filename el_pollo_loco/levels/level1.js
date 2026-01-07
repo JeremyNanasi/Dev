@@ -1,21 +1,26 @@
+const endbossSpawnX = 2500;
+const bottleMinX = 200;
+const bottleMaxX = endbossSpawnX - 500;
+const randomBottleX = () => bottleMinX + Math.random() * (bottleMaxX - bottleMinX);
+
 level1 = new Level(
     [
-        new Chicken(),
-        new Chicken(),
-        new Chicken(),
-        new Chicken(),
-        new Chicken(),
-        new Chicken(),
-        new Chicken(),
-        new Chicken(),
-        new Chicken(),
-        new smallchicken({ isSmall: true }),
-        new smallchicken({ isSmall: true }),
-        new smallchicken({ isSmall: true }),
-        new smallchicken({ isSmall: true }),
-        new smallchicken({ isSmall: true }),
-        new smallchicken({ isSmall: true }),
-        new Endboss()
+        // new Chicken(),
+        // new Chicken(),
+        // new Chicken(),
+        // new Chicken(),
+        // new Chicken(),
+        // new Chicken(),
+        // new Chicken(),
+        // new Chicken(),
+        // new Chicken(),
+        // new smallchicken({ isSmall: true }),
+        // new smallchicken({ isSmall: true }),
+        // new smallchicken({ isSmall: true }),
+        // new smallchicken({ isSmall: true }),
+        // new smallchicken({ isSmall: true }),
+        // new smallchicken({ isSmall: true }),
+        // new Endboss()
     ],
     [
         new Cloud(),
@@ -54,14 +59,15 @@ level1 = new Level(
         new Icons({ x: -750 + Math.random() * 750*3 + 800 })
     ],
     [
-        new ThrowableObject(450, 360, { isCollectible: true }),
-        new ThrowableObject(900, 360, { isCollectible: true }),
-        new ThrowableObject(900, 360, { isCollectible: true }),
-        new ThrowableObject(900, 360, { isCollectible: true }),
-        new ThrowableObject(900, 360, { isCollectible: true }),
-        new ThrowableObject(900, 360, { isCollectible: true }),
-        new ThrowableObject(900, 360, { isCollectible: true }),
-        new ThrowableObject(900, 360, { isCollectible: true })
+        new ThrowableObject(randomBottleX(), 360, { isCollectible: true }),
+        new ThrowableObject(randomBottleX(), 360, { isCollectible: true }),
+        new ThrowableObject(randomBottleX(), 360, { isCollectible: true }),
+        new ThrowableObject(randomBottleX(), 360, { isCollectible: true }),
+        new ThrowableObject(randomBottleX(), 360, { isCollectible: true }),
+        new ThrowableObject(randomBottleX(), 360, { isCollectible: true }),
+        new ThrowableObject(randomBottleX(), 360, { isCollectible: true }),
+        new ThrowableObject(randomBottleX(), 360, { isCollectible: true }),
+        new ThrowableObject(randomBottleX(), 360, { isCollectible: true })
     ],
         
     [

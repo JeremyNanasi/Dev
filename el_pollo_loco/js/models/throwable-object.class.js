@@ -25,6 +25,7 @@ class ThrowableObject extends MoveableObject {
     gravityInterval;
     rotationInterval;
     groundY = 360;
+    throwDirection = 1;
 
     constructor(x, y, options = {}) {
         super();
@@ -38,6 +39,7 @@ class ThrowableObject extends MoveableObject {
 
         const hasCoordinates = typeof x === 'number' && typeof y === 'number';
         const isCollectible = options.isCollectible ?? !hasCoordinates;
+        this.throwDirection = options.direction ?? 1;
 
         if (isCollectible) {
             this.spawnCollectible(
@@ -73,11 +75,14 @@ class ThrowableObject extends MoveableObject {
         }
     }
 
-   throw(x, y) {
+    throw(x, y) {
         this.stopGroundAnimation();
         this.x = x;
         this.y = y;
         this.speedY = 30;
+        this.currentImage = 0;
+        this.img = this.imageCache[this.IMAGE_ROTATION[0]];
+        this.otherDirection = false;
         this.applyGravity();
         this.startRotation();
     }   
@@ -86,6 +91,7 @@ class ThrowableObject extends MoveableObject {
         this.stopRotation();
         this.rotationInterval = setInterval(() => {
             this.playAnimation(this.IMAGE_ROTATION);
+            this.x += 10 * this.throwDirection;
             this.x += 10;
         }, 25);
     }
@@ -133,5 +139,21 @@ class ThrowableObject extends MoveableObject {
                 clearInterval(splashInterval);
             }
         }, frameDelay);
+    }
+
+    isColliding(mo) {
+        const thisX = this.getHitboxX();
+        const thisY = this.getHitboxY();
+        const thisWidth = this.getHitboxWidth();
+        const thisHeight = this.getHitboxHeight();
+        const moX = mo.getHitboxX?.() ?? mo.x;
+        const moY = mo.getHitboxY?.() ?? mo.y;
+        const moWidth = mo.getHitboxWidth?.() ?? mo.width;
+        const moHeight = mo.getHitboxHeight?.() ?? mo.height;
+
+        return thisX + thisWidth > moX
+            && thisX < moX + moWidth
+            && thisY + thisHeight > moY
+            && thisY < moY + moHeight;
     }
 }
