@@ -1,4 +1,4 @@
-let canvas;
+let  canvas;
 let world;
 let keyboard = new Keyboard();
 let gameStarted = false;
@@ -10,7 +10,14 @@ let endOverlayShown = false;
 let endOverlayElement;
 const DEFAULT_CANVAS_WIDTH = 720;
 const DEFAULT_CANVAS_HEIGHT = 480;
-
+const KEYBOARD_CODE_MAP = {
+    39: 'RIGHT',
+    37: 'LEFT',
+    38: 'UP',
+    40: 'DOWN',
+    32: 'SPACE',
+    68: 'D'
+};
 
 function init() {
     canvas = document.getElementById('canvas');
@@ -30,12 +37,18 @@ function startGame() {
     init();
 }
 
-document.addEventListener('DOMContentLoaded', () => {
+function shouldStartGame() {
     const params = new URLSearchParams(window.location.search);
-    const shouldStart = params.get('start') === '1';
+    return params.get('start') === '1';
+}
 
-    if (!shouldStart) {
-        window.location.replace('menu.html');
+function redirectToMenu() {
+    window.location.replace('menu.html');
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+    if (!shouldStartGame()) {
+        redirectToMenu();
         return;
     }
 
@@ -44,30 +57,42 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 function setupFullscreenToggle() {
-    const toggleButton = document.getElementById('fullscreen-toggle');
+    const toggleButton = getFullscreenToggleButton();
     if (!toggleButton) {
         return;
     }
 
-    const updateButtonState = () => {
-        const isFullscreen = Boolean(document.fullscreenElement);
-        toggleButton.textContent = isFullscreen ? 'Vollbild verlassen' : 'Vollbild';
-        toggleButton.classList.toggle('is-active', isFullscreen);
-    };
+    registerFullscreenListeners(toggleButton);
+}
 
-    toggleButton.addEventListener('click', () => {
-        if (document.fullscreenElement) {
-            document.exitFullscreen?.();
-        } else {
-            canvas?.requestFullscreen?.();
-        }
-    });
+function getFullscreenToggleButton() {
+    return document.getElementById('fullscreen-toggle');
+}
 
-    document.addEventListener('fullscreenchange', () => {
-        updateButtonState();
-        resizeCanvas();
-    });
-    updateButtonState();
+function registerFullscreenListeners(toggleButton) {
+    toggleButton.addEventListener('click', () => handleFullscreenToggleClick());
+    document.addEventListener('fullscreenchange', () => handleFullscreenChange(toggleButton));
+    updateFullscreenButtonState(toggleButton);
+}
+
+function handleFullscreenToggleClick() {
+    if (document.fullscreenElement) {
+        document.exitFullscreen?.();
+        return;
+    }
+
+    canvas?.requestFullscreen?.();
+}
+
+function handleFullscreenChange(toggleButton) {
+    updateFullscreenButtonState(toggleButton);
+    resizeCanvas();
+}
+
+function updateFullscreenButtonState(toggleButton) {
+    const isFullscreen = Boolean(document.fullscreenElement);
+    toggleButton.textContent = isFullscreen ? 'Vollbild verlassen' : 'Vollbild';
+    toggleButton.classList.toggle('is-active', isFullscreen);
 }
 
 function resizeCanvas() {
@@ -88,38 +113,11 @@ function resizeCanvas() {
 window.addEventListener('resize', resizeCanvas);
 
 function startGameOverWatcher() {
-    if (endOverlayElement) {
-        endOverlayElement.remove();
-    }
-    gameOverOverlay = null;
-    endOverlayElement = null;
-    gameOverShown = false;
-    endOverlayShown = false;
-    controlsLocked = false;
-    resetKeyboard();
+    resetGameOverState();
 
     const loop = () => {
-        const isDead = world?.character?.isDead?.();
-        const boss = world?.level?.enemies?.find((enemy) => enemy instanceof Endboss);
-        const bossDefeated = boss && (boss.isDeadState || boss.energy <= 0);
-
-        if (isDead && !endOverlayShown) {
-            triggerGameOverOverlay();
-            controlsLocked = true;
-        } else if (bossDefeated && !endOverlayShown) {
-            showEndOverlay({
-                imgSrc: './img/You won, you lost/You Win A.png',
-                alt: 'You Won',
-                hint: '⏎ Enter – zurück zum Menü',
-                fit: 'contain',
-                width: '85vw',
-                height: '85vh',
-                maxWidth: '900px',
-                maxHeight: '600px'
-            });
-            controlsLocked = true;
-            endOverlayShown = true;
-        }
+        const status = getGameOverStatus();
+        handleGameOverStatus(status);
 
         if (!endOverlayShown) {
             requestAnimationFrame(loop);
@@ -127,6 +125,83 @@ function startGameOverWatcher() {
     };
 
     requestAnimationFrame(loop);
+}
+
+function resetGameOverState() {
+    if (endOverlayElement) {
+        endOverlayElement.remove();
+    }
+
+    gameOverOverlay = null;
+    endOverlayElement = null;
+    gameOverShown = false;
+    endOverlayShown = false;
+    controlsLocked = false;
+    resetKeyboard();
+}
+
+function getGameOverStatus() {
+    if (world?.character?.isDead?.()) {
+        return 'dead';
+    }
+
+    const boss = getBoss();
+    if (isBossDefeated(boss)) {
+        return 'bossDefeated';
+    }
+
+    return null;
+}
+
+function getBoss() {
+    return world?.level?.enemies?.find((enemy) => enemy instanceof Endboss);
+}
+
+function isBossDefeated(boss) {
+    return boss && (boss.isDeadState || boss.energy <= 0);
+}
+
+function handleGameOverStatus(status) {
+    if (status === 'dead') {
+        handlePlayerDead();
+        return;
+    }
+
+    if (status === 'bossDefeated') {
+        handleBossDefeated();
+    }
+}
+
+function handlePlayerDead() {
+    if (endOverlayShown) {
+        return;
+    }
+
+    triggerGameOverOverlay();
+    controlsLocked = true;
+}
+
+function handleBossDefeated() {
+    if (endOverlayShown) {
+        return;
+    }
+
+    showEndOverlay(getBossDefeatedOverlayConfig());
+    controlsLocked = true;
+    endOverlayShown = true;
+}
+
+function getBossDefeatedOverlayConfig() {
+    return {
+        imgSrc: './img/You won, you lost/You Win A.png',
+        alt: 'You Won',
+        hint: '⏎ Enter – zurück zum Menü',
+        fit: 'contain',
+        width: '85vw',
+        height: '85vh',
+        maxWidth: '900px',
+        maxHeight: '600px'
+    };
 }
 
 function triggerGameOverOverlay() {
@@ -144,40 +219,57 @@ function triggerGameOverOverlay() {
 }
 
 function showEndOverlay({ imgSrc, alt, hint }) {
-    const overlay = document.createElement('div'); 
-    // overlay.id = 'game-over-overlay';
-    // overlay.style.position = 'fixed';
-    // overlay.style.inset = '0';
-    // overlay.style.display = 'flex';
-    // overlay.style.alignItems = 'center';
-    // overlay.style.justifyContent = 'center';
-    // overlay.style.background = 'transparent';
-    // overlay.style.zIndex = '9999';
-    // overlay.style.flexDirection = 'column';
     if (gameOverOverlay) {
         return;
     }
 
-    const img = document.createElement('img');
+    const overlay = createEndOverlay();
+    const img = createEndOverlayImage(imgSrc, alt);
+    const hintEl = createEndOverlayHint(hint);
+    appendEndOverlay(overlay, img, hintEl);
+    setEndOverlayState(overlay);
+}
 
+function createEndOverlay() {
+    return document.createElement('div');
+}
+
+function createEndOverlayImage() {
+    return document.createElement('img');
+}
+
+function createEndOverlayHint(hint) {
     const hintEl = document.createElement('div');
     hintEl.textContent = hint;
-    hintEl.style.marginTop = '20px';
-    hintEl.style.padding = '10px 14px';
-    hintEl.style.borderRadius = '10px';
-    hintEl.style.background = 'rgba(0,0,0,0.55)';
-    hintEl.style.color = '#fff';
-    hintEl.style.fontFamily = 'Inter, Arial, sans-serif';
-    hintEl.style.fontWeight = '700';
-    hintEl.style.letterSpacing = '0.6px';
-    hintEl.style.boxShadow = '0 10px 20px rgba(0,0,0,0.35)';
+    applyHintStyles(hintEl);
+    return hintEl;
+}
 
+function applyHintStyles(hintEl) {
+    Object.assign(hintEl.style, {
+        marginTop: '20px',
+        padding: '10px 14px',
+        borderRadius: '10px',
+        background: 'rgba(0,0,0,0.55)',
+        color: '#fff',
+        fontFamily: 'Inter, Arial, sans-serif',
+        fontWeight: '700',
+        letterSpacing: '0.6px',
+        boxShadow: '0 10px 20px rgba(0,0,0,0.35)'
+    });
+}
+
+function appendEndOverlay(overlay, img, hintEl) {
     overlay.appendChild(img);
     overlay.appendChild(hintEl);
+
     const fullscreenRoot = document.fullscreenElement;
     const overlayRoot = fullscreenRoot && fullscreenRoot !== canvas ? fullscreenRoot : document.body;
     overlayRoot.appendChild(overlay);
     document.body.appendChild(overlay);
+}
+
+function setEndOverlayState(overlay) {
     gameOverOverlay = overlay;
     endOverlayElement = overlay;
     controlsLocked = true;
@@ -189,9 +281,19 @@ function ensureGameOverStyles() {
         return;
     }
 
+    const style = buildGameOverStyleElement();
+    document.head.appendChild(style);
+}
+
+function buildGameOverStyleElement() {
     const style = document.createElement('style');
     style.id = GAME_OVER_STYLE_ID;
-    style.textContent = `
+    style.textContent = getGameOverStyleText();
+    return style;
+}
+
+function getGameOverStyleText() {
+    return `
         @keyframes gameOverPop {
             0% { transform: scale(0); opacity: 0; }
             100% { transform: scale(1); opacity: 1; }
@@ -201,87 +303,75 @@ function ensureGameOverStyles() {
             100% { transform: scale(0.9); }
         }
     `;
-    document.head.appendChild(style);
 }
 
 window.showGameOverOverlay = triggerGameOverOverlay;
 
 window.addEventListener("keydown", (e) => {
-        if (e.keyCode === 13 && world?.isBossDefeated?.()) {
-        window.location.href = 'menu.html';
+    if (handleEnterMenuNavigation(e)) {
         return;
     }
-
-    const isEnter = e.key === 'Enter' || e.code === 'Enter' || e.code === 'NumpadEnter' || e.keyCode === 13;
-    if ((controlsLocked || endOverlayShown) && isEnter) {
-        e.preventDefault();
-        window.location.href = 'menu.html';
+    if (handleLockedEnter(e)) {
         return;
     }
-
-    if (world?.isBossDefeated?.()) {
+    if (shouldIgnoreInput()) {
         return;
     }
-
-    if (controlsLocked) {
-        return;
-    }
-
-    if(e.keyCode == 39) {
-        keyboard.RIGHT = true;
-    }
-
-    if(e.keyCode == 37) {
-        keyboard.LEFT = true;
-    }
-
-    if(e.keyCode == 38) {
-        keyboard.UP = true;
-    }
-
-    if(e.keyCode == 40) {
-        keyboard.DOWN = true;
-    }
-
-    if(e.keyCode == 32) {
-        keyboard.SPACE = true;
-    }
-
-    if(e.keyCode == 68) {
-        keyboard.D = true;
-    }
+    setKeyboardState(e.keyCode, true);
 });
 
-window.addEventListener("keyup", (e) => {
-    if (world?.isBossDefeated?.()) {
+function handleEnterMenuNavigation(e) {
+    if (e.keyCode === 13 && isBossDefeated()) {
+        navigateToMenu();
+        return true;
+    }
+
+    return false;
+}
+
+function handleLockedEnter(e) {
+    if ((controlsLocked || endOverlayShown) && isEnterKey(e)) {
+        e.preventDefault();
+        navigateToMenu();
+        return true;
+    }
+
+    return false;
+}
+
+function shouldIgnoreInput() {
+    return isBossDefeated() || controlsLocked;
+}
+
+function isEnterKey(e) {
+    return e.key === 'Enter' || e.code === 'Enter' || e.code === 'NumpadEnter' || e.keyCode === 13;
+}
+
+function isBossDefeated() {
+    return world?.isBossDefeated?.();
+}
+
+function navigateToMenu() {
+    window.location.href = 'menu.html';
+}
+
+function setKeyboardState(keyCode, isPressed) {
+    const key = KEYBOARD_CODE_MAP[keyCode];
+    if (!key) {
         return;
     }
-    
+
+    keyboard[key] = isPressed;
+}
+
+window.addEventListener("keyup", (e) => {
+    if (isBossDefeated()) {
+        return;
+    }
+
     if (controlsLocked) {
         return;
     }
 
-    if(e.keyCode == 39) {
-        keyboard.RIGHT = false;
-    }
-
-    if(e.keyCode == 37) {
-        keyboard.LEFT = false;
-    }
-
-    if(e.keyCode == 38) {
-        keyboard.UP = false;
-    }
-
-    if(e.keyCode == 40) {
-        keyboard.DOWN = false;
-    }
-
-    if(e.keyCode == 32) {
-        keyboard.SPACE = false;
-    }
-
-    if(e.keyCode == 68) {
-        keyboard.D = false;
-    }
+    setKeyboardState(e.keyCode, false);
 });
