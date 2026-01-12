@@ -1,10 +1,5 @@
 class World {
     character = new Character();
-        level = typeof level1 !== 'undefined'
-        ? level1
-        : (typeof Level !== 'undefined'
-            ? new Level()
-            : { enemies: [], clouds: [], icons: [], salsa: [], backgroundObjects: [] });
     level = level1;
     canvas;
     ctx;
@@ -67,7 +62,7 @@ class World {
 
     setWorld() {
         this.character.world = this;
-        (this.level.enemies ?? []).forEach((enemy) => {
+        this.level.enemies.forEach((enemy) => {
             enemy.world = this;
         });
     }
@@ -132,7 +127,7 @@ class World {
     }
 
     handleEnemyCollisions() {
-        (this.level.enemies ?? []).forEach((enemy) => {
+        this.level.enemies.forEach((enemy) => {
             if (this.shouldSkipEnemy(enemy)) {
                 return;
             }
@@ -156,20 +151,35 @@ class World {
     }
 
     resolveEnemyCollision(enemy, rects) {
-        if (this.isJumpAttack(rects) && typeof enemy.die === 'function') {
-            enemy.die();
+        if (this.isJumpAttack(rects)) {
+            if (typeof enemy.die === 'function') {
+                enemy.die();
+            }
+            this.character.speedY = 20;
             return;
         }
+        
         this.character.hit();
         this.statusBar.setPercentage(this.character.energy);
     }
 
     isJumpAttack(rects) {
-        const stompWindow = Math.max(5, rects.enemyRect.height * 0.2);
-        const characterBottom = rects.characterRect.y + rects.characterRect.height;
-        return this.character.speedY < 0
-            && characterBottom >= rects.enemyRect.y
-            && characterBottom <= rects.enemyRect.y + stompWindow;
+        const characterRect = rects.characterRect;
+        const enemyRect = rects.enemyRect;
+        
+        const isFalling = this.character.speedY < 0;
+        const isInAir = this.character.isAboveGround();
+        
+        const characterBottom = characterRect.y + characterRect.height;
+        const enemyTop = enemyRect.y;
+        const enemyMiddle = enemyRect.y + (enemyRect.height * 0.5);
+        
+        const isComingFromAbove = characterBottom <= enemyMiddle;
+        
+        const verticalOverlap = characterBottom - enemyTop;
+        const isSmallOverlap = verticalOverlap > 0 && verticalOverlap < (enemyRect.height * 0.6);
+        
+        return isFalling && isInAir && isComingFromAbove && isSmallOverlap;
     }
 
     handleIconCollisions() {
@@ -203,9 +213,8 @@ class World {
     }
 
     isBottleHittingEnemy(bottle) {
-        const enemies = this.level.enemies ?? [];
-        for (let j = 0; j < enemies.length; j++) {
-            const enemy = enemies[j];
+        for (let j = 0; j < this.level.enemies.length; j++) {
+            const enemy = this.level.enemies[j];
             if (bottle.isColliding(enemy)) {
                 this.applyBottleHit(enemy);
                 return true;
@@ -309,7 +318,7 @@ class World {
     }
 
     drawBossHealthBars() {
-        (this.level.enemies ?? []).forEach((enemy) => {
+        this.level.enemies.forEach((enemy) => {
             if (enemy instanceof Endboss && enemy.healthBar) {
                 enemy.updateHealthBar?.();
                 this.addToMap(enemy.healthBar);
