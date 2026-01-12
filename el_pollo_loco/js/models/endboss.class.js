@@ -108,47 +108,52 @@ class Endboss extends MoveableObject {
     }
 
     startMovement() {
-        if (this.movementInterval) {
-            clearInterval(this.movementInterval);
-        }
-
+        this.clearMovementInterval();
         this.movementInterval = setInterval(() => {
-            if (this.isHurting || this.isDeadState) {
-                return;
-            }
-
+            if (this.shouldSkipMovementTick()) return;
             this.updateFacingDirection();
             this.applyContactDamageIfColliding();
             const distanceAhead = this.getDistanceAhead();
-            const withinAttackRange = this.canStartAttack();
-            const withinAlertRange = this.isCharacterWithinAlertRange(distanceAhead);
-
-            if (withinAttackRange) {
-                this.startAttackAnimation();
-                return;
-            }
-
-            if (withinAlertRange && !this.isAlerting && !this.alertOnCooldown && !this.isAttacking) {
-                this.startAlertAnimation();
-                this.alertOnCooldown = true;
-                return;
-            }
-
-            if (!withinAlertRange && this.alertOnCooldown) {
-                this.alertOnCooldown = false;
-            }
-
-            if (this.shouldMove()) {
+            if (this.handleAttackOrAlert(distanceAhead)) return;
+            if (this.shouldMove(distanceAhead)) {
                 this.startWalkingAnimation();
                 this.moveLeft();
             }
         }, 1000 / 60);
     }
 
-    shouldMove() {
+    clearMovementInterval() {
+        if (!this.movementInterval) return;
+        clearInterval(this.movementInterval);
+        this.movementInterval = null;
+    }
+
+    shouldSkipMovementTick() {
+        return this.isHurting || this.isDeadState;
+    }
+
+    handleAttackOrAlert(distanceAhead) {
+        if (this.canStartAttack(distanceAhead)) {
+            this.startAttackAnimation();
+            return true;
+        }
+        return this.handleAlertState(distanceAhead);
+    }
+
+    handleAlertState(distanceAhead) {
+        const withinAlertRange = this.isCharacterWithinAlertRange(distanceAhead);
+        if (withinAlertRange && !this.isAlerting && !this.alertOnCooldown && !this.isAttacking) {
+            this.startAlertAnimation();
+            this.alertOnCooldown = true;
+            return true;
+        }
+        if (!withinAlertRange && this.alertOnCooldown) this.alertOnCooldown = false;
+        return false;
+    }
+
+    shouldMove(distanceAhead) {
         if (!this.world || !this.world.character || this.isAlerting || this.isAttacking || this.isHurting) return false;
         
-        const distanceAhead = this.getDistanceAhead();
         const stillAheadOfCharacter = distanceAhead >= - 100;
         const withinStartRange = distanceAhead <= this.startMovingDistance;
         const withinStopRange = distanceAhead <= this.stopDistance;
@@ -157,27 +162,33 @@ class Endboss extends MoveableObject {
     }
 
     startAlertAnimation() {
-        if (this.alertInterval) {
-            clearInterval(this.alertInterval);
-        }
+        this.clearAlertInterval();
+        this.prepareAlertState();
+        this.startAlertInterval();
+    }
 
+    clearAlertInterval() {
+        if (!this.alertInterval) return;
+        clearInterval(this.alertInterval);
+        this.alertInterval = null;
+        this.isAlerting = false;
+    }
+
+    prepareAlertState() {
         this.isAlerting = true;
         this.stopWalkingAnimation();
         this.currentImage = 0;
-
-        const frameDelay = this.frameTimers.alert || 200;
-
         this.img = this.imageCache[this.ALERT_ENBOSS[0]];
-        let frameIndex = 1;
+    }
 
+    startAlertInterval() {
+        const frameDelay = this.frameTimers.alert || 200;
+        let frameIndex = 1;
         this.alertInterval = setInterval(() => {
             this.img = this.imageCache[this.ALERT_ENBOSS[frameIndex]];
             frameIndex++;
-
             if (frameIndex >= this.ALERT_ENBOSS.length) {
-                clearInterval(this.alertInterval);
-                this.alertInterval = null;
-                this.isAlerting = false;
+                this.clearAlertInterval();
                 this.currentImage = 0;
             }
         }, frameDelay);
@@ -200,38 +211,41 @@ class Endboss extends MoveableObject {
     }
 
     startAttackAnimation() {
-        if (this.attackInterval) {
-            clearInterval(this.attackInterval);
-        }
+        this.clearAttackInterval();
+        this.clearAlertInterval();
+        this.prepareAttackState();
+        this.startAttackInterval();
+    }
 
-        if (this.alertInterval) {
-            clearInterval(this.alertInterval);
-            this.alertInterval = null;
-            this.isAlerting = false;
-        }
+    clearAttackInterval() {
+        if (!this.attackInterval) return;
+        clearInterval(this.attackInterval);
+        this.attackInterval = null;
+        this.isAttacking = false;
+    }
 
+    prepareAttackState() {
         this.isAttacking = true;
         this.attackDamageApplied = false;
         this.stopWalkingAnimation();
         this.currentImage = 0;
+    }
 
+    startAttackInterval() {
         const frameDelay = this.frameTimers.attack || 150;
         let frameIndex = 0;
-
         this.attackInterval = setInterval(() => {
             this.img = this.imageCache[this.ATTACK_ENDBOSS[frameIndex]];
             this.handleDamageDuringAttack();
             frameIndex++;
-
             if (frameIndex >= this.ATTACK_ENDBOSS.length) {
-                clearInterval(this.attackInterval);
-                this.attackInterval = null;
+                this.clearAttackInterval();
                 this.finishAttackAnimation();
             }
         }, frameDelay);
     }
 
-        handleDamageDuringAttack() {
+    handleDamageDuringAttack() {
         if (this.attackDamageApplied || !this.world?.character) {
             return;
         }
@@ -245,109 +259,85 @@ class Endboss extends MoveableObject {
         this.world.statusBar?.setPercentage(this.world.character.energy);
     }
 
-        applyContactDamageIfColliding() {
-        if (!this.world?.character) {
-            return;
-        }
-
-        if (!this.world.character.isColliding(this)) {
-            return;
-        }
-
-        const now = Date.now();
-        if (now - this.lastContactDamageTime < this.contactDamageCooldown) {
-            return;
-        }
-
-        this.lastContactDamageTime = now;
+    applyContactDamageIfColliding() {
+        if (!this.canApplyContactDamage()) return;
         this.world.character.hit(this.contactDamageAmount);
         this.world.statusBar?.setPercentage(this.world.character.energy);
     }
 
+    canApplyContactDamage() {
+        if (!this.world?.character) return false;
+        if (!this.world.character.isColliding(this)) return false;
+        const now = Date.now();
+        if (now - this.lastContactDamageTime < this.contactDamageCooldown) return false;
+        this.lastContactDamageTime = now;
+        return true;
+    }
+
     playHurtAnimation() {
-        if (this.isDeadState) {
-            return;
-        }
+        if (this.isDeadState) return;
+        this.prepareHurtState();
+        this.startHurtInterval();
+    }
 
-        if (this.hurtInterval) {
-            clearInterval(this.hurtInterval);
-            this.hurtInterval = null;
-        }
+    clearHurtInterval() {
+        if (!this.hurtInterval) return;
+        clearInterval(this.hurtInterval);
+        this.hurtInterval = null;
+        this.isHurting = false;
+    }
 
+    prepareHurtState() {
+        this.clearHurtInterval();
         this.isHurting = true;
         this.stopWalkingAnimation();
-        if (this.attackInterval) {
-            clearInterval(this.attackInterval);
-            this.attackInterval = null;
-            this.isAttacking = false;
-        }
-        if (this.alertInterval) {
-            clearInterval(this.alertInterval);
-            this.alertInterval = null;
-            this.isAlerting = false;
-        }
+        this.clearAttackInterval();
+        this.clearAlertInterval();
+    }
 
+    startHurtInterval() {
         const frameDelay = this.frameTimers.hurt || 150;
         let frameIndex = 0;
-
         this.hurtInterval = setInterval(() => {
             this.img = this.imageCache[this.HURT_ENDBOSS[frameIndex]];
             frameIndex++;
-
             if (frameIndex >= this.HURT_ENDBOSS.length) {
-                clearInterval(this.hurtInterval);
-                this.hurtInterval = null;
+                this.clearHurtInterval();
                 this.currentImage = 0;
-                this.isHurting = false;
                 this.startWalkingAnimation();
             }
         }, frameDelay);
     }
 
     playDeathAnimation() {
-        if (this.isDeadState) {
-            return;
-        }
-
+        if (this.isDeadState) return;
         this.isDeadState = true;
         this.healthBar?.setPercentage(0);
+        this.clearIntervalsForDeath();
+        this.startDeathInterval();
+    }
 
-        if (this.walkInterval) {
-            clearInterval(this.walkInterval);
-            this.walkInterval = null;
-        }
+    clearWalkInterval() {
+        if (!this.walkInterval) return;
+        clearInterval(this.walkInterval);
+        this.walkInterval = null;
+    }
 
-        if (this.movementInterval) {
-            clearInterval(this.movementInterval);
-            this.movementInterval = null;
-        }
+    clearIntervalsForDeath() {
+        this.clearWalkInterval();
+        this.clearMovementInterval();
+        this.clearAlertInterval();
+        this.clearAttackInterval();
+        this.clearHurtInterval();
+    }
 
-        if (this.alertInterval) {
-            clearInterval(this.alertInterval);
-            this.alertInterval = null;
-            this.isAlerting = false;
-        }
-
-        if (this.attackInterval) {
-            clearInterval(this.attackInterval);
-            this.attackInterval = null;
-            this.isAttacking = false;
-        }
-
-        if (this.hurtInterval) {
-            clearInterval(this.hurtInterval);
-            this.hurtInterval = null;
-            this.isHurting = false;
-        }
-
+    startDeathInterval() {
         this.currentImage = 0;
         const frameDelay = this.frameTimers.dead || 200;
         let frameIndex = 0;
-
         this.deathInterval = setInterval(() => {
             this.img = this.imageCache[this.DEAD_ENDBOSS[frameIndex]];
             frameIndex++;
-
             if (frameIndex >= this.DEAD_ENDBOSS.length) {
                 clearInterval(this.deathInterval);
                 this.deathInterval = null;
