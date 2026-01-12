@@ -1,5 +1,10 @@
 class World {
     character = new Character();
+        level = typeof level1 !== 'undefined'
+        ? level1
+        : (typeof Level !== 'undefined'
+            ? new Level()
+            : { enemies: [], clouds: [], icons: [], salsa: [], backgroundObjects: [] });
     level = level1;
     canvas;
     ctx;
@@ -62,7 +67,7 @@ class World {
 
     setWorld() {
         this.character.world = this;
-        this.level.enemies.forEach((enemy) => {
+        (this.level.enemies ?? []).forEach((enemy) => {
             enemy.world = this;
         });
     }
@@ -127,7 +132,7 @@ class World {
     }
 
     handleEnemyCollisions() {
-        this.level.enemies.forEach((enemy) => {
+        (this.level.enemies ?? []).forEach((enemy) => {
             if (this.shouldSkipEnemy(enemy)) {
                 return;
             }
@@ -198,8 +203,9 @@ class World {
     }
 
     isBottleHittingEnemy(bottle) {
-        for (let j = 0; j < this.level.enemies.length; j++) {
-            const enemy = this.level.enemies[j];
+        const enemies = this.level.enemies ?? [];
+        for (let j = 0; j < enemies.length; j++) {
+            const enemy = enemies[j];
             if (bottle.isColliding(enemy)) {
                 this.applyBottleHit(enemy);
                 return true;
@@ -303,7 +309,7 @@ class World {
     }
 
     drawBossHealthBars() {
-        this.level.enemies.forEach((enemy) => {
+        (this.level.enemies ?? []).forEach((enemy) => {
             if (enemy instanceof Endboss && enemy.healthBar) {
                 enemy.updateHealthBar?.();
                 this.addToMap(enemy.healthBar);

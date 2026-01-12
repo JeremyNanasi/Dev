@@ -53,12 +53,13 @@ class MoveableObject extends DrawableObject {
         const thisHeight = this.getHitboxHeight();
         const moX = mo.getHitboxX?.() ?? mo.x;
         const moY = mo.getHitboxY?.() ?? mo.y;
+        const moWidth = mo.getHitboxWidth?.() ?? mo.width;
         const moHeight = mo.getHitboxHeight?.() ?? mo.height;
 
-        return thisX + thisWidth - 95 > moX &&
-            thisY + thisHeight > moY &&
-            thisX < moX &&
-            thisY < moY + moHeight;
+        return thisX < moX + moWidth &&
+            thisX + thisWidth > moX &&
+            thisY < moY + moHeight &&
+            thisY + thisHeight > moY;
     }
 
     getHitboxX() {
