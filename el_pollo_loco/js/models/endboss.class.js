@@ -268,6 +268,10 @@ class Endboss extends MoveableObject {
     canApplyContactDamage() {
         if (!this.world?.character) return false;
         if (!this.world.character.isColliding(this)) return false;
+        const collisionConfig = this.world.getCollisionConfig?.();
+        if (collisionConfig && this.world.isStomping?.(this.world.character, this, collisionConfig)) {
+            return false;
+        }
         const now = Date.now();
         if (now - this.lastContactDamageTime < this.contactDamageCooldown) return false;
         this.lastContactDamageTime = now;
