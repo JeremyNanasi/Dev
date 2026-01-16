@@ -31,7 +31,7 @@ class Endboss extends MoveableObject {
     attackDistance = 0;
     attackCooldownDuration = 1400;
     attackDamageApplied = false;
-    contactDamageAmount = 20;
+    contactDamageAmount = 300;
     contactDamageCooldown = 1000;
     lastContactDamageTime = 0;
 
@@ -131,6 +131,7 @@ class Endboss extends MoveableObject {
 
         if (characterDead) {
             if (this.canMoveLeft()) {
+                this.otherDirection = true;
                 this.startWalkingAnimation();
                 this.moveLeft();
             } else {
@@ -146,8 +147,10 @@ class Endboss extends MoveableObject {
 
         this.startWalkingAnimation();
         if (direction < 0) {
+            this.otherDirection = true;
             this.moveLeft();
         } else {
+            this.otherDirection = false;
             this.moveRight();
         }
     }
@@ -439,7 +442,7 @@ class Endboss extends MoveableObject {
 
         const endbossCenter = this.x + this.width / 2;
         const characterCenter = this.world.character.x + this.world.character.width / 2;
-        this.otherDirection = characterCenter > endbossCenter;
+        this.otherDirection = characterCenter < endbossCenter;
     }
 
     updateHealthBar() {

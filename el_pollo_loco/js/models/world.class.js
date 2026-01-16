@@ -202,10 +202,10 @@ class World {
     }
 
     getPickupBoxForCharacter() {
-        const x = this.character.x + 50;
-        const y = this.character.y + 60;
-        const width = 80;
-        const height = 120;
+        const x = this.character.x + 55;
+        const y = this.character.y + 160;
+        const width = 70;
+        const height = 40;
         return {
             x,
             y,
@@ -219,10 +219,11 @@ class World {
     }
 
     getPickupBoxForObject(object) {
-        const x = object.x + 10;
-        const y = object.y + 10;
-        const width = Math.max(30, (object.width || 50) - 20);
-        const height = Math.max(30, (object.height || 50) - 20);
+        const inset = 8;
+        const x = object.x + inset;
+        const y = object.y + inset;
+        const width = Math.max(10, (object.width || 50) - inset * 2);
+        const height = Math.max(10, (object.height || 50) - inset * 2);
         return {
             x,
             y,
@@ -236,7 +237,11 @@ class World {
     }
 
     isPickupColliding(characterPickupBox, objectPickupBox) {
-        return this.isCollidingBoxes(characterPickupBox, objectPickupBox);
+        if (!this.isCollidingBoxes(characterPickupBox, objectPickupBox)) {
+            return false;
+        }
+        const overlap = this.getOverlap(characterPickupBox, objectPickupBox);
+        return overlap.x >= 10 && overlap.y >= 10;
     }
 
     handleThrowableCollisions() {
@@ -367,7 +372,7 @@ class World {
             return;
         }
         if (this.isBossDefeated() && this.winImage.complete) {
-            this.drawEndScreen(this.winImage, 'winStartTime', { baseScale: 0.92, pulseAmplitude: 0.02 });
+            this.drawEndScreen(this.winImage, 'winStartTime');
         }
     }
 
