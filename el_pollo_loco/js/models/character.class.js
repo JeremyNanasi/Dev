@@ -9,6 +9,12 @@ class Character extends MoveableObject {
     deadFrameDuration = 200;
     currentDeadFrameTime = 0;
 
+    // Hitbox offsets to trim sprite padding for accurate collision
+    hitboxOffsetX = 40;
+    hitboxOffsetY = 80;
+    hitboxWidth = 100;
+    hitboxHeight = 120;
+
 
     IMAGES_WALKING = [
         './img/2_character_pepe/2_walk/W-21.png',

@@ -4,6 +4,12 @@ class Chicken extends MoveableObject {
     y = 355;
     energy = 20;
 
+    // Hitbox offsets for accurate collision (trim sprite padding)
+    hitboxOffsetX = 5;
+    hitboxOffsetY = 5;
+    hitboxWidth = 60;
+    hitboxHeight = 50;
+
     IMAGES_WALKING = [
         './img/3_enemies_chicken/chicken_normal/1_walk/1_w.png',
         './img/3_enemies_chicken/chicken_normal/1_walk/2_w.png',

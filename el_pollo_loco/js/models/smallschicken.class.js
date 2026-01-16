@@ -3,9 +3,12 @@ class smallchicken extends MoveableObject {
     width = 60;
     y = 365;
     energy = 20;
-    hitboxHeight = 60;
-    hitboxWidth = 70;
-    hitboxOffsetY = -10;
+
+    // Hitbox offsets for accurate collision
+    hitboxOffsetX = 0;
+    hitboxOffsetY = -5;
+    hitboxWidth = 50;
+    hitboxHeight = 45;
 
     IMAGES_CHICKEN_SMALL_WALKING = [
         './img/3_enemies_chicken/chicken_small/1_walk/1_w.png',

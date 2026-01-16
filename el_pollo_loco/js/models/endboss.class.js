@@ -5,6 +5,12 @@ class Endboss extends MoveableObject {
     y = 60;
     speed = 0.8;
     energy = 50;
+
+    // Hitbox offsets for accurate collision (trim sprite padding)
+    hitboxOffsetX = 60;
+    hitboxOffsetY = 70;
+    hitboxWidth = 250;
+    hitboxHeight = 300;
     startMovingDistance = 1000;
     stopDistance = 1500;
     world;
@@ -115,11 +121,74 @@ class Endboss extends MoveableObject {
             this.applyContactDamageIfColliding();
             const distanceAhead = this.getDistanceAhead();
             if (this.handleAttackOrAlert(distanceAhead)) return;
-            if (this.shouldMove(distanceAhead)) {
+            this.handleMovement();
+        }, 1000 / 60);
+    }
+
+    handleMovement() {
+        const characterDead = this.world?.character?.isDead?.();
+        const direction = this.getMovementDirection();
+
+        if (characterDead) {
+            if (this.canMoveLeft()) {
                 this.startWalkingAnimation();
                 this.moveLeft();
+            } else {
+                this.stopWalkingAnimation();
             }
-        }, 1000 / 60);
+            return;
+        }
+
+        if (direction === 0 || !this.canMoveInDirection(direction)) {
+            this.stopWalkingAnimation();
+            return;
+        }
+
+        this.startWalkingAnimation();
+        if (direction < 0) {
+            this.moveLeft();
+        } else {
+            this.moveRight();
+        }
+    }
+
+    getMovementDirection() {
+        if (!this.world?.character) return 0;
+        if (this.isAlerting || this.isAttacking || this.isHurting) return 0;
+
+        const endbossCenter = this.x + this.width / 2;
+        const characterCenter = this.world.character.x + this.world.character.width / 2;
+        const distance = Math.abs(endbossCenter - characterCenter);
+
+        if (distance > this.startMovingDistance) return 0;
+        if (distance < 50) return 0;
+
+        return characterCenter < endbossCenter ? -1 : 1;
+    }
+
+    canMoveInDirection(direction) {
+        if (direction < 0) {
+            return this.canMoveLeft();
+        }
+        return this.canMoveRight();
+    }
+
+    canMoveLeft() {
+        const minX = this.getMinX();
+        return this.x > minX;
+    }
+
+    canMoveRight() {
+        const maxX = this.getMaxX();
+        return this.x < maxX;
+    }
+
+    getMinX() {
+        return 500;
+    }
+
+    getMaxX() {
+        return 2500;
     }
 
     clearMovementInterval() {
@@ -151,15 +220,6 @@ class Endboss extends MoveableObject {
         return false;
     }
 
-    shouldMove(distanceAhead) {
-        if (!this.world || !this.world.character || this.isAlerting || this.isAttacking || this.isHurting) return false;
-        
-        const stillAheadOfCharacter = distanceAhead >= - 100;
-        const withinStartRange = distanceAhead <= this.startMovingDistance;
-        const withinStopRange = distanceAhead <= this.stopDistance;
-
-        return stillAheadOfCharacter && withinStartRange && withinStopRange;
-    }
 
     startAlertAnimation() {
         this.clearAlertInterval();
@@ -250,7 +310,11 @@ class Endboss extends MoveableObject {
             return;
         }
 
-        if (!this.world.character.isColliding(this)) {
+        const collisionConfig = this.world.getCollisionConfig?.();
+        if (!collisionConfig) return;
+
+        // Use isSideHit to ensure real collision (not stomp or top-graze)
+        if (!this.world.isSideHit?.(this.world.character, this, collisionConfig)) {
             return;
         }
 
@@ -267,11 +331,14 @@ class Endboss extends MoveableObject {
 
     canApplyContactDamage() {
         if (!this.world?.character) return false;
-        if (!this.world.character.isColliding(this)) return false;
         const collisionConfig = this.world.getCollisionConfig?.();
-        if (collisionConfig && this.world.isStomping?.(this.world.character, this, collisionConfig)) {
+        if (!collisionConfig) return false;
+
+        // Use consistent isSideHit check (excludes stomping and top-grazing)
+        if (!this.world.isSideHit?.(this.world.character, this, collisionConfig)) {
             return false;
         }
+
         const now = Date.now();
         if (now - this.lastContactDamageTime < this.contactDamageCooldown) return false;
         this.lastContactDamageTime = now;

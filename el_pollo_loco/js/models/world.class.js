@@ -165,11 +165,11 @@ class World {
     }
 
     handleIconCollisions() {
-        this.collectCollidingItems(this.level.icons, (index) => this.collectIcon(index));
+        this.collectCollidingItems(this.level.icons, (index) => this.collectIcon(index), true);
     }
 
     handleSalsaCollisions() {
-        this.collectCollidingItems(this.level.salsa, (index) => this.collectSalsa(index));
+        this.collectCollidingItems(this.level.salsa, (index) => this.collectSalsa(index), true);
     }
 
     collectCollidingItems(items, collectFn) {
@@ -181,9 +181,62 @@ class World {
     }
 
     isCharacterColliding(object) {
+        if (this.isCollectibleObject(object)) {
+            const characterPickupBox = this.getPickupBoxForCharacter();
+            const objectPickupBox = this.getPickupBoxForObject(object);
+            return this.isPickupColliding(characterPickupBox, objectPickupBox);
+        }
         const characterBox = this.getCollisionBox(this.character);
         const objectBox = this.getCollisionBox(object);
         return this.isCollidingBoxes(characterBox, objectBox);
+    }
+
+    isCollectibleObject(object) {
+        if (object?.isCollectible === true || object?.collectible === true || object?.type === 'collectible') {
+            return true;
+        }
+        if (object instanceof Icons) {
+            return true;
+        }
+        return object instanceof ThrowableObject && this.level?.salsa?.includes(object);
+    }
+
+    getPickupBoxForCharacter() {
+        const x = this.character.x + 50;
+        const y = this.character.y + 60;
+        const width = 80;
+        const height = 120;
+        return {
+            x,
+            y,
+            width,
+            height,
+            left: x,
+            right: x + width,
+            top: y,
+            bottom: y + height
+        };
+    }
+
+    getPickupBoxForObject(object) {
+        const x = object.x + 10;
+        const y = object.y + 10;
+        const width = Math.max(30, (object.width || 50) - 20);
+        const height = Math.max(30, (object.height || 50) - 20);
+        return {
+            x,
+            y,
+            width,
+            height,
+            left: x,
+            right: x + width,
+            top: y,
+            bottom: y + height
+        };
+    }
+
+    isPickupColliding(characterPickupBox, objectPickupBox) {
+        return this.isCollidingBoxes(characterPickupBox, objectPickupBox);
     }
 
     handleThrowableCollisions() {
@@ -417,30 +470,26 @@ class World {
     }
 
     getSegmentedPercentage(collected, total) {
-        if (!total || total <= 0) {
+        if (!total || total <= 0 || collected <= 0) {
             return 0;
         }
-
-        const segmentSize = total / 5;
-        const segmentIndex = Math.ceil(collected / segmentSize);
+        const ratio = collected / total;
+        const segmentIndex = Math.ceil(ratio * 5);
         const percentage = segmentIndex * 20;
-
-        return Math.max(0, Math.min(100, percentage));
+        return Math.min(100, percentage);
     }
 
     getCollisionConfig() {
         return {
-            stompTolerance: 10,
-            stompMinOverlapX: 24,
-            stompMinOverlapXRatio: 0.35,
+            stompVerticalTolerance: 30,
+            stompMinOverlapX: 15,
+            stompMinOverlapXRatio: 0.25,
             stompCenterMargin: 10,
-            minOverlapX: 12,
-            minOverlapY: 18,
-            topGrace: 8,
+            minOverlapX: 5,
+            minOverlapY: 10,
+            topGrace: 15,
             bounceSpeed: 15,
-            defaultContactDamage: 5,
-            characterOffset: { x: 10, y: 5, width: -20, height: -5 },
-            enemyOffset: { x: 8, y: 5, width: -16, height: -5 }
+            defaultContactDamage: 5
         };
     }
 
@@ -483,44 +532,67 @@ class World {
     }
 
     isStomping(character, enemy, config) {
-        const characterBox = this.getCollisionBox(character, config.characterOffset);
-        const enemyBox = this.getCollisionBox(enemy, config.enemyOffset);
+        const characterBox = this.getCollisionBox(character);
+        const enemyBox = this.getCollisionBox(enemy);
+
         if (!this.isCollidingBoxes(characterBox, enemyBox)) {
             return false;
         }
-        const isFalling = character.speedY < 0; // Falling uses speedY < 0 in this physics setup.
+
+        const isFalling = character.speedY < 0;
+        if (!isFalling) {
+            return false;
+        }
+
         const characterBottom = characterBox.bottom;
         const enemyTop = enemyBox.top;
-        const overlap = this.getOverlap(characterBox, enemyBox);
-        const overlapXEnough = overlap.x >= config.stompMinOverlapX
-            || overlap.x >= enemyBox.width * config.stompMinOverlapXRatio;
-        const characterCenterX = characterBox.left + characterBox.width / 2;
-        const withinCenter = characterCenterX >= enemyBox.left + config.stompCenterMargin
-            && characterCenterX <= enemyBox.right - config.stompCenterMargin;
+        const verticalPenetration = characterBottom - enemyTop;
 
-        // Stomp only if directly above (avoid diagonal/forward hits from wide sprites).
-        return isFalling
-            && characterBottom <= enemyTop + config.stompTolerance
-            && overlapXEnough
-            && withinCenter;
+        if (verticalPenetration > config.stompVerticalTolerance) {
+            return false;
+        }
+
+        const overlap = this.getOverlap(characterBox, enemyBox);
+        const minOverlapNeeded = Math.min(
+            config.stompMinOverlapX,
+            enemyBox.width * config.stompMinOverlapXRatio
+        );
+        if (overlap.x < minOverlapNeeded) {
+            return false;
+        }
+
+        const characterCenterX = characterBox.left + characterBox.width / 2;
+        const withinEnemyBounds = characterCenterX >= enemyBox.left - config.stompCenterMargin
+            && characterCenterX <= enemyBox.right + config.stompCenterMargin;
+
+        return withinEnemyBounds;
     }
 
     isSideHit(character, enemy, config) {
-        const characterBox = this.getCollisionBox(character, config.characterOffset);
-        const enemyBox = this.getCollisionBox(enemy, config.enemyOffset);
+        const characterBox = this.getCollisionBox(character);
+        const enemyBox = this.getCollisionBox(enemy);
+
         if (!this.isCollidingBoxes(characterBox, enemyBox)) {
             return false;
         }
+
         if (this.isStomping(character, enemy, config)) {
             return false;
         }
+
         const overlap = this.getOverlap(characterBox, enemyBox);
         if (overlap.x < config.minOverlapX || overlap.y < config.minOverlapY) {
             return false;
         }
-        if (characterBox.bottom <= enemyBox.top + config.topGrace) {
+
+        const characterBottom = characterBox.bottom;
+        const enemyTop = enemyBox.top;
+        const isFalling = character.speedY < 0;
+
+        if (isFalling && characterBottom <= enemyTop + config.topGrace) {
             return false;
         }
+
         return true;
     }
 }
