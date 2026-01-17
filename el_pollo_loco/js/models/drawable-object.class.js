@@ -19,17 +19,6 @@ class DrawableObject {
         ctx.drawImage(this.img, this.x, this.y, this.height, this.width);
     }
 
-    drawFrame() {  //(ctx)
-        return;
-        // if(this instanceof Character || this instanceof Chicken) {
-        // ctx.beginPath();
-        // ctx.lineWidth = "5";
-        // ctx.strokeStyle = 'blue';
-        // ctx.rect(this.x, this.y, this.height, this.width);
-        // ctx.stroke();
-        // }
-    }
-
     /**
      * 
      * @param {Array} arr - ['img/image1.png', 'img/image2.png', ...] 

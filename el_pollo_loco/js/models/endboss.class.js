@@ -461,5 +461,3 @@ class Endboss extends MoveableObject {
         this.healthBar.y = this.y - 60;
     }
 }
-
-// 2. Endboss-Leiche fällt schneller/weiter + Healthbar über Boss weg?

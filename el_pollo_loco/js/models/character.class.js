@@ -8,8 +8,6 @@ class Character extends MoveableObject {
     currentFrameTime = 0;
     deadFrameDuration = 200;
     currentDeadFrameTime = 0;
-
-    // Hitbox offsets to trim sprite padding for accurate collision
     hitboxOffsetX = 40;
     hitboxOffsetY = 80;
     hitboxWidth = 100;
@@ -90,9 +88,7 @@ class Character extends MoveableObject {
     idleFrameDelayMs = 1000;
     lastIdleFrameTime = 0;
     lastMovementTime = Date.now();
-
     world;
-    // walking_sound = new Audio('audio/running.mp3')
 
     constructor() {
         super().loadImage('./img/2_character_pepe/2_walk/W-21.png');

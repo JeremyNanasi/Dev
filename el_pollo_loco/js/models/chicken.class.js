@@ -3,8 +3,6 @@ class Chicken extends MoveableObject {
     width = 70;
     y = 355;
     energy = 20;
-
-    // Hitbox offsets for accurate collision (trim sprite padding)
     hitboxOffsetX = 5;
     hitboxOffsetY = 5;
     hitboxWidth = 60;

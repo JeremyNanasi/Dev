@@ -3,8 +3,6 @@ class smallchicken extends MoveableObject {
     width = 60;
     y = 365;
     energy = 20;
-
-    // Hitbox offsets for accurate collision
     hitboxOffsetX = 0;
     hitboxOffsetY = -5;
     hitboxWidth = 50;
