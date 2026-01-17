@@ -1,6 +1,7 @@
 let canvas;
 let world;
 let keyboard = new Keyboard();
+let fullscreenTarget;
 let gameStarted = false;
 let gameOverShown = false;
 let gameOverOverlay;
@@ -19,8 +20,14 @@ const KEYBOARD_CODE_MAP = {
     68: 'D'
 };
 
+let fsHintEl = null;
+let inlineHintEl = null;
+let lastHintText = null;
+let endOverlayActive = false;
+
 function init() {
     canvas = document.getElementById('canvas');
+    fullscreenTarget = ensureFullscreenTarget(canvas);
     world = new World(canvas, keyboard);
     ensureGameOverStyles();
     startGameOverWatcher();
@@ -60,6 +67,25 @@ document.addEventListener('DOMContentLoaded', () => {
     startGame();
 });
 
+function ensureFullscreenTarget(canvasEl) {
+    const existing = document.getElementById('fullscreen-target');
+    if (existing) {
+        return existing;
+    }
+
+    const wrapper = document.createElement('div');
+    wrapper.id = 'fullscreen-target';
+
+    const parent = canvasEl.parentNode;
+    parent.insertBefore(wrapper, canvasEl);
+    wrapper.appendChild(canvasEl);
+
+    wrapper.style.display = 'inline-block';
+    wrapper.style.position = 'relative';
+
+    return wrapper;
+}
+
 function setupFullscreenToggle() {
     const toggleButton = getFullscreenToggleButton();
     if (!toggleButton) {
@@ -85,12 +111,13 @@ function handleFullscreenToggleClick() {
         return;
     }
 
-    canvas?.requestFullscreen?.();
+    (fullscreenTarget || canvas)?.requestFullscreen?.();
 }
 
 function handleFullscreenChange(toggleButton) {
     updateFullscreenButtonState(toggleButton);
     resizeCanvas();
+    syncHints();
 }
 
 function updateFullscreenButtonState(toggleButton) {
@@ -104,14 +131,55 @@ function resizeCanvas() {
         return;
     }
 
-    if (document.fullscreenElement && fullscreenTarget && document.fullscreenElement === fullscreenTarget) {
-        const size = Math.min(window.innerWidth, window.innerHeight);
-        canvas.width = Math.max(1, Math.floor(size));
-        canvas.height = Math.max(1, Math.floor(size));
+    canvas.width = DEFAULT_CANVAS_WIDTH;
+    canvas.height = DEFAULT_CANVAS_HEIGHT;
+
+    if (document.fullscreenElement) {
+        applyFullscreenContainScale();
     } else {
-        canvas.width = DEFAULT_CANVAS_WIDTH;
-        canvas.height = DEFAULT_CANVAS_HEIGHT;
+        resetFullscreenStyles();
     }
+}
+
+function applyFullscreenContainScale() {
+    if (!fullscreenTarget) return;
+
+    fullscreenTarget.style.position = 'fixed';
+    fullscreenTarget.style.inset = '0';
+    fullscreenTarget.style.width = '100vw';
+    fullscreenTarget.style.height = '100vh';
+    fullscreenTarget.style.display = 'flex';
+    fullscreenTarget.style.alignItems = 'center';
+    fullscreenTarget.style.justifyContent = 'center';
+    fullscreenTarget.style.background = '#000';
+
+    const vw = window.innerWidth;
+    const vh = window.innerHeight;
+
+    const scale = Math.min(vw / DEFAULT_CANVAS_WIDTH, vh / DEFAULT_CANVAS_HEIGHT);
+    const scaledW = Math.floor(DEFAULT_CANVAS_WIDTH * scale);
+    const scaledH = Math.floor(DEFAULT_CANVAS_HEIGHT * scale);
+
+    canvas.style.width = scaledW + 'px';
+    canvas.style.height = scaledH + 'px';
+    canvas.style.display = 'block';
+}
+
+function resetFullscreenStyles() {
+    if (!fullscreenTarget) return;
+
+    fullscreenTarget.style.position = '';
+    fullscreenTarget.style.inset = '';
+    fullscreenTarget.style.width = '';
+    fullscreenTarget.style.height = '';
+    fullscreenTarget.style.display = 'inline-block';
+    fullscreenTarget.style.alignItems = '';
+    fullscreenTarget.style.justifyContent = '';
+    fullscreenTarget.style.background = '';
+
+    canvas.style.width = '';
+    canvas.style.height = '';
+    canvas.style.display = '';
 }
 
 window.addEventListener('resize', resizeCanvas);
@@ -135,6 +203,11 @@ function resetGameOverState() {
     if (endOverlayElement) {
         endOverlayElement.remove();
     }
+
+    removeFullscreenHint();
+    removeInlineHint();
+    lastHintText = null;
+    endOverlayActive = false;
 
     gameOverOverlay = null;
     endOverlayElement = null;
@@ -222,53 +295,27 @@ function triggerGameOverOverlay() {
     endOverlayShown = true;
 }
 
-function showEndOverlay({ hint }) {
-    if (endOverlayElement) {
-        return;
+function showEndOverlay(config = {}) {
+    lastHintText = config.hint || lastHintText;
+    endOverlayActive = true;
+
+    if (!endOverlayShown) {
+        endOverlayShown = true;
+        controlsLocked = true;
+        resetKeyboard();
     }
 
-    const overlay = createEndOverlay();
-    const hintEl = createEndOverlayHint(hint);
-
-    appendEndOverlay(overlay, hintEl);
-    setEndOverlayState(overlay);
+    if (document.fullscreenElement) {
+        removeInlineHint();
+        showFullscreenHint(lastHintText);
+    } else {
+        removeFullscreenHint();
+        showInlineHint(lastHintText);
+    }
 }
 
-function createEndOverlay() {
-    const overlay = document.createElement('div');
-    Object.assign(overlay.style, {
-        position: 'fixed',
-        left: '50%',
-        transform: 'translateX(-50%)',
-        bottom: '28px',
-        zIndex: '9999',
-        pointerEvents: 'none'
-    });
-    return overlay;
-}
-
-function createEndOverlayImage(imgSrc, alt) {
-    const img = document.createElement('img');
-    img.src = imgSrc;
-    img.alt = alt;
-    Object.assign(img.style, {
-        maxWidth: '80vw',
-        maxHeight: '70vh',
-        objectFit: 'contain'
-    });
-    return img;
-}
-
-function createEndOverlayHint(hint) {
-    const hintEl = document.createElement('div');
-    hintEl.textContent = hint;
-    applyHintStyles(hintEl);
-    return hintEl;
-}
-
-function applyHintStyles(hintEl) {
-    Object.assign(hintEl.style, {
-        marginTop: '20px',
+function buildHintBaseStyles(el) {
+    Object.assign(el.style, {
         padding: '10px 14px',
         borderRadius: '10px',
         background: 'rgba(0,0,0,0.55)',
@@ -280,19 +327,95 @@ function applyHintStyles(hintEl) {
     });
 }
 
-function appendEndOverlay(overlay, hintEl) {
-    overlay.appendChild(hintEl);
+function showFullscreenHint(text) {
+    lastHintText = text || lastHintText;
 
-    const fullscreenRoot = document.fullscreenElement;
-    const overlayRoot = fullscreenRoot && fullscreenRoot !== canvas ? fullscreenRoot : document.body;
-    overlayRoot.appendChild(overlay);
+    if (!document.fullscreenElement) return;
+    if (!lastHintText) return;
+
+    if (!fsHintEl) {
+        fsHintEl = document.createElement('div');
+        fsHintEl.id = 'fs-hint';
+        Object.assign(fsHintEl.style, {
+            position: 'fixed',
+            left: '50%',
+            bottom: '18px',
+            transform: 'translateX(-50%)',
+            zIndex: '99999',
+            pointerEvents: 'none'
+        });
+        buildHintBaseStyles(fsHintEl);
+    }
+
+    fsHintEl.textContent = lastHintText;
+
+    const host = document.fullscreenElement === canvas ? fullscreenTarget : document.fullscreenElement;
+    const target = host || document.body;
+
+    if (fsHintEl.parentNode !== target) {
+        fsHintEl.remove();
+        target.appendChild(fsHintEl);
+    }
 }
 
-function setEndOverlayState(overlay) {
-    endOverlayElement = overlay;
-    endOverlayShown = true;
-    controlsLocked = true;
-    resetKeyboard();
+function removeFullscreenHint() {
+    if (fsHintEl && fsHintEl.parentNode) {
+        fsHintEl.parentNode.removeChild(fsHintEl);
+    }
+}
+
+function showInlineHint(text) {
+    lastHintText = text || lastHintText;
+
+    if (document.fullscreenElement) return;
+    if (!lastHintText) return;
+
+    if (!inlineHintEl) {
+        inlineHintEl = document.createElement('div');
+        inlineHintEl.id = 'inline-hint';
+        Object.assign(inlineHintEl.style, {
+            display: 'inline-block',
+            marginTop: '14px',
+            pointerEvents: 'none'
+        });
+        buildHintBaseStyles(inlineHintEl);
+    }
+
+    inlineHintEl.textContent = lastHintText;
+
+    const host = fullscreenTarget || canvas?.parentNode;
+    const parent = host?.parentNode || document.body;
+
+    if (!inlineHintEl.parentNode) {
+        parent.appendChild(inlineHintEl);
+        parent.style.textAlign = 'center';
+    } else if (inlineHintEl.parentNode !== parent) {
+        inlineHintEl.remove();
+        parent.appendChild(inlineHintEl);
+        parent.style.textAlign = 'center';
+    }
+}
+
+function removeInlineHint() {
+    if (inlineHintEl && inlineHintEl.parentNode) {
+        inlineHintEl.parentNode.removeChild(inlineHintEl);
+    }
+}
+
+function syncHints() {
+    if (!endOverlayActive) {
+        removeFullscreenHint();
+        removeInlineHint();
+        return;
+    }
+
+    if (document.fullscreenElement) {
+        removeInlineHint();
+        showFullscreenHint(lastHintText);
+    } else {
+        removeFullscreenHint();
+        showInlineHint(lastHintText);
+    }
 }
 
 function resetKeyboard() {
