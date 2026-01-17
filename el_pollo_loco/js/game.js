@@ -1,4 +1,4 @@
-let  canvas;
+let canvas;
 let world;
 let keyboard = new Keyboard();
 let gameStarted = false;
@@ -30,7 +30,6 @@ function init() {
 window.showWinOverlay = function () {
     showEndOverlay({ hint: '⏎ Enter – zurück zum Menü' });
 };
-
 
 function startGame() {
     if (gameStarted) {
@@ -294,6 +293,13 @@ function setEndOverlayState(overlay) {
     endOverlayShown = true;
     controlsLocked = true;
     resetKeyboard();
+}
+
+function resetKeyboard() {
+    Object.keys(KEYBOARD_CODE_MAP).forEach(code => {
+        const key = KEYBOARD_CODE_MAP[code];
+        keyboard[key] = false;
+    });
 }
 
 function ensureGameOverStyles() {

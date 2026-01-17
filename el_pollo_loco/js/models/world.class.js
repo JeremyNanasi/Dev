@@ -361,6 +361,9 @@ class World {
     drawBossHealthBars() {
         this.level.enemies.forEach((enemy) => {
             if (enemy instanceof Endboss && enemy.healthBar) {
+                if (enemy.isDeadState || enemy.energy <= 0) {
+                    return;
+                }
                 enemy.updateHealthBar?.();
                 this.addToMap(enemy.healthBar);
             }
@@ -604,31 +607,5 @@ class World {
         }
 
         return true;
-    }
-}
-
-function isFullscreenActive() {
-    return Boolean(document.fullscreenElement);
-}
-
-function applyEndOverlayLayout() {
-    if (!endOverlayElement) {
-        return;
-    }
-
-    if (isFullscreenActive()) {
-        Object.assign(endOverlayElement.style, {
-            left: 'auto',
-            right: '28px',
-            transform: 'none',
-            bottom: '24px'
-        });
-    } else {
-        Object.assign(endOverlayElement.style, {
-            left: '50%',
-            right: 'auto',
-            transform: 'translateX(-50%)',
-            bottom: '28px'
-        });
     }
 }

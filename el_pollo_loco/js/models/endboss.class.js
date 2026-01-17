@@ -315,8 +315,6 @@ class Endboss extends MoveableObject {
 
         const collisionConfig = this.world.getCollisionConfig?.();
         if (!collisionConfig) return;
-
-        // Use isSideHit to ensure real collision (not stomp or top-graze)
         if (!this.world.isSideHit?.(this.world.character, this, collisionConfig)) {
             return;
         }
@@ -337,7 +335,6 @@ class Endboss extends MoveableObject {
         const collisionConfig = this.world.getCollisionConfig?.();
         if (!collisionConfig) return false;
 
-        // Use consistent isSideHit check (excludes stomping and top-grazing)
         if (!this.world.isSideHit?.(this.world.character, this, collisionConfig)) {
             return false;
         }
@@ -409,14 +406,14 @@ class Endboss extends MoveableObject {
         this.currentImage = 0;
         const frameDelay = this.frameTimers.dead || 200;
         let frameIndex = 0;
-        const groundY = 350;
+        const groundY = 450;
         this.deathInterval = setInterval(() => {
             this.img = this.imageCache[this.DEAD_ENDBOSS[frameIndex]];
             if (frameIndex < this.DEAD_ENDBOSS.length - 1) {
                 frameIndex++;
             } else {
                 if (this.y < groundY) {
-                    this.y += 8;
+                    this.y += 20;
                 } else {
                     this.y = groundY;
                     clearInterval(this.deathInterval);
@@ -464,3 +461,5 @@ class Endboss extends MoveableObject {
         this.healthBar.y = this.y - 60;
     }
 }
+
+// 2. Endboss-Leiche fällt schneller/weiter + Healthbar über Boss weg?
