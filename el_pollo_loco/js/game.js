@@ -27,6 +27,11 @@ function init() {
     resizeCanvas();
 }
 
+window.showWinOverlay = function () {
+    showEndOverlay({ hint: '⏎ Enter – zurück zum Menü' });
+};
+
+
 function startGame() {
     if (gameStarted) {
         return;
@@ -218,24 +223,41 @@ function triggerGameOverOverlay() {
     endOverlayShown = true;
 }
 
-function showEndOverlay({ imgSrc, alt, hint }) {
-    if (gameOverOverlay) {
+function showEndOverlay({ hint }) {
+    if (endOverlayElement) {
         return;
     }
 
     const overlay = createEndOverlay();
-    const img = createEndOverlayImage(imgSrc, alt);
     const hintEl = createEndOverlayHint(hint);
-    appendEndOverlay(overlay, img, hintEl);
+
+    appendEndOverlay(overlay, hintEl);
     setEndOverlayState(overlay);
 }
 
 function createEndOverlay() {
-    return document.createElement('div');
+    const overlay = document.createElement('div');
+    Object.assign(overlay.style, {
+        position: 'fixed',
+        left: '50%',
+        transform: 'translateX(-50%)',
+        bottom: '28px',
+        zIndex: '9999',
+        pointerEvents: 'none'
+    });
+    return overlay;
 }
 
-function createEndOverlayImage() {
-    return document.createElement('img');
+function createEndOverlayImage(imgSrc, alt) {
+    const img = document.createElement('img');
+    img.src = imgSrc;
+    img.alt = alt;
+    Object.assign(img.style, {
+        maxWidth: '80vw',
+        maxHeight: '70vh',
+        objectFit: 'contain'
+    });
+    return img;
 }
 
 function createEndOverlayHint(hint) {
@@ -259,19 +281,17 @@ function applyHintStyles(hintEl) {
     });
 }
 
-function appendEndOverlay(overlay, img, hintEl) {
-    overlay.appendChild(img);
+function appendEndOverlay(overlay, hintEl) {
     overlay.appendChild(hintEl);
 
     const fullscreenRoot = document.fullscreenElement;
     const overlayRoot = fullscreenRoot && fullscreenRoot !== canvas ? fullscreenRoot : document.body;
     overlayRoot.appendChild(overlay);
-    document.body.appendChild(overlay);
 }
 
 function setEndOverlayState(overlay) {
-    gameOverOverlay = overlay;
     endOverlayElement = overlay;
+    endOverlayShown = true;
     controlsLocked = true;
     resetKeyboard();
 }
@@ -321,11 +341,11 @@ window.addEventListener("keydown", (e) => {
 });
 
 function handleEnterMenuNavigation(e) {
-    if (e.keyCode === 13 && isBossDefeated()) {
+    if (isEnterKey(e) && (endOverlayShown || controlsLocked || isBossDefeated())) {
+        e.preventDefault();
         navigateToMenu();
         return true;
     }
-
     return false;
 }
 

@@ -111,7 +111,7 @@ class World {
     }
 
     getThrowOffsetX(direction) {
-        return direction === -1 ? -20 : 100;
+        return direction === -1 ? -50 : 100;
     }
 
     refreshSalsaHud() {
@@ -140,7 +140,8 @@ class World {
             if (this.isSideHit(this.character, enemy, collisionConfig)) {
                 const damage = enemy.contactDamageAmount ?? collisionConfig.defaultContactDamage;
                 this.character.hit(damage);
-                this.statusBar.setPercentage(this.character.energy);
+                const percentage = (this.character.energy / 600) * 100;
+                this.statusBar.setPercentage(percentage);
             }
         });
     }
@@ -372,9 +373,13 @@ class World {
             return;
         }
         if (this.isBossDefeated() && this.winImage.complete) {
-            this.drawEndScreen(this.winImage, 'winStartTime');
+            this.drawEndScreen(this.winImage, 'winStartTime', { baseScale: 0.92, pulseAmplitude: 0.02 });
+            if (typeof window.showWinOverlay === 'function') {
+                window.showWinOverlay();
+            }
         }
-    }
+    }     
+
 
     queueNextFrame() {
         const animationFrame = window.requestAnimationFrame
@@ -599,5 +604,31 @@ class World {
         }
 
         return true;
+    }
+}
+
+function isFullscreenActive() {
+    return Boolean(document.fullscreenElement);
+}
+
+function applyEndOverlayLayout() {
+    if (!endOverlayElement) {
+        return;
+    }
+
+    if (isFullscreenActive()) {
+        Object.assign(endOverlayElement.style, {
+            left: 'auto',
+            right: '28px',
+            transform: 'none',
+            bottom: '24px'
+        });
+    } else {
+        Object.assign(endOverlayElement.style, {
+            left: '50%',
+            right: 'auto',
+            transform: 'translateX(-50%)',
+            bottom: '28px'
+        });
     }
 }

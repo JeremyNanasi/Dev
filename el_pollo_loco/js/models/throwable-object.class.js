@@ -82,7 +82,7 @@ class ThrowableObject extends MoveableObject {
         this.speedY = 30;
         this.currentImage = 0;
         this.img = this.imageCache[this.IMAGE_ROTATION[0]];
-        this.otherDirection = false;
+        this.otherDirection = this.throwDirection === -1;
         this.applyGravity();
         this.startRotation();
     }   
@@ -91,8 +91,7 @@ class ThrowableObject extends MoveableObject {
         this.stopRotation();
         this.rotationInterval = setInterval(() => {
             this.playAnimation(this.IMAGE_ROTATION);
-            this.x += 10 * this.throwDirection;
-            this.x += 10;
+            this.x += 15 * this.throwDirection;
         }, 25);
     }
 

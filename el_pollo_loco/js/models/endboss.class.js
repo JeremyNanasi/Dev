@@ -131,7 +131,7 @@ class Endboss extends MoveableObject {
 
         if (characterDead) {
             if (this.canMoveLeft()) {
-                this.otherDirection = true;
+                this.otherDirection = false;
                 this.startWalkingAnimation();
                 this.moveLeft();
             } else {
@@ -147,10 +147,10 @@ class Endboss extends MoveableObject {
 
         this.startWalkingAnimation();
         if (direction < 0) {
-            this.otherDirection = true;
+            this.otherDirection = false;
             this.moveLeft();
         } else {
-            this.otherDirection = false;
+            this.otherDirection = true;
             this.moveRight();
         }
     }
@@ -409,12 +409,19 @@ class Endboss extends MoveableObject {
         this.currentImage = 0;
         const frameDelay = this.frameTimers.dead || 200;
         let frameIndex = 0;
+        const groundY = 350;
         this.deathInterval = setInterval(() => {
             this.img = this.imageCache[this.DEAD_ENDBOSS[frameIndex]];
-            frameIndex++;
-            if (frameIndex >= this.DEAD_ENDBOSS.length) {
-                clearInterval(this.deathInterval);
-                this.deathInterval = null;
+            if (frameIndex < this.DEAD_ENDBOSS.length - 1) {
+                frameIndex++;
+            } else {
+                if (this.y < groundY) {
+                    this.y += 8;
+                } else {
+                    this.y = groundY;
+                    clearInterval(this.deathInterval);
+                    this.deathInterval = null;
+                }
             }
         }, frameDelay);
     }
@@ -439,10 +446,11 @@ class Endboss extends MoveableObject {
 
     updateFacingDirection() {
         if (!this.world || !this.world.character) return;
+        if (this.isAlerting || this.isAttacking || this.isHurting) return;
 
         const endbossCenter = this.x + this.width / 2;
         const characterCenter = this.world.character.x + this.world.character.width / 2;
-        this.otherDirection = characterCenter < endbossCenter;
+        this.otherDirection = characterCenter > endbossCenter;
     }
 
     updateHealthBar() {
