@@ -29,37 +29,54 @@
     <script src="./levels/level1.js"></script>
     <script src="./js/game.js" defer></script>
 </head>
-<body onload="init()">
-    
+
+<body>
     <h1>El Pollo Loco</h1>
 
-
-    <canvas id="canvas" width="720" height="480">
-        <div class="touch-controls" aria-hidden="true">
-            <div class="touch-controls__group touch-controls__group--left">
-                <button class="touch-control-button" type="button" data-key="LEFT" aria-label="Move left">
-                    <span aria-hidden="true">⬅️</span>
-                    <span>Left</span>
+    <div id="fullscreen-target" class="game-shell">
+        <div class="game-overlay" aria-hidden="false">
+            <div class="game-overlay__top-right">
+                <button class="icon-button icon-button--orientation" id="orientation-toggle" type="button" aria-label="Ausrichtung umschalten">
+                    Ausrichtung: Auto
                 </button>
-                <button class="touch-control-button" type="button" data-key="RIGHT" aria-label="Move right">
-                    <span aria-hidden="true">➡️</span>
-                    <span>Right</span>
+
+                <button class="icon-button icon-button--mute" id="mute-toggle" type="button" aria-pressed="false" aria-label="Sound umschalten">
+                    <img id="mute-icon" src="./img/mobile/sound.png" alt="Sound an">
                 </button>
             </div>
-            <div class="touch-controls__group touch-controls__group--right">
-                <button class="touch-control-button" type="button" data-key="SPACE" aria-label="Jump">
-                    <span aria-hidden="true">⤴️</span>
-                    <span>Jump</span>
-                </button>
-                <button class="touch-control-button" type="button" data-key="D" aria-label="Throw bottle">
-                    <span aria-hidden="true">🍼</span>
-                    <span>Throw Bottle</span>
+
+            <div class="touch-controls" id="touch-controls" aria-hidden="true">
+                <div class="touch-controls__group touch-controls__group--left">
+                    <button class="touch-control-button" type="button" data-key="LEFT" aria-label="Nach links">
+                        <img src="./img/mobile/left-chevron.png" alt="">
+                    </button>
+                    <button class="touch-control-button" type="button" data-key="RIGHT" aria-label="Nach rechts">
+                        <img src="./img/mobile/right-chevron.png" alt="">
+                    </button>
+                </div>
+
+                <div class="touch-controls__group touch-controls__group--right">
+                    <button class="touch-control-button" type="button" data-key="SPACE" aria-label="Springen">
+                        <img src="./img/mobile/up-arrow.png" alt="">
+                    </button>
+                    <button class="touch-control-button" type="button" data-key="D" aria-label="Flasche werfen">
+                        <img src="./img/mobile/glass-bottle.png" alt="">
+                    </button>
+                </div>
+            </div>
+
+            <div class="game-overlay__bottom-controls">
+                <button class="ui-toggle-button" id="mobile-controls-toggle" type="button">
+                    Mobile-Steuerung an
                 </button>
             </div>
         </div>
-        <button class="mute-button" id="mute-toggle" type="button" aria-pressed="false">🔊 Sound an</button>
-    </canvas>
+
+        <canvas id="canvas" width="720" height="480"></canvas>
+    </div>
+
     <button class="fullscreen-button" id="fullscreen-toggle" type="button">Vollbild</button>
+
     <audio id="background-music" src="./img/backgroundmusic/western-cowboy-duel-background-350113.mp3" loop autoplay></audio>
 </body>
 </html>

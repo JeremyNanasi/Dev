@@ -34,6 +34,205 @@ canvas {
     display: block;
 }
 
+.game-overlay__bottom-controls {
+    position: fixed;
+    left: 50%;
+    bottom: 18px;
+    transform: translateX(-50%);
+    pointer-events: auto;
+}
+
+.touch-controls {
+    position: fixed;
+    inset: 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    padding: 0 18px 24px;
+    gap: 16px;
+    pointer-events: none;
+    opacity: 0;
+    transform: translateY(12px);
+    transition: opacity 0.2s ease, transform 0.2s ease;
+}
+
+.touch-controls.is-visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.game-shell {
+    position: relative;
+}
+
+.game-overlay {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    z-index: 20;
+}
+
+.game-overlay__top-right {
+    position: fixed;
+    top: max(12px, env(safe-area-inset-top));
+    right: max(12px, env(safe-area-inset-right));
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    pointer-events: auto;
+    z-index: 9999;
+}
+
+.icon-button {
+    border: 0;
+    border-radius: 999px;
+    background: rgba(0, 0, 0, 0.45);
+    color: #fff;
+    padding: 10px 12px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    font-family: "Inter", Arial, Helvetica, sans-serif;
+    font-weight: 700;
+    box-shadow: 0 10px 20px rgba(0,0,0,0.35);
+    backdrop-filter: blur(4px);
+    -webkit-tap-highlight-color: transparent;
+    touch-action: manipulation;
+}
+
+.icon-button--mute {
+    width: 52px;
+    height: 52px;
+    padding: 0;
+}
+
+.icon-button--mute img {
+    width: 28px;
+    height: 28px;
+    display: block;
+}
+
+.icon-button--orientation {
+    height: 52px;
+}
+
+.game-overlay__bottom-controls {
+    position: fixed;
+    left: 50%;
+    transform: translateX(-50%);
+    bottom: max(16px, env(safe-area-inset-bottom));
+    pointer-events: auto;
+    z-index: 9999;
+}
+
+.ui-toggle-button {
+    border: 0;
+    border-radius: 999px;
+    background: #ffa509;
+    color: #000;
+    padding: 12px 18px;
+    font-family: "Inter", Arial, Helvetica, sans-serif;
+    font-weight: 800;
+    box-shadow: 0 12px 22px rgba(177, 118, 8, 0.4);
+    cursor: pointer;
+}
+
+.touch-controls {
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: max(12px, env(safe-area-inset-bottom));
+    display: none;
+    justify-content: space-between;
+    align-items: flex-end;
+    padding: 12px 16px;
+    pointer-events: none;
+    z-index: 9998;
+}
+
+.touch-controls__group {
+    display: flex;
+    gap: 12px;
+    pointer-events: auto;
+}
+
+.touch-control-button {
+    width: clamp(56px, 10vw, 84px);
+    height: clamp(56px, 10vw, 84px);
+    padding: 0;
+    border-radius: 18px;
+    border: 1px solid rgba(255, 255, 255, 0.35);
+    background: rgba(0, 0, 0, 0.45);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    touch-action: none;
+    user-select: none;
+    -webkit-tap-highlight-color: transparent;
+    backdrop-filter: blur(4px);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.35);
+}
+
+.touch-control-button img {
+    width: 52%;
+    height: 52%;
+    display: block;
+}
+
+.touch-control-button:active,
+.touch-control-button.is-pressed {
+    background: rgba(255, 165, 9, 0.6);
+    border-color: rgba(255, 255, 255, 0.6);
+    transform: translateY(1px);
+}
+
+body.touch-controls-visible .touch-controls {
+    display: flex;
+}
+
+body.touch-controls-hidden .touch-controls {
+    display: none;
+}
+
+body.touch-controls-visible #fullscreen-target {
+    margin-bottom: 110px;
+}
+
+body.touch-controls-visible .game-overlay__bottom-controls {
+    display: block;
+}
+
+body.orientation-portrait #fullscreen-target {
+    max-width: 520px;
+}
+
+body.orientation-landscape #fullscreen-target {
+    max-width: 960px;
+}
+
+body.orientation-portrait canvas,
+body.orientation-landscape canvas {
+    width: 100%;
+    height: auto;
+}
+
+@media (max-width: 767px) {
+    h1 {
+        font-size: 36px;
+    }
+
+    .touch-control-button {
+        width: 68px;
+        height: 68px;
+    }
+
+    .game-overlay__top-right {
+        top: 12px;
+        right: 12px;
+    }
+}
+
 @media only screen and (max-width: 720px) {
     canvas {
         width: 100%;

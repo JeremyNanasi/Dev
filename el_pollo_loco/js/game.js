@@ -24,6 +24,12 @@ let fsHintEl = null;
 let inlineHintEl = null;
 let lastHintText = null;
 let endOverlayActive = false;
+let touchControlsInitialized = false;
+let touchControlsVisible = false;
+const TOUCH_CONTROLS_STORAGE_KEY = 'touch-controls-preference';
+const SOUND_ENABLED_KEY = 'sound-enabled';
+const ORIENTATION_MODE_KEY = 'orientation-mode';
+const ORIENTATION_MODES = ['auto', 'portrait', 'landscape'];
 
 function init() {
     canvas = document.getElementById('canvas');
@@ -32,6 +38,12 @@ function init() {
     ensureGameOverStyles();
     startGameOverWatcher();
     resizeCanvas();
+    setupTouchControls();
+    setupSoundToggle();
+    setupMobileControlsToggle();
+    setupOrientationToggle();
+    applyStoredOrientation();
+    updateTouchControlsVisibility();
 }
 
 window.showWinOverlay = function () {
@@ -70,6 +82,7 @@ document.addEventListener('DOMContentLoaded', () => {
 function ensureFullscreenTarget(canvasEl) {
     const existing = document.getElementById('fullscreen-target');
     if (existing) {
+        applyFullscreenTargetDefaults(existing);
         return existing;
     }
 
@@ -84,6 +97,11 @@ function ensureFullscreenTarget(canvasEl) {
     wrapper.style.position = 'relative';
 
     return wrapper;
+}
+
+function applyFullscreenTargetDefaults(wrapper) {
+    wrapper.style.display = 'inline-block';
+    wrapper.style.position = 'relative';
 }
 
 function setupFullscreenToggle() {
@@ -118,6 +136,7 @@ function handleFullscreenChange(toggleButton) {
     updateFullscreenButtonState(toggleButton);
     resizeCanvas();
     syncHints();
+    syncOrientationLock();
 }
 
 function updateFullscreenButtonState(toggleButton) {
@@ -183,6 +202,7 @@ function resetFullscreenStyles() {
 }
 
 window.addEventListener('resize', resizeCanvas);
+window.addEventListener('resize', updateTouchControlsVisibility);
 
 function startGameOverWatcher() {
     resetGameOverState();
@@ -524,3 +544,226 @@ window.addEventListener("keyup", (e) => {
 
     setKeyboardState(e.keyCode, false);
 });
+
+function setupTouchControls() {
+    if (touchControlsInitialized) {
+        return;
+    }
+
+    const buttons = Array.from(document.querySelectorAll('.touch-control-button'));
+    if (!buttons.length) {
+        return;
+    }
+
+    const keyToButton = new Map();
+    const mousePressedKeys = new Set();
+
+    const getKeysForButton = (key) => {
+        if (key === 'SPACE' || key === 'UP') {
+            return ['SPACE', 'UP'];
+        }
+        return [key];
+    };
+
+    buttons.forEach((button) => {
+        const key = button.dataset.key;
+        if (!key) {
+            return;
+        }
+        keyToButton.set(key, button);
+
+        const handlePressStart = (event, source) => {
+            if (shouldIgnoreInput()) {
+                return;
+            }
+            event.preventDefault();
+
+            const keys = getKeysForButton(key);
+            keys.forEach((k) => keyboard[k] = true);
+
+            button.classList.add('is-pressed');
+            if (source === 'mouse') {
+                mousePressedKeys.add(key);
+            }
+        };
+
+        const handlePressEnd = (event) => {
+            event.preventDefault();
+
+            const keys = getKeysForButton(key);
+            const isJump = keys.includes('SPACE') || keys.includes('UP');
+
+            if (isJump) {
+                setTimeout(() => {
+                    keys.forEach((k) => keyboard[k] = false);
+                }, 120);
+            } else {
+                keys.forEach((k) => keyboard[k] = false);
+            }
+
+            button.classList.remove('is-pressed');
+            mousePressedKeys.delete(key);
+        };
+
+        button.addEventListener('touchstart', (event) => handlePressStart(event, 'touch'), { passive: false });
+        button.addEventListener('touchend', handlePressEnd, { passive: false });
+        button.addEventListener('touchcancel', handlePressEnd, { passive: false });
+        button.addEventListener('mousedown', (event) => handlePressStart(event, 'mouse'));
+        button.addEventListener('mouseup', handlePressEnd);
+        button.addEventListener('mouseleave', handlePressEnd);
+    });
+
+    window.addEventListener('mouseup', (event) => {
+        if (!mousePressedKeys.size) {
+            return;
+        }
+        event.preventDefault();
+        mousePressedKeys.forEach((key) => {
+            const keys = (key === 'SPACE' || key === 'UP') ? ['SPACE', 'UP'] : [key];
+            keys.forEach((k) => keyboard[k] = false);
+            keyToButton.get(key)?.classList.remove('is-pressed');
+        });
+        mousePressedKeys.clear();
+    });
+
+    touchControlsInitialized = true;
+}
+
+function setupMobileControlsToggle() {
+    const toggle = document.getElementById('mobile-controls-toggle');
+    if (!toggle) return;
+
+    toggle.addEventListener('click', () => {
+        touchControlsVisible = !touchControlsVisible;
+        localStorage.setItem(TOUCH_CONTROLS_STORAGE_KEY, touchControlsVisible ? 'on' : 'off');
+        updateTouchControlsUI();
+    });
+}
+
+function updateTouchControlsVisibility() {
+    const stored = localStorage.getItem(TOUCH_CONTROLS_STORAGE_KEY);
+    if (stored === 'on') {
+        touchControlsVisible = true;
+    } else if (stored === 'off') {
+        touchControlsVisible = false;
+    } else {
+        touchControlsVisible = window.innerWidth < 768;
+    }
+
+    updateTouchControlsUI();
+}
+
+function updateTouchControlsUI() {
+    const controls = document.getElementById('touch-controls');
+    const toggle = document.getElementById('mobile-controls-toggle');
+    const shouldShow = Boolean(touchControlsVisible);
+
+    controls?.classList.toggle('is-visible', shouldShow);
+    document.body.classList.toggle('touch-controls-visible', shouldShow);
+    document.body.classList.toggle('touch-controls-hidden', !shouldShow);
+
+    if (toggle) {
+        toggle.textContent = shouldShow ? 'Mobile-Steuerung aus' : 'Mobile-Steuerung an';
+    }
+
+    const orientationToggle = document.getElementById('orientation-toggle');
+    if (orientationToggle) {
+        orientationToggle.style.display = shouldShow || window.innerWidth < 768 ? 'inline-flex' : 'none';
+    }
+}
+
+function setupSoundToggle() {
+    const button = document.getElementById('mute-toggle');
+    const icon = document.getElementById('mute-icon');
+    if (!button || !icon) return;
+
+    button.addEventListener('click', () => {
+        const isEnabled = localStorage.getItem(SOUND_ENABLED_KEY) !== 'false';
+        setSoundEnabled(!isEnabled);
+    });
+
+    const stored = localStorage.getItem(SOUND_ENABLED_KEY);
+    const initialEnabled = stored !== 'false';
+    setSoundEnabled(initialEnabled);
+}
+
+function setSoundEnabled(enabled) {
+    const icon = document.getElementById('mute-icon');
+    const button = document.getElementById('mute-toggle');
+    const audios = document.querySelectorAll('audio');
+
+    audios.forEach((audio) => {
+        audio.muted = !enabled;
+    });
+
+    if (icon) {
+        icon.src = enabled ? './img/mobile/sound.png' : './img/mobile/mute.png';
+        icon.alt = enabled ? 'Sound an' : 'Sound aus';
+    }
+
+    if (button) {
+        button.setAttribute('aria-pressed', enabled ? 'false' : 'true');
+    }
+
+    localStorage.setItem(SOUND_ENABLED_KEY, enabled ? 'true' : 'false');
+}
+
+function setupOrientationToggle() {
+    const button = document.getElementById('orientation-toggle');
+    if (!button) return;
+
+    button.addEventListener('click', () => {
+        const current = localStorage.getItem(ORIENTATION_MODE_KEY) || 'auto';
+        const nextMode = getNextOrientationMode(current);
+        localStorage.setItem(ORIENTATION_MODE_KEY, nextMode);
+        applyOrientationMode(nextMode);
+        syncOrientationLock();
+    });
+}
+
+function getNextOrientationMode(current) {
+    const index = ORIENTATION_MODES.indexOf(current);
+    if (index === -1) {
+        return ORIENTATION_MODES[0];
+    }
+    return ORIENTATION_MODES[(index + 1) % ORIENTATION_MODES.length];
+}
+
+function applyStoredOrientation() {
+    const stored = localStorage.getItem(ORIENTATION_MODE_KEY) || 'auto';
+    applyOrientationMode(stored);
+}
+
+function applyOrientationMode(mode) {
+    const button = document.getElementById('orientation-toggle');
+    const normalized = ORIENTATION_MODES.includes(mode) ? mode : 'auto';
+
+    document.body.classList.remove('orientation-auto', 'orientation-portrait', 'orientation-landscape');
+    document.body.classList.add(`orientation-${normalized}`);
+
+    if (button) {
+        const label = normalized === 'auto' ? 'Auto' : normalized === 'portrait' ? 'Hochformat' : 'Querformat';
+        button.textContent = `Ausrichtung: ${label}`;
+    }
+}
+
+function syncOrientationLock() {
+    if (!document.fullscreenElement) {
+        return;
+    }
+
+    const mode = localStorage.getItem(ORIENTATION_MODE_KEY) || 'auto';
+    const orientation = screen.orientation;
+
+    if (!orientation || typeof orientation.lock !== 'function') {
+        return;
+    }
+
+    if (mode === 'auto') {
+        orientation.unlock?.();
+        return;
+    }
+
+    const lockMode = mode === 'portrait' ? 'portrait-primary' : 'landscape-primary';
+    orientation.lock(lockMode).catch(() => {});
+}
