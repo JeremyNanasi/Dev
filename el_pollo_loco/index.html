@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="./style.css">
     <title>El Pollo Loco</title>
+    <link rel="icon" type="image/png" href="./img/boots.png">
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -34,9 +35,31 @@
 
 
     <canvas id="canvas" width="720" height="480">
-
+        <div class="touch-controls" aria-hidden="true">
+            <div class="touch-controls__group touch-controls__group--left">
+                <button class="touch-control-button" type="button" data-key="LEFT" aria-label="Move left">
+                    <span aria-hidden="true">⬅️</span>
+                    <span>Left</span>
+                </button>
+                <button class="touch-control-button" type="button" data-key="RIGHT" aria-label="Move right">
+                    <span aria-hidden="true">➡️</span>
+                    <span>Right</span>
+                </button>
+            </div>
+            <div class="touch-controls__group touch-controls__group--right">
+                <button class="touch-control-button" type="button" data-key="SPACE" aria-label="Jump">
+                    <span aria-hidden="true">⤴️</span>
+                    <span>Jump</span>
+                </button>
+                <button class="touch-control-button" type="button" data-key="D" aria-label="Throw bottle">
+                    <span aria-hidden="true">🍼</span>
+                    <span>Throw Bottle</span>
+                </button>
+            </div>
+        </div>
+        <button class="mute-button" id="mute-toggle" type="button" aria-pressed="false">🔊 Sound an</button>
     </canvas>
     <button class="fullscreen-button" id="fullscreen-toggle" type="button">Vollbild</button>
-    <audio id="background-music" src="./img/backgroundmusic/backgroundmusic.mp3" loop autoplay></audio>
+    <audio id="background-music" src="./img/backgroundmusic/western-cowboy-duel-background-350113.mp3" loop autoplay></audio>
 </body>
 </html>

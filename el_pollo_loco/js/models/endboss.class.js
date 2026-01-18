@@ -5,8 +5,6 @@ class Endboss extends MoveableObject {
     y = 60;
     speed = 0.8;
     energy = 50;
-
-    // Hitbox offsets for accurate collision (trim sprite padding)
     hitboxOffsetX = 60;
     hitboxOffsetY = 70;
     hitboxWidth = 250;

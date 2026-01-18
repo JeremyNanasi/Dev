@@ -12,6 +12,10 @@ class DrawableObject {
         this.img.src = path;
     }
 
+    drawFrame() {
+        return;
+    }
+
     draw(ctx) {
         if (!this.img) {
             return;

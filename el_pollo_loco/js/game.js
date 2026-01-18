@@ -522,5 +522,5 @@ window.addEventListener("keyup", (e) => {
         return;
     }
 
-setKeyboardState(e.keyCode, false);
+    setKeyboardState(e.keyCode, false);
 });
