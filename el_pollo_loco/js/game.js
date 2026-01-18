@@ -134,9 +134,8 @@ function handleFullscreenToggleClick() {
 
 function handleFullscreenChange(toggleButton) {
     updateFullscreenButtonState(toggleButton);
-    resizeCanvas();
+    applyOrientationLayout();
     syncHints();
-    syncOrientationLock();
 }
 
 function updateFullscreenButtonState(toggleButton) {
@@ -152,57 +151,42 @@ function resizeCanvas() {
 
     canvas.width = DEFAULT_CANVAS_WIDTH;
     canvas.height = DEFAULT_CANVAS_HEIGHT;
-
-    if (document.fullscreenElement) {
-        applyFullscreenContainScale();
-    } else {
-        resetFullscreenStyles();
-    }
 }
 
-function applyFullscreenContainScale() {
+function applyFullscreenContainScale(isFullscreen = Boolean(document.fullscreenElement)) {
     if (!fullscreenTarget) return;
 
     fullscreenTarget.style.position = 'fixed';
-    fullscreenTarget.style.inset = '0';
-    fullscreenTarget.style.width = '100vw';
-    fullscreenTarget.style.height = '100vh';
-    fullscreenTarget.style.display = 'flex';
-    fullscreenTarget.style.alignItems = 'center';
-    fullscreenTarget.style.justifyContent = 'center';
-    fullscreenTarget.style.background = '#000';
-
-    const vw = window.innerWidth;
-    const vh = window.innerHeight;
-
-    const scale = Math.min(vw / DEFAULT_CANVAS_WIDTH, vh / DEFAULT_CANVAS_HEIGHT);
-    const scaledW = Math.floor(DEFAULT_CANVAS_WIDTH * scale);
-    const scaledH = Math.floor(DEFAULT_CANVAS_HEIGHT * scale);
-
-    canvas.style.width = scaledW + 'px';
-    canvas.style.height = scaledH + 'px';
-    canvas.style.display = 'block';
+    fullscreenTarget.style.left = '50%';
+    fullscreenTarget.style.top = '50%';
+    fullscreenTarget.style.width = `${DEFAULT_CANVAS_WIDTH}px`;
+    fullscreenTarget.style.height = `${DEFAULT_CANVAS_HEIGHT}px`;
+    fullscreenTarget.style.display = 'block';
+    fullscreenTarget.style.alignItems = '';
+    fullscreenTarget.style.justifyContent = '';
+    fullscreenTarget.style.background = isFullscreen ? '#000' : 'transparent';
 }
 
 function resetFullscreenStyles() {
     if (!fullscreenTarget) return;
 
     fullscreenTarget.style.position = '';
-    fullscreenTarget.style.inset = '';
+    fullscreenTarget.style.left = '';
+    fullscreenTarget.style.top = '';
     fullscreenTarget.style.width = '';
     fullscreenTarget.style.height = '';
     fullscreenTarget.style.display = 'inline-block';
     fullscreenTarget.style.alignItems = '';
     fullscreenTarget.style.justifyContent = '';
     fullscreenTarget.style.background = '';
+    fullscreenTarget.style.transform = '';
 
-    canvas.style.width = '';
-    canvas.style.height = '';
     canvas.style.display = '';
 }
 
-window.addEventListener('resize', resizeCanvas);
+window.addEventListener('resize', applyOrientationLayout);
 window.addEventListener('resize', updateTouchControlsVisibility);
+window.addEventListener('orientationchange', applyOrientationLayout);
 
 function startGameOverWatcher() {
     resetGameOverState();
@@ -716,8 +700,7 @@ function setupOrientationToggle() {
         const current = localStorage.getItem(ORIENTATION_MODE_KEY) || 'auto';
         const nextMode = getNextOrientationMode(current);
         localStorage.setItem(ORIENTATION_MODE_KEY, nextMode);
-        applyOrientationMode(nextMode);
-        syncOrientationLock();
+        applyOrientationLayout();
     });
 }
 
@@ -731,7 +714,7 @@ function getNextOrientationMode(current) {
 
 function applyStoredOrientation() {
     const stored = localStorage.getItem(ORIENTATION_MODE_KEY) || 'auto';
-    applyOrientationMode(stored);
+    applyOrientationLayout(stored);
 }
 
 function applyOrientationMode(mode) {
@@ -747,23 +730,94 @@ function applyOrientationMode(mode) {
     }
 }
 
-function syncOrientationLock() {
+async function syncOrientationLock(targetOrientation, mode) {
     if (!document.fullscreenElement) {
-        return;
+        return false;
     }
 
-    const mode = localStorage.getItem(ORIENTATION_MODE_KEY) || 'auto';
+    const resolvedMode = ORIENTATION_MODES.includes(mode) ? mode : 'auto';
     const orientation = screen.orientation;
 
     if (!orientation || typeof orientation.lock !== 'function') {
-        return;
+        return false;
     }
 
-    if (mode === 'auto') {
+    if (resolvedMode === 'auto') {
         orientation.unlock?.();
+        return true;
+    }
+
+    const lockMode = targetOrientation === 'portrait' ? 'portrait' : 'landscape';
+    try {
+        await orientation.lock(lockMode);
+        return true;
+    } catch {
+        return false;
+    }
+}
+
+function applyOrientationLayout(forcedMode) {
+    if (!canvas || !fullscreenTarget) {
         return;
     }
 
-    const lockMode = mode === 'portrait' ? 'portrait-primary' : 'landscape-primary';
-    orientation.lock(lockMode).catch(() => {});
+    const storedMode = forcedMode || localStorage.getItem(ORIENTATION_MODE_KEY) || 'auto';
+    const mode = ORIENTATION_MODES.includes(storedMode) ? storedMode : 'auto';
+    const viewportOrientation = getViewportOrientation();
+    const targetOrientation = mode === 'auto' ? viewportOrientation : mode;
+    const isFullscreen = Boolean(document.fullscreenElement);
+
+    applyOrientationMode(mode);
+    resizeCanvas();
+
+    const applyLayout = (useFallback) => {
+        const rotation = useFallback ? getFallbackRotation(targetOrientation, viewportOrientation) : 0;
+        const scale = computeContainScale(window.innerWidth, window.innerHeight, rotation);
+        const needsFixedLayout = isFullscreen || (useFallback && rotation !== 0);
+
+        if (needsFixedLayout) {
+            applyFullscreenContainScale(isFullscreen);
+            fullscreenTarget.style.transform = `translate(-50%, -50%) rotate(${rotation}deg) scale(${scale})`;
+            return;
+        }
+
+        resetFullscreenStyles();
+    };
+
+    if (!isFullscreen) {
+        applyLayout(true);
+        return;
+    }
+
+    syncOrientationLock(targetOrientation, mode).then((locked) => {
+        applyLayout(!locked);
+    });
+}
+
+function getViewportOrientation() {
+    if (window.matchMedia) {
+        return window.matchMedia('(orientation: portrait)').matches ? 'portrait' : 'landscape';
+    }
+    return window.innerWidth >= window.innerHeight ? 'landscape' : 'portrait';
+}
+
+function getFallbackRotation(targetOrientation, viewportOrientation) {
+    if (targetOrientation !== viewportOrientation) {
+        return targetOrientation === 'landscape' ? 90 : 270;
+    }
+
+    const orientationType = screen.orientation?.type || '';
+    if (orientationType.includes('secondary')) {
+        return 180;
+    }
+
+    return 0;
+}
+
+function computeContainScale(viewportWidth, viewportHeight, rotation) {
+    const normalized = ((rotation % 360) + 360) % 360;
+    const rotated = normalized === 90 || normalized === 270;
+    const baseWidth = rotated ? DEFAULT_CANVAS_HEIGHT : DEFAULT_CANVAS_WIDTH;
+    const baseHeight = rotated ? DEFAULT_CANVAS_WIDTH : DEFAULT_CANVAS_HEIGHT;
+    return Math.min(viewportWidth / baseWidth, viewportHeight / baseHeight);
 }
