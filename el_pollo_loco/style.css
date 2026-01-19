@@ -43,7 +43,7 @@ canvas {
 }
 
 .touch-controls {
-    position: fixed;
+    position: absolute;
     inset: 0;
     display: flex;
     justify-content: space-between;
@@ -65,6 +65,11 @@ canvas {
     position: relative;
 }
 
+#fullscreen-target {
+    transform-origin: center center;
+    will-change: transform;
+}
+
 .game-overlay {
     position: absolute;
     inset: 0;
@@ -73,7 +78,7 @@ canvas {
 }
 
 .game-overlay__top-right {
-    position: fixed;
+    position: absolute;
     top: max(12px, env(safe-area-inset-top));
     right: max(12px, env(safe-area-inset-right));
     display: flex;
@@ -118,7 +123,7 @@ canvas {
 }
 
 .game-overlay__bottom-controls {
-    position: fixed;
+    position: absolute;
     left: 50%;
     transform: translateX(-50%);
     bottom: max(16px, env(safe-area-inset-bottom));
