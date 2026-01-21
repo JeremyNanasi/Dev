@@ -29,6 +29,7 @@ let touchControlsVisible = false;
 let bgCanvas;
 let bgContext;
 let bgCaptureInterval;
+let touchUiMql;
 const TOUCH_CONTROLS_STORAGE_KEY = 'touch-controls-preference';
 const SOUND_ENABLED_KEY = 'sound-enabled';
 const ORIENTATION_MODE_KEY = 'orientation-mode';
@@ -38,6 +39,8 @@ function init() {
     canvas = document.getElementById('canvas');
     fullscreenTarget = ensureFullscreenTarget(canvas);
     setupBackgroundLayer();
+    setupMobileTabletDetection();
+    setupTouchControlsMediaQuery();
     world = new World(canvas, keyboard);
     ensureGameOverStyles();
     startGameOverWatcher();
@@ -192,6 +195,8 @@ function resetFullscreenStyles() {
 window.addEventListener('resize', updateLayout);
 window.addEventListener('resize', updateTouchControlsVisibility);
 window.addEventListener('orientationchange', updateLayout);
+window.addEventListener('orientationchange', updateMobileTabletState);
+window.addEventListener('resize', updateMobileTabletState);
 
 function startGameOverWatcher() {
     resetGameOverState();
@@ -629,14 +634,45 @@ function setupMobileControlsToggle() {
     });
 }
 
+function setupTouchControlsMediaQuery() {
+    if (!window.matchMedia) {
+        return;
+    }
+    touchUiMql = window.matchMedia('(max-width: 900px)');
+    touchUiMql.addEventListener('change', updateTouchControlsVisibility);
+}
+
+function detectMobileTablet() {
+    const hasTouchPoints = navigator.maxTouchPoints > 0;
+    const coarsePointer = window.matchMedia?.('(pointer: coarse)')?.matches;
+    const noHover = window.matchMedia?.('(hover: none)')?.matches;
+    return hasTouchPoints || (coarsePointer && noHover);
+}
+
+function updateMobileTabletState() {
+    const detected = detectMobileTablet();
+    document.body.classList.toggle('is-mobile-tablet', detected);
+    return detected;
+}
+
+function setupMobileTabletDetection() {
+    updateMobileTabletState();
+}
+
 function updateTouchControlsVisibility() {
     const stored = localStorage.getItem(TOUCH_CONTROLS_STORAGE_KEY);
+    const isMobileTablet = document.body.classList.contains('is-mobile-tablet');
+    const isWithinBreakpoint = touchUiMql ? touchUiMql.matches : window.innerWidth <= 900;
     if (stored === 'on') {
         touchControlsVisible = true;
     } else if (stored === 'off') {
         touchControlsVisible = false;
     } else {
-        touchControlsVisible = window.innerWidth < 768;
+        touchControlsVisible = isMobileTablet && isWithinBreakpoint;
+    }
+
+    if (!isMobileTablet || !isWithinBreakpoint) {
+        touchControlsVisible = false;
     }
 
     updateTouchControlsUI();
@@ -657,7 +693,8 @@ function updateTouchControlsUI() {
 
     const orientationToggle = document.getElementById('orientation-toggle');
     if (orientationToggle) {
-        orientationToggle.style.display = shouldShow || window.innerWidth < 768 ? 'inline-flex' : 'none';
+        const withinBreakpoint = touchUiMql ? touchUiMql.matches : window.innerWidth <= 900;
+        orientationToggle.style.display = shouldShow || withinBreakpoint ? 'inline-flex' : 'none';
     }
 }
 

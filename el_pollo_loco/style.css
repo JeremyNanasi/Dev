@@ -121,14 +121,14 @@ canvas {
 }
 
 .icon-button--mute {
-    width: 52px;
-    height: 52px;
+    width: 34px;
+    height: 34px;
     padding: 0;
 }
 
 .icon-button--mute img {
-    width: 28px;
-    height: 28px;
+    width: 20px;
+    height: 20px;
     display: block;
 }
 
@@ -183,10 +183,10 @@ canvas {
 }
 
 .touch-control-button {
-    width: clamp(56px, 10vw, 84px);
-    height: clamp(56px, 10vw, 84px);
+    width: clamp(40px, 10vw, 20px);
+    height: clamp(40px, 10vw, 20px);
     padding: 0;
-    border-radius: 18px;
+    border-radius: 55px;
     border: 1px solid rgba(255, 255, 255, 0.35);
     background: rgba(0, 0, 0, 0.45);
     display: inline-flex;
