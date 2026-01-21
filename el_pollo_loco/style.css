@@ -1,22 +1,45 @@
 body {
     font-family: "New Rocker", Arial, Helvetica, sans-serif;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    flex-direction: column;
-    min-height: 100vh;
     margin: 0;
-
-    background-image: url('./img/10_page_background/desert.jpg');
-    background-size: cover;
-    background-position: center;
+    min-height: 100vh;
+    background: #0b0b0b;
     overflow: hidden;
-    background-repeat: no-repeat;
 }
 
-h1 {
+.game-title {
+    position: fixed;
+    top: 16px;
+    left: 50%;
+    transform: translateX(-50%);
+    margin: 0;
     font-size: 50px;
-    margin: 20px;
+    z-index: 5;
+    pointer-events: none;
+    color: #fff4d0;
+    text-shadow: 0 8px 20px rgba(0, 0, 0, 0.55);
+}
+
+body.is-fullscreen .game-title {
+    display: none;
+}
+
+#viewport {
+    position: fixed;
+    inset: 0;
+    overflow: hidden;
+    z-index: 0;
+}
+
+#bg-canvas {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 0;
+    filter: blur(18px) brightness(0.75) saturate(0.9);
+    transform: scale(1.05);
+    transform-origin: center;
+    opacity: 0.95;
 }
 
 .fullscreen-button {
@@ -30,57 +53,53 @@ h1 {
 }
 
 canvas {
-    background-color: black;
     display: block;
 }
 
-.game-overlay__bottom-controls {
-    position: fixed;
-    left: 50%;
-    bottom: 18px;
-    transform: translateX(-50%);
-    pointer-events: auto;
-}
-
-.touch-controls {
-    position: fixed;
-    inset: 0;
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-end;
-    padding: 0 18px 24px;
-    gap: 16px;
-    pointer-events: none;
-    opacity: 0;
-    transform: translateY(12px);
-    transition: opacity 0.2s ease, transform 0.2s ease;
-}
-
-.touch-controls.is-visible {
-    opacity: 1;
-    transform: translateY(0);
-}
-
 .game-shell {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    width: 720px;
+    height: 480px;
+    transform-origin: center;
+    overflow: hidden;
+    box-shadow: 0 26px 60px rgba(0, 0, 0, 0.55), 0 10px 25px rgba(0, 0, 0, 0.4);
+    z-index: 2;
+}
+
+.game-shell::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(circle at 50% 45%, rgba(0, 0, 0, 0) 45%, rgba(0, 0, 0, 0.35) 100%);
+    z-index: 2;
+    pointer-events: none;
+}
+
+#canvas {
+    width: 100%;
+    height: 100%;
+    background: #000;
     position: relative;
+    z-index: 1;
 }
 
 .game-overlay {
     position: absolute;
     inset: 0;
     pointer-events: none;
-    z-index: 20;
+    z-index: 3;
 }
 
 .game-overlay__top-right {
-    position: fixed;
+    position: absolute;
     top: max(12px, env(safe-area-inset-top));
     right: max(12px, env(safe-area-inset-right));
     display: flex;
     gap: 10px;
     align-items: center;
     pointer-events: auto;
-    z-index: 9999;
 }
 
 .icon-button {
@@ -118,12 +137,11 @@ canvas {
 }
 
 .game-overlay__bottom-controls {
-    position: fixed;
+    position: absolute;
     left: 50%;
     transform: translateX(-50%);
-    bottom: max(16px, env(safe-area-inset-bottom));
+    bottom: max(12px, env(safe-area-inset-bottom));
     pointer-events: auto;
-    z-index: 9999;
 }
 
 .ui-toggle-button {
@@ -139,7 +157,7 @@ canvas {
 }
 
 .touch-controls {
-    position: fixed;
+    position: absolute;
     left: 0;
     right: 0;
     bottom: max(12px, env(safe-area-inset-bottom));
@@ -148,7 +166,14 @@ canvas {
     align-items: flex-end;
     padding: 12px 16px;
     pointer-events: none;
-    z-index: 9998;
+    opacity: 0;
+    transform: translateY(12px);
+    transition: opacity 0.2s ease, transform 0.2s ease;
+}
+
+.touch-controls.is-visible {
+    opacity: 1;
+    transform: translateY(0);
 }
 
 .touch-controls__group {
@@ -195,30 +220,12 @@ body.touch-controls-hidden .touch-controls {
     display: none;
 }
 
-body.touch-controls-visible #fullscreen-target {
-    margin-bottom: 110px;
-}
-
 body.touch-controls-visible .game-overlay__bottom-controls {
     display: block;
 }
 
-body.orientation-portrait #fullscreen-target {
-    max-width: 520px;
-}
-
-body.orientation-landscape #fullscreen-target {
-    max-width: 960px;
-}
-
-body.orientation-portrait canvas,
-body.orientation-landscape canvas {
-    width: 100%;
-    height: auto;
-}
-
 @media (max-width: 767px) {
-    h1 {
+    .game-title {
         font-size: 36px;
     }
 
@@ -230,17 +237,5 @@ body.orientation-landscape canvas {
     .game-overlay__top-right {
         top: 12px;
         right: 12px;
-    }
-}
-
-@media only screen and (max-width: 720px) {
-    canvas {
-        width: 100%;
-    }
-}
-
-@media only screen and (max-height: 480px) {
-    canvas {
-        height: 100vh;
     }
 }
