@@ -26,9 +26,6 @@ let lastHintText = null;
 let endOverlayActive = false;
 let touchControlsInitialized = false;
 let touchControlsVisible = false;
-let bgCanvas;
-let bgContext;
-let bgCaptureInterval;
 let touchUiMql;
 const TOUCH_CONTROLS_STORAGE_KEY = 'touch-controls-preference';
 const SOUND_ENABLED_KEY = 'sound-enabled';
@@ -38,7 +35,6 @@ const ORIENTATION_MODES = ['auto', 'portrait', 'landscape'];
 function init() {
     canvas = document.getElementById('canvas');
     fullscreenTarget = ensureFullscreenTarget(canvas);
-    setupBackgroundLayer();
     setupMobileTabletDetection();
     setupTouchControlsMediaQuery();
     world = new World(canvas, keyboard);
@@ -51,7 +47,6 @@ function init() {
     setupOrientationToggle();
     applyStoredOrientation();
     updateTouchControlsVisibility();
-    startBackgroundCapture();
 }
 
 window.showWinOverlay = function () {
@@ -813,7 +808,6 @@ function updateLayout(forcedMode) {
     resizeCanvas();
     applyFullscreenContainScale(isFullscreen);
     document.body.classList.toggle('is-fullscreen', isFullscreen);
-    updateBackgroundCanvasSize();
 
     const applyLayout = (useFallback) => {
         const rotation = useFallback ? getFallbackRotation(targetOrientation, viewportOrientation) : 0;
@@ -857,65 +851,4 @@ function computeContainScale(viewportWidth, viewportHeight, rotation) {
     const baseWidth = rotated ? DEFAULT_CANVAS_HEIGHT : DEFAULT_CANVAS_WIDTH;
     const baseHeight = rotated ? DEFAULT_CANVAS_WIDTH : DEFAULT_CANVAS_HEIGHT;
     return Math.min(viewportWidth / baseWidth, viewportHeight / baseHeight);
-}
-
-function setupBackgroundLayer() {
-    bgCanvas = document.getElementById('bg-canvas');
-    if (!bgCanvas) {
-        return;
-    }
-    bgContext = bgCanvas.getContext('2d');
-    updateBackgroundCanvasSize();
-}
-
-function updateBackgroundCanvasSize() {
-    if (!bgCanvas) {
-        return;
-    }
-    const dpr = window.devicePixelRatio || 1;
-    const width = Math.max(1, Math.floor(window.innerWidth * dpr));
-    const height = Math.max(1, Math.floor(window.innerHeight * dpr));
-    if (bgCanvas.width !== width || bgCanvas.height !== height) {
-        bgCanvas.width = width;
-        bgCanvas.height = height;
-    }
-}
-
-function startBackgroundCapture() {
-    if (bgCaptureInterval) {
-        return;
-    }
-    bgCaptureInterval = window.setInterval(() => {
-        captureBackgroundFrame();
-    }, 250);
-}
-
-function captureBackgroundFrame() {
-    if (!bgCanvas || !bgContext || !canvas) {
-        return;
-    }
-    if (!canvas.width || !canvas.height) {
-        return;
-    }
-
-    const targetWidth = bgCanvas.width;
-    const targetHeight = bgCanvas.height;
-    if (!targetWidth || !targetHeight) {
-        return;
-    }
-
-    const srcWidth = canvas.width;
-    const srcHeight = canvas.height;
-    if (!srcWidth || !srcHeight) {
-        return;
-    }
-
-    const scale = Math.max(targetWidth / srcWidth, targetHeight / srcHeight);
-    const drawWidth = srcWidth * scale;
-    const drawHeight = srcHeight * scale;
-    const dx = (targetWidth - drawWidth) / 2;
-    const dy = (targetHeight - drawHeight) / 2;
-
-    bgContext.clearRect(0, 0, targetWidth, targetHeight);
-    bgContext.drawImage(canvas, dx, dy, drawWidth, drawHeight);
 }

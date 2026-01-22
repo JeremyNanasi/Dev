@@ -15,30 +15,69 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=New+Rocker&display=swap" rel="stylesheet">
 </head>
 <body>
-    <main class="menu-page">
-        <section class="menu-grid">
-            <section class="menu-card">
-                <h1>El Pollo Loco</h1>
-                <p>Drücke auf Start, um dein Abenteuer zu beginnen.</p>
-                <div class="menu-actions">
-                    <a href="index.html?start=1" class="start-button" role="button">Start</a>
-                </div>
-            </section>
+    <div id="menu-shell" class="menu-shell">
+        <div id="orientation-block" class="orientation-block" aria-hidden="true">
+            <div class="orientation-block__card" role="dialog" aria-modal="true" aria-label="Ausrichtung erforderlich">
+                <div class="orientation-block__title">El Pollo Loco</div>
+                <div class="orientation-block__text">Bitte drehe dein Gerät ins Querformat, um zu spielen.</div>
+            </div>
+        </div>
 
-            <section class="menu-card info-card">
-                <h2>Steuerung</h2>
-                <button class="menu-toggle" id="controls-toggle" type="button" aria-expanded="false" aria-controls="controls-list">
-                    Steuerung anzeigen
-                </button>
-                <ul id="controls-list" class="menu-list">
-                    <li class="list-style-none"><span class="key">← →</span> Bewegen</li>
-                    <li class="list-style-none"><span class="key">↑</span> Springen</li>
-                    <li class="list-style-none"><span class="key">Space</span> Wurf</li>
-                    <li class="list-style-none"><span class="key">D</span>Flasche werfen</li>
-                </ul>
+        <main class="menu-page">
+            <section class="menu-grid">
+                <section class="menu-card">
+                    <h1>El Pollo Loco</h1>
+                    <p>Drücke auf Start, um dein Abenteuer zu beginnen.</p>
+                    <div class="menu-actions">
+                        <a href="index.html?start=1" class="start-button" role="button">Start</a>
+                    </div>
+                </section>
+
+                <section class="menu-card info-card">
+                    <h2>Steuerung</h2>
+                    <button class="menu-toggle" id="controls-toggle" type="button" aria-expanded="false" aria-controls="controls-list">
+                        Steuerung anzeigen
+                    </button>
+                    <ul id="controls-list" class="menu-list controls-grid">
+                        <li class="controls-row">
+                            <div class="controls-keycaps">
+                                <span class="keycap"></span>
+                                <span class="keycap"></span>
+                            </div>
+                            <div class="controls-desc">Bewegen</div>
+                        </li>
+                        <li class="controls-row">
+                            <div class="controls-keycaps">
+                                <span class="keycap"></span>
+                            </div>
+                            <div class="controls-desc">Springen</div>
+                        </li>
+                        <li class="controls-row">
+                            <div class="controls-keycaps">
+                                <span class="keycap keycap--wide">SPACE</span>
+                            </div>
+                            <div class="controls-desc">Wurf</div>
+                        </li>
+                        <li class="controls-row">
+                            <div class="controls-keycaps">
+                                <span class="keycap">D</span>
+                            </div>
+                            <div class="controls-desc">Flasche werfen</div>
+                        </li>
+                        <li class="controls-row controls-row--toggle">
+                            <div class="controls-keycaps">
+                                <button id="sound-toggle" class="keycap keycap--toggle" type="button" aria-pressed="false">
+                                    <span class="keycap__label">Musik/Sound</span>
+                                    <span class="keycap__state" data-state>an</span>
+                                </button>
+                            </div>
+                            <div class="controls-desc">an/aus</div>
+                        </li>
+                    </ul>
+                </section>
             </section>
-        </section>
-    </main>
+        </main>
+    </div>
     <audio id="background-music" src="./img/backgroundmusic/western-cowboy-duel-background-350113.mp3" loop autoplay></audio>
 </body>
 </html>
