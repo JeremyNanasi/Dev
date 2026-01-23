@@ -544,68 +544,45 @@ class World {
         };
     }
 
-    isStomping(character, enemy, config) {
+    getCollisionPair(character, enemy) {
         const characterBox = this.getCollisionBox(character);
         const enemyBox = this.getCollisionBox(enemy);
+        return { characterBox, enemyBox };
+    }
 
-        if (!this.isCollidingBoxes(characterBox, enemyBox)) {
-            return false;
-        }
+    isFalling(character) {
+        return character.speedY < 0;
+    }
 
-        const isFalling = character.speedY < 0;
-        if (!isFalling) {
-            return false;
-        }
+    getStompMinOverlap(enemyBox, config) {
+        return Math.min(config.stompMinOverlapX, enemyBox.width * config.stompMinOverlapXRatio);
+    }
 
-        const characterBottom = characterBox.bottom;
-        const enemyTop = enemyBox.top;
-        const verticalPenetration = characterBottom - enemyTop;
-
-        if (verticalPenetration > config.stompVerticalTolerance) {
-            return false;
-        }
-
-        const overlap = this.getOverlap(characterBox, enemyBox);
-        const minOverlapNeeded = Math.min(
-            config.stompMinOverlapX,
-            enemyBox.width * config.stompMinOverlapXRatio
-        );
-        if (overlap.x < minOverlapNeeded) {
-            return false;
-        }
-
+    isWithinStompCenter(characterBox, enemyBox, config) {
         const characterCenterX = characterBox.left + characterBox.width / 2;
-        const withinEnemyBounds = characterCenterX >= enemyBox.left - config.stompCenterMargin
+        return characterCenterX >= enemyBox.left - config.stompCenterMargin
             && characterCenterX <= enemyBox.right + config.stompCenterMargin;
+    }
 
-        return withinEnemyBounds;
+    isStomping(character, enemy, config) {
+        const { characterBox, enemyBox } = this.getCollisionPair(character, enemy);
+        if (!this.isCollidingBoxes(characterBox, enemyBox)) { return false; }
+        if (!this.isFalling(character)) { return false; }
+        const verticalPenetration = characterBox.bottom - enemyBox.top;
+        if (verticalPenetration > config.stompVerticalTolerance) { return false; }
+        const overlap = this.getOverlap(characterBox, enemyBox);
+        if (overlap.x < this.getStompMinOverlap(enemyBox, config)) { return false; }
+        return this.isWithinStompCenter(characterBox, enemyBox, config);
     }
 
     isSideHit(character, enemy, config) {
-        const characterBox = this.getCollisionBox(character);
-        const enemyBox = this.getCollisionBox(enemy);
-
-        if (!this.isCollidingBoxes(characterBox, enemyBox)) {
-            return false;
-        }
-
-        if (this.isStomping(character, enemy, config)) {
-            return false;
-        }
-
+        const { characterBox, enemyBox } = this.getCollisionPair(character, enemy);
+        if (!this.isCollidingBoxes(characterBox, enemyBox)) { return false; }
+        if (this.isStomping(character, enemy, config)) { return false; }
         const overlap = this.getOverlap(characterBox, enemyBox);
-        if (overlap.x < config.minOverlapX || overlap.y < config.minOverlapY) {
-            return false;
-        }
-
+        if (overlap.x < config.minOverlapX || overlap.y < config.minOverlapY) { return false; }
         const characterBottom = characterBox.bottom;
-        const enemyTop = enemyBox.top;
-        const isFalling = character.speedY < 0;
-
-        if (isFalling && characterBottom <= enemyTop + config.topGrace) {
-            return false;
-        }
-
+        if (this.isFalling(character) && characterBottom <= enemyBox.top + config.topGrace) { return false; }
         return true;
     }
 }

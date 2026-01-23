@@ -23,10 +23,6 @@ class DrawableObject {
         ctx.drawImage(this.img, this.x, this.y, this.height, this.width);
     }
 
-    /**
-     * 
-     * @param {Array} arr - ['img/image1.png', 'img/image2.png', ...] 
-     */
     loadImages(arr) {
         arr.forEach((path) => {
             let img = new Image();
