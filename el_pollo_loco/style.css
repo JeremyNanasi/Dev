@@ -163,10 +163,6 @@ canvas {
     display: block;
 }
 
-.icon-button--orientation {
-    height: 52px;
-}
-
 .game-overlay__bottom-controls {
     position: absolute;
     left: 50%;
@@ -265,11 +261,6 @@ body.touch-controls-visible .game-overlay__bottom-controls {
 @media (max-width: 767px) {
     .game-title {
         font-size: 36px;
-    }
-
-    .touch-control-button {
-        width: 68px;
-        height: 68px;
     }
 
     .game-overlay__top-right {

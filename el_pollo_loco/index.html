@@ -11,8 +11,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=New+Rocker&display=swap" rel="stylesheet">
 
-    <script src="./js/core/epl.namespace.js"></script>
-    <script src="./js/core/sound.controller.js"></script>
+    <script src="./js/models/menu.js"></script>
     <script src="./js/models/drawable-object.class.js"></script>
     <script src="./js/models/movable-object.class.js"></script>
     <script src="./js/models/throwable-object.class.js"></script>
@@ -35,6 +34,13 @@
     <h1 class="game-title">El Pollo Loco</h1>
 
     <div id="viewport">
+        <div id="orientation-block" class="orientation-block" aria-hidden="true">
+            <div class="orientation-block__card" role="dialog" aria-modal="true" aria-label="Ausrichtung erforderlich">
+                <div class="orientation-block__title">El Pollo Loco</div>
+                <div class="orientation-block__text">Bitte drehe dein Gerät ins Querformat, um zu spielen.</div>
+            </div>
+        </div>
+
         <div id="fullscreen-target" class="game-shell">
             <canvas id="canvas" width="720" height="480"></canvas>
 
@@ -82,6 +88,6 @@
         </div>
     </div>
 
-    <audio id="background-music" src="./img/backgroundmusic/western-cowboy-duel-background-350113.mp3" loop></audio>
+    <audio id="background-music" src="./img/backgroundmusic/western-cowboy-duel-background-350113.mp3" loop autoplay></audio>
 </body>
 </html>

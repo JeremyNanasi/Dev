@@ -1,11 +1,11 @@
 (function() {
     function isSoundEnabled() {
-        var key = window.EPL ? window.EPL.KEYS.SOUND_ENABLED : 'sound-enabled';
+        let key = window.EPL ? window.EPL.KEYS.SOUND_ENABLED : 'sound-enabled';
         return localStorage.getItem(key) !== 'false';
     }
 
     function applySoundState(enabled) {
-        var audio = document.getElementById('background-music');
+        let audio = document.getElementById('background-music');
         if (!audio) return;
         if (enabled) {
             audio.muted = false;
@@ -19,38 +19,38 @@
     }
 
     function setupSoundToggle() {
-        var toggle = document.getElementById('sound-toggle');
+        let toggle = document.getElementById('sound-toggle');
         if (!toggle) return;
 
-        var updateToggle = function(enabled) {
+        let updateToggle = function(enabled) {
             toggle.classList.toggle('is-off', !enabled);
             toggle.setAttribute('aria-pressed', enabled ? 'false' : 'true');
-            var stateLabel = toggle.querySelector('[data-state]');
+            let stateLabel = toggle.querySelector('[data-state]');
             if (stateLabel) {
                 stateLabel.textContent = enabled ? 'an' : 'aus';
             }
         };
 
         toggle.addEventListener('click', function() {
-            var nextEnabled = !isSoundEnabled();
-            var key = window.EPL ? window.EPL.KEYS.SOUND_ENABLED : 'sound-enabled';
+            let nextEnabled = !isSoundEnabled();
+            let key = window.EPL ? window.EPL.KEYS.SOUND_ENABLED : 'sound-enabled';
             localStorage.setItem(key, nextEnabled ? 'true' : 'false');
             applySoundState(nextEnabled);
             updateToggle(nextEnabled);
         });
 
-        var initial = isSoundEnabled();
+        let initial = isSoundEnabled();
         applySoundState(initial);
         updateToggle(initial);
     }
 
     function setupControlsToggle() {
-        var toggleButton = document.getElementById('controls-toggle');
-        var menuList = document.getElementById('controls-list');
+        let toggleButton = document.getElementById('controls-toggle');
+        let menuList = document.getElementById('controls-list');
         if (!toggleButton || !menuList) return;
 
-        var expanded = false;
-        var updateUi = function() {
+        let expanded = false;
+        let updateUi = function() {
             menuList.classList.toggle('collapsed', !expanded);
             toggleButton.setAttribute('aria-expanded', expanded ? 'true' : 'false');
             toggleButton.textContent = expanded ? 'Steuerung verbergen' : 'Steuerung anzeigen';
@@ -66,9 +66,9 @@
     }
 
     function initSoundOnGesture() {
-        var handler = function() {
+        let handler = function() {
             if (isSoundEnabled()) {
-                var audio = document.getElementById('background-music');
+                let audio = document.getElementById('background-music');
                 if (audio && audio.paused) {
                     audio.currentTime = 0;
                     audio.play().catch(function() {});
@@ -82,10 +82,10 @@
     }
 
     document.addEventListener('DOMContentLoaded', function() {
-        var audio = document.getElementById('background-music');
+        let audio = document.getElementById('background-music');
         if (audio) {
             audio.removeAttribute('autoplay');
-            var enabled = isSoundEnabled();
+            let enabled = isSoundEnabled();
             audio.muted = !enabled;
             if (!enabled) {
                 audio.pause();

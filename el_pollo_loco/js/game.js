@@ -1,23 +1,23 @@
-﻿var canvas;
-var world;
-var keyboard = new Keyboard();
-var fullscreenTarget;
-var gameStarted = false;
-var gameOverShown = false;
-var gameOverOverlay;
-var controlsLocked = false;
-var endOverlayShown = false;
-var endOverlayElement;
-var fsHintEl = null;
-var inlineHintEl = null;
-var lastHintText = null;
-var endOverlayActive = false;
-var touchControlsInitialized = false;
-var touchControlsVisible = false;
-var touchUiMql;
+﻿let canvas;
+let world;
+let keyboard = new Keyboard();
+let fullscreenTarget;
+let gameStarted = false;
+let gameOverShown = false;
+let gameOverOverlay;
+let controlsLocked = false;
+let endOverlayShown = false;
+let endOverlayElement;
+let fsHintEl = null;
+let inlineHintEl = null;
+let lastHintText = null;
+let endOverlayActive = false;
+let touchControlsInitialized = false;
+let touchControlsVisible = false;
+let touchUiMql;
 
-var GAME_OVER_STYLE_ID = 'game-over-animations';
-var KEYBOARD_CODE_MAP = {
+let GAME_OVER_STYLE_ID = 'game-over-animations';
+let KEYBOARD_CODE_MAP = {
     39: 'RIGHT',
     37: 'LEFT',
     38: 'UP',
