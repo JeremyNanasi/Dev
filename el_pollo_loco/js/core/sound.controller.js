@@ -2,8 +2,8 @@
     if (window.EPL && window.EPL.Sound) return;
     if (!window.EPL) window.EPL = {};
 
-    var audioElement = null;
-    var initialized = false;
+    let audioElement = null;
+    let initialized = false;
 
     function getAudio() {
         if (!audioElement) {
@@ -22,7 +22,7 @@
     }
 
     function applyState(enabled) {
-        var audio = getAudio();
+        let audio = getAudio();
         if (!audio) return;
 
         if (enabled) {
@@ -37,7 +37,7 @@
     }
 
     function toggle() {
-        var next = !isEnabled();
+        let next = !isEnabled();
         setEnabled(next);
         return next;
     }
@@ -46,12 +46,12 @@
         if (initialized) return;
         initialized = true;
 
-        var audio = getAudio();
+        let audio = getAudio();
         if (audio) {
             audio.removeAttribute('autoplay');
         }
 
-        var enabled = isEnabled();
+        let enabled = isEnabled();
         if (audio) {
             audio.muted = !enabled;
             if (!enabled) {
@@ -63,7 +63,7 @@
 
     function tryPlayOnGesture() {
         if (!isEnabled()) return;
-        var audio = getAudio();
+        let audio = getAudio();
         if (audio && audio.paused) {
             audio.currentTime = 0;
             audio.play().catch(function() {});

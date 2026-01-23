@@ -45,7 +45,7 @@ function init() {
 }
 
 function initSoundOnGesture() {
-    var handler = function() {
+    let handler = function() {
         if (window.EPL && window.EPL.Sound) {
             window.EPL.Sound.tryPlayOnGesture();
         }
@@ -68,7 +68,7 @@ function startGame() {
 }
 
 function shouldStartGame() {
-    var params = new URLSearchParams(window.location.search);
+    let params = new URLSearchParams(window.location.search);
     return params.get('start') === '1';
 }
 
@@ -89,14 +89,14 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 function ensureFullscreenTarget(canvasEl) {
-    var existing = document.getElementById('fullscreen-target');
+    let existing = document.getElementById('fullscreen-target');
     if (existing) {
         applyFullscreenTargetDefaults(existing);
         return existing;
     }
-    var wrapper = document.createElement('div');
+    let wrapper = document.createElement('div');
     wrapper.id = 'fullscreen-target';
-    var parent = canvasEl.parentNode;
+    let parent = canvasEl.parentNode;
     parent.insertBefore(wrapper, canvasEl);
     wrapper.appendChild(canvasEl);
     wrapper.style.display = 'block';
@@ -110,7 +110,7 @@ function applyFullscreenTargetDefaults(wrapper) {
 }
 
 function setupFullscreenToggle() {
-    var toggleButton = getFullscreenToggleButton();
+    let toggleButton = getFullscreenToggleButton();
     if (!toggleButton) return;
     registerFullscreenListeners(toggleButton);
 }
@@ -140,23 +140,23 @@ function handleFullscreenChange(toggleButton) {
 }
 
 function updateFullscreenButtonState(toggleButton) {
-    var isFullscreen = Boolean(document.fullscreenElement);
+    let isFullscreen = Boolean(document.fullscreenElement);
     toggleButton.textContent = isFullscreen ? 'Vollbild verlassen' : 'Vollbild';
     toggleButton.classList.toggle('is-active', isFullscreen);
 }
 
 function resizeCanvas() {
     if (!canvas) return;
-    var w = window.EPL ? window.EPL.DEFAULT_CANVAS_WIDTH : 720;
-    var h = window.EPL ? window.EPL.DEFAULT_CANVAS_HEIGHT : 480;
+    let w = window.EPL ? window.EPL.DEFAULT_CANVAS_WIDTH : 720;
+    let h = window.EPL ? window.EPL.DEFAULT_CANVAS_HEIGHT : 480;
     canvas.width = w;
     canvas.height = h;
 }
 
 function applyFullscreenContainScale() {
     if (!fullscreenTarget) return;
-    var w = window.EPL ? window.EPL.DEFAULT_CANVAS_WIDTH : 720;
-    var h = window.EPL ? window.EPL.DEFAULT_CANVAS_HEIGHT : 480;
+    let w = window.EPL ? window.EPL.DEFAULT_CANVAS_WIDTH : 720;
+    let h = window.EPL ? window.EPL.DEFAULT_CANVAS_HEIGHT : 480;
     fullscreenTarget.style.position = 'absolute';
     fullscreenTarget.style.left = '50%';
     fullscreenTarget.style.top = '50%';
@@ -176,8 +176,8 @@ window.addEventListener('resize', updateMobileTabletState);
 
 function startGameOverWatcher() {
     resetGameOverState();
-    var loop = function() {
-        var status = getGameOverStatus();
+    let loop = function() {
+        let status = getGameOverStatus();
         handleGameOverStatus(status);
         if (!endOverlayShown) {
             requestAnimationFrame(loop);
@@ -204,7 +204,7 @@ function resetGameOverState() {
 
 function getGameOverStatus() {
     if (world?.character?.isDead?.()) return 'dead';
-    var boss = getBoss();
+    let boss = getBoss();
     if (isBossDefeatedCheck(boss)) return 'bossDefeated';
     return null;
 }
@@ -313,8 +313,8 @@ function showFullscreenHint(text) {
         buildHintBaseStyles(fsHintEl);
     }
     fsHintEl.textContent = lastHintText;
-    var host = document.fullscreenElement === canvas ? fullscreenTarget : document.fullscreenElement;
-    var target = host || document.body;
+    let host = document.fullscreenElement === canvas ? fullscreenTarget : document.fullscreenElement;
+    let target = host || document.body;
     if (fsHintEl.parentNode !== target) {
         fsHintEl.remove();
         target.appendChild(fsHintEl);
@@ -342,8 +342,8 @@ function showInlineHint(text) {
         buildHintBaseStyles(inlineHintEl);
     }
     inlineHintEl.textContent = lastHintText;
-    var host = fullscreenTarget || (canvas ? canvas.parentNode : null);
-    var parent = (host ? host.parentNode : null) || document.body;
+    let host = fullscreenTarget || (canvas ? canvas.parentNode : null);
+    let parent = (host ? host.parentNode : null) || document.body;
     if (!inlineHintEl.parentNode) {
         parent.appendChild(inlineHintEl);
         parent.style.textAlign = 'center';
@@ -377,19 +377,19 @@ function syncHints() {
 
 function resetKeyboard() {
     Object.keys(KEYBOARD_CODE_MAP).forEach(function(code) {
-        var key = KEYBOARD_CODE_MAP[code];
+        let key = KEYBOARD_CODE_MAP[code];
         keyboard[key] = false;
     });
 }
 
 function ensureGameOverStyles() {
     if (document.getElementById(GAME_OVER_STYLE_ID)) return;
-    var style = buildGameOverStyleElement();
+    let style = buildGameOverStyleElement();
     document.head.appendChild(style);
 }
 
 function buildGameOverStyleElement() {
-    var style = document.createElement('style');
+    let style = document.createElement('style');
     style.id = GAME_OVER_STYLE_ID;
     style.textContent = getGameOverStyleText();
     return style;
@@ -443,7 +443,7 @@ function navigateToMenu() {
 }
 
 function setKeyboardState(keyCode, isPressed) {
-    var key = KEYBOARD_CODE_MAP[keyCode];
+    let key = KEYBOARD_CODE_MAP[keyCode];
     if (!key) return;
     keyboard[key] = isPressed;
 }
@@ -456,30 +456,30 @@ window.addEventListener('keyup', function(e) {
 
 function setupTouchControls() {
     if (touchControlsInitialized) return;
-    var buttons = Array.from(document.querySelectorAll('.touch-control-button'));
+    let buttons = Array.from(document.querySelectorAll('.touch-control-button'));
     if (!buttons.length) return;
-    var keyToButton = new Map();
-    var mousePressedKeys = new Set();
-    var getKeysForButton = function(key) {
+    let keyToButton = new Map();
+    let mousePressedKeys = new Set();
+    let getKeysForButton = function(key) {
         if (key === 'SPACE' || key === 'UP') return ['SPACE', 'UP'];
         return [key];
     };
     buttons.forEach(function(button) {
-        var key = button.dataset.key;
+        let key = button.dataset.key;
         if (!key) return;
         keyToButton.set(key, button);
-        var handlePressStart = function(event, source) {
+        let handlePressStart = function(event, source) {
             if (shouldIgnoreInput()) return;
             event.preventDefault();
-            var keys = getKeysForButton(key);
+            let keys = getKeysForButton(key);
             keys.forEach(function(k) { keyboard[k] = true; });
             button.classList.add('is-pressed');
             if (source === 'mouse') mousePressedKeys.add(key);
         };
-        var handlePressEnd = function(event) {
+        let handlePressEnd = function(event) {
             event.preventDefault();
-            var keys = getKeysForButton(key);
-            var isJump = keys.includes('SPACE') || keys.includes('UP');
+            let keys = getKeysForButton(key);
+            let isJump = keys.includes('SPACE') || keys.includes('UP');
             if (isJump) {
                 setTimeout(function() { keys.forEach(function(k) { keyboard[k] = false; }); }, 120);
             } else {
@@ -499,9 +499,9 @@ function setupTouchControls() {
         if (!mousePressedKeys.size) return;
         event.preventDefault();
         mousePressedKeys.forEach(function(key) {
-            var keys = (key === 'SPACE' || key === 'UP') ? ['SPACE', 'UP'] : [key];
+            let keys = (key === 'SPACE' || key === 'UP') ? ['SPACE', 'UP'] : [key];
             keys.forEach(function(k) { keyboard[k] = false; });
-            var btn = keyToButton.get(key);
+            let btn = keyToButton.get(key);
             if (btn) btn.classList.remove('is-pressed');
         });
         mousePressedKeys.clear();
@@ -510,11 +510,11 @@ function setupTouchControls() {
 }
 
 function setupMobileControlsToggle() {
-    var toggle = document.getElementById('mobile-controls-toggle');
+    let toggle = document.getElementById('mobile-controls-toggle');
     if (!toggle) return;
     toggle.addEventListener('click', function() {
         touchControlsVisible = !touchControlsVisible;
-        var key = window.EPL ? window.EPL.KEYS.TOUCH_CONTROLS : 'touch-controls-preference';
+        let key = window.EPL ? window.EPL.KEYS.TOUCH_CONTROLS : 'touch-controls-preference';
         localStorage.setItem(key, touchControlsVisible ? 'on' : 'off');
         updateTouchControlsUI();
     });
@@ -522,20 +522,20 @@ function setupMobileControlsToggle() {
 
 function setupTouchControlsMediaQuery() {
     if (!window.matchMedia) return;
-    var bp = window.EPL ? window.EPL.BREAKPOINT_MOBILE : 899;
+    let bp = window.EPL ? window.EPL.BREAKPOINT_MOBILE : 899;
     touchUiMql = window.matchMedia('(max-width: ' + bp + 'px)');
     touchUiMql.addEventListener('change', updateTouchControlsVisibility);
 }
 
 function detectMobileTablet() {
-    var hasTouchPoints = navigator.maxTouchPoints > 0;
-    var coarsePointer = window.matchMedia?.('(pointer: coarse)')?.matches;
-    var noHover = window.matchMedia?.('(hover: none)')?.matches;
+    let hasTouchPoints = navigator.maxTouchPoints > 0;
+    let coarsePointer = window.matchMedia?.('(pointer: coarse)')?.matches;
+    let noHover = window.matchMedia?.('(hover: none)')?.matches;
     return hasTouchPoints || (coarsePointer && noHover);
 }
 
 function updateMobileTabletState() {
-    var detected = detectMobileTablet();
+    let detected = detectMobileTablet();
     document.body.classList.toggle('is-mobile-tablet', detected);
     return detected;
 }
@@ -545,11 +545,11 @@ function setupMobileTabletDetection() {
 }
 
 function updateTouchControlsVisibility() {
-    var key = window.EPL ? window.EPL.KEYS.TOUCH_CONTROLS : 'touch-controls-preference';
-    var stored = localStorage.getItem(key);
-    var isMobileTablet = document.body.classList.contains('is-mobile-tablet');
-    var bp = window.EPL ? window.EPL.BREAKPOINT_MOBILE : 899;
-    var isWithinBreakpoint = touchUiMql ? touchUiMql.matches : window.innerWidth <= bp;
+    let key = window.EPL ? window.EPL.KEYS.TOUCH_CONTROLS : 'touch-controls-preference';
+    let stored = localStorage.getItem(key);
+    let isMobileTablet = document.body.classList.contains('is-mobile-tablet');
+    let bp = window.EPL ? window.EPL.BREAKPOINT_MOBILE : 899;
+    let isWithinBreakpoint = touchUiMql ? touchUiMql.matches : window.innerWidth <= bp;
     if (stored === 'on') {
         touchControlsVisible = true;
     } else if (stored === 'off') {
@@ -564,40 +564,40 @@ function updateTouchControlsVisibility() {
 }
 
 function updateTouchControlsUI() {
-    var controls = document.getElementById('touch-controls');
-    var toggle = document.getElementById('mobile-controls-toggle');
-    var shouldShow = Boolean(touchControlsVisible);
+    let controls = document.getElementById('touch-controls');
+    let toggle = document.getElementById('mobile-controls-toggle');
+    let shouldShow = Boolean(touchControlsVisible);
     if (controls) controls.classList.toggle('is-visible', shouldShow);
     document.body.classList.toggle('touch-controls-visible', shouldShow);
     document.body.classList.toggle('touch-controls-hidden', !shouldShow);
     if (toggle) {
         toggle.textContent = shouldShow ? 'Mobile-Steuerung aus' : 'Mobile-Steuerung an';
     }
-    var orientationToggle = document.getElementById('orientation-toggle');
+    let orientationToggle = document.getElementById('orientation-toggle');
     if (orientationToggle) {
-        var bp = window.EPL ? window.EPL.BREAKPOINT_MOBILE : 899;
-        var withinBreakpoint = touchUiMql ? touchUiMql.matches : window.innerWidth <= bp;
+        let bp = window.EPL ? window.EPL.BREAKPOINT_MOBILE : 899;
+        let withinBreakpoint = touchUiMql ? touchUiMql.matches : window.innerWidth <= bp;
         orientationToggle.style.display = shouldShow || withinBreakpoint ? 'inline-flex' : 'none';
     }
 }
 
 function setupSoundToggleGame() {
-    var button = document.getElementById('mute-toggle');
-    var icon = document.getElementById('mute-icon');
+    let button = document.getElementById('mute-toggle');
+    let icon = document.getElementById('mute-icon');
     if (!button || !icon) return;
     button.addEventListener('click', function() {
         if (window.EPL && window.EPL.Sound) {
-            var next = window.EPL.Sound.toggle();
+            let next = window.EPL.Sound.toggle();
             updateSoundIcon(next);
         }
     });
-    var enabled = window.EPL && window.EPL.Sound ? window.EPL.Sound.isEnabled() : true;
+    let enabled = window.EPL && window.EPL.Sound ? window.EPL.Sound.isEnabled() : true;
     updateSoundIcon(enabled);
 }
 
 function updateSoundIcon(enabled) {
-    var icon = document.getElementById('mute-icon');
-    var button = document.getElementById('mute-toggle');
+    let icon = document.getElementById('mute-icon');
+    let button = document.getElementById('mute-toggle');
     if (icon) {
         icon.src = enabled ? './img/mobile/sound.png' : './img/mobile/mute.png';
         icon.alt = enabled ? 'Sound an' : 'Sound aus';
@@ -608,13 +608,13 @@ function updateSoundIcon(enabled) {
 }
 
 function setupOrientationToggle() {
-    var button = document.getElementById('orientation-toggle');
+    let button = document.getElementById('orientation-toggle');
     if (!button) return;
     button.addEventListener('click', function() {
-        var key = window.EPL ? window.EPL.KEYS.ORIENTATION_MODE : 'orientation-mode';
-        var modes = window.EPL ? window.EPL.ORIENTATION_MODES : ['auto', 'portrait', 'landscape'];
-        var current = localStorage.getItem(key) || 'auto';
-        var nextMode = getNextOrientationMode(current, modes);
+        let key = window.EPL ? window.EPL.KEYS.ORIENTATION_MODE : 'orientation-mode';
+        let modes = window.EPL ? window.EPL.ORIENTATION_MODES : ['auto', 'portrait', 'landscape'];
+        let current = localStorage.getItem(key) || 'auto';
+        let nextMode = getNextOrientationMode(current, modes);
         localStorage.setItem(key, nextMode);
         updateLayout();
     });
@@ -622,49 +622,49 @@ function setupOrientationToggle() {
 
 function getNextOrientationMode(current, modes) {
     modes = modes || (window.EPL ? window.EPL.ORIENTATION_MODES : ['auto', 'portrait', 'landscape']);
-    var index = modes.indexOf(current);
+    let index = modes.indexOf(current);
     if (index === -1) return modes[0];
     return modes[(index + 1) % modes.length];
 }
 
 function applyStoredOrientation() {
-    var key = window.EPL ? window.EPL.KEYS.ORIENTATION_MODE : 'orientation-mode';
-    var stored = localStorage.getItem(key) || 'auto';
+    let key = window.EPL ? window.EPL.KEYS.ORIENTATION_MODE : 'orientation-mode';
+    let stored = localStorage.getItem(key) || 'auto';
     updateLayout(stored);
 }
 
 function applyOrientationMode(mode) {
-    var button = document.getElementById('orientation-toggle');
-    var modes = window.EPL ? window.EPL.ORIENTATION_MODES : ['auto', 'portrait', 'landscape'];
-    var normalized = modes.includes(mode) ? mode : 'auto';
+    let button = document.getElementById('orientation-toggle');
+    let modes = window.EPL ? window.EPL.ORIENTATION_MODES : ['auto', 'portrait', 'landscape'];
+    let normalized = modes.includes(mode) ? mode : 'auto';
     document.body.classList.remove('orientation-auto', 'orientation-portrait', 'orientation-landscape');
     document.body.classList.add('orientation-' + normalized);
     if (button) {
-        var label = normalized === 'auto' ? 'Auto' : normalized === 'portrait' ? 'Hochformat' : 'Querformat';
+        let label = normalized === 'auto' ? 'Auto' : normalized === 'portrait' ? 'Hochformat' : 'Querformat';
         button.textContent = 'Ausrichtung: ' + label;
     }
 }
 
 function updateLayout(forcedMode) {
     if (!canvas || !fullscreenTarget) return;
-    var key = window.EPL ? window.EPL.KEYS.ORIENTATION_MODE : 'orientation-mode';
-    var modes = window.EPL ? window.EPL.ORIENTATION_MODES : ['auto', 'portrait', 'landscape'];
-    var storedMode = forcedMode || localStorage.getItem(key) || 'auto';
-    var mode = modes.includes(storedMode) ? storedMode : 'auto';
-    var viewportOrientation = getViewportOrientation();
-    var targetOrientation = mode === 'auto' ? viewportOrientation : mode;
-    var isFullscreen = Boolean(document.fullscreenElement);
-    var bp = window.EPL ? window.EPL.BREAKPOINT_MOBILE : 899;
-    var isMobile = window.innerWidth <= bp;
+    let key = window.EPL ? window.EPL.KEYS.ORIENTATION_MODE : 'orientation-mode';
+    let modes = window.EPL ? window.EPL.ORIENTATION_MODES : ['auto', 'portrait', 'landscape'];
+    let storedMode = forcedMode || localStorage.getItem(key) || 'auto';
+    let mode = modes.includes(storedMode) ? storedMode : 'auto';
+    let viewportOrientation = getViewportOrientation();
+    let targetOrientation = mode === 'auto' ? viewportOrientation : mode;
+    let isFullscreen = Boolean(document.fullscreenElement);
+    let bp = window.EPL ? window.EPL.BREAKPOINT_MOBILE : 899;
+    let isMobile = window.innerWidth <= bp;
     applyOrientationMode(mode);
     resizeCanvas();
     applyFullscreenContainScale();
     document.body.classList.toggle('is-fullscreen', isFullscreen);
-    var rotation = 0;
+    let rotation = 0;
     if (isMobile && viewportOrientation === 'portrait') {
         rotation = 90;
     }
-    var scale = computeContainScale(window.innerWidth, window.innerHeight, rotation);
+    let scale = computeContainScale(window.innerWidth, window.innerHeight, rotation);
     fullscreenTarget.style.transform = 'translate(-50%, -50%) rotate(' + rotation + 'deg) scale(' + scale + ')';
 }
 
@@ -676,11 +676,11 @@ function getViewportOrientation() {
 }
 
 function computeContainScale(viewportWidth, viewportHeight, rotation) {
-    var w = window.EPL ? window.EPL.DEFAULT_CANVAS_WIDTH : 720;
-    var h = window.EPL ? window.EPL.DEFAULT_CANVAS_HEIGHT : 480;
-    var normalized = ((rotation % 360) + 360) % 360;
-    var rotated = normalized === 90 || normalized === 270;
-    var baseWidth = rotated ? h : w;
-    var baseHeight = rotated ? w : h;
+    let w = window.EPL ? window.EPL.DEFAULT_CANVAS_WIDTH : 720;
+    let h = window.EPL ? window.EPL.DEFAULT_CANVAS_HEIGHT : 480;
+    let normalized = ((rotation % 360) + 360) % 360;
+    let rotated = normalized === 90 || normalized === 270;
+    let baseWidth = rotated ? h : w;
+    let baseHeight = rotated ? w : h;
     return Math.min(viewportWidth / baseWidth, viewportHeight / baseHeight);
 }
