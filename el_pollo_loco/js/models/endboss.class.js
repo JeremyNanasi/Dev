@@ -401,24 +401,38 @@ class Endboss extends MoveableObject {
     }
 
     startDeathInterval() {
-        this.currentImage = 0;
-        const frameDelay = this.frameTimers.dead || 200;
+        this.initializeDeathAnimation();
+        const frameDelay = this.getDeathFrameDelay();
         let frameIndex = 0;
         const groundY = 450;
         this.deathInterval = setInterval(() => {
-            this.img = this.imageCache[this.DEAD_ENDBOSS[frameIndex]];
-            if (frameIndex < this.DEAD_ENDBOSS.length - 1) {
-                frameIndex++;
-            } else {
-                if (this.y < groundY) {
-                    this.y += 20;
-                } else {
-                    this.y = groundY;
-                    clearInterval(this.deathInterval);
-                    this.deathInterval = null;
-                }
-            }
+            frameIndex = this.updateDeathFrame(frameIndex, groundY);
         }, frameDelay);
+    }
+
+    initializeDeathAnimation() {
+        this.currentImage = 0;
+    }
+
+    getDeathFrameDelay() {
+        return this.frameTimers.dead || 200;
+    }
+
+    updateDeathFrame(frameIndex, groundY) {
+        this.img = this.imageCache[this.DEAD_ENDBOSS[frameIndex]];
+        if (frameIndex < this.DEAD_ENDBOSS.length - 1) return frameIndex + 1;
+        this.applyDeathFall(groundY);
+        return frameIndex;
+    }
+
+    applyDeathFall(groundY) {
+        if (this.y < groundY) {
+            this.y += 20;
+            return;
+        }
+        this.y = groundY;
+        clearInterval(this.deathInterval);
+        this.deathInterval = null;
     }
 
     finishAttackAnimation() {
