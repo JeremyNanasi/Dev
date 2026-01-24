@@ -98,39 +98,3 @@
         initSoundOnGesture();
     });
 })();
-
-document.addEventListener('DOMContentLoaded', () => {
-    ensureBackgroundMusic();
-    setupControlsToggle();
-});
-
-function setupControlsToggle() {
-    const elements = getControlsElements();
-    if (!elements) {
-        return;
-    }
-    const { toggleButton, menuList } = elements;
-    let expanded = false;
-    const updateUi = () => updateControlsUi(menuList, toggleButton, expanded);
-    toggleButton.addEventListener('click', () => {
-        expanded = !expanded;
-        updateUi();
-    });
-    updateUi();
-}
-
-function getControlsElements() {
-    const toggleButton = document.getElementById('controls-toggle');
-    const menuList = document.getElementById('controls-list');
-    if (!toggleButton || !menuList) {
-        return null;
-    }
-    return { toggleButton, menuList };
-}
-
-function updateControlsUi(menuList, toggleButton, expanded) {
-    menuList.classList.toggle('collapsed', !expanded);
-    toggleButton.setAttribute('aria-expanded', expanded ? 'true' : 'false');
-    toggleButton.textContent = expanded ? 'Steuerung verbergen' : 'Steuerung anzeigen';
-    toggleButton.classList.toggle('is-expanded', expanded);
-}
