@@ -1,7 +1,13 @@
 html,
 body {
     height: 100%;
+    min-height: 100%;
     overflow: hidden;
+    background-image: url('./img/10_page_background/desert.jpg');
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
+    background-repeat: no-repeat;
 }
 
 body {
@@ -9,6 +15,26 @@ body {
     margin: 0;
     min-height: 100vh;
     background: #0b0b0b;
+    position: relative;
+}
+
+body::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    background-image: url('./img/10_page_background/desert.jpg');
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
+    background-repeat: no-repeat;
+    filter: blur(6px) brightness(0.85);
+    z-index: 0;
+    pointer-events: none;
+}
+
+body > * {
+    position: relative;
+    z-index: 1;
 }
 
 .game-title {
@@ -22,6 +48,7 @@ body {
     pointer-events: none;
     color: #fff4d0;
     text-shadow: 0 8px 20px rgba(0, 0, 0, 0.55);
+    background-color: transparent;
 }
 
 body.is-fullscreen .game-title {
@@ -114,6 +141,11 @@ canvas {
     background: #000;
     position: relative;
     z-index: 1;
+}
+
+#fullscreen-target {
+    transform-origin: center center;
+    will-change: transform;
 }
 
 .game-overlay {
