@@ -71,6 +71,7 @@ class World {
         setInterval(() => {
             this.checkCollisions();
             this.checkThrowObjects();
+            window.EPL?.EnemySfx?.update(this);
         }, 1000 / 60);
     }
 
