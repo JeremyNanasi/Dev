@@ -223,9 +223,13 @@ class Endboss extends MoveableObject {
 
 
     startAlertAnimation() {
+        if (this.isDeadState || this.energy <= 0) return;
         this.clearAlertInterval();
         this.prepareAlertState();
         this.startAlertInterval();
+        if (window.EPL?.EnemySfx?.onEndbossAlertStart) {
+            window.EPL.EnemySfx.onEndbossAlertStart(this);
+        }
     }
 
     clearAlertInterval() {

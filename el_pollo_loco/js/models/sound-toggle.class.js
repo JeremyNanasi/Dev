@@ -9,7 +9,8 @@
         smallLoop: './img/effect-sound/small-chicken.mp3',
         chickenLoop: './img/effect-sound/chicken.mp3',
         death: './img/effect-sound/chicken-death.mp3',
-        endbossAlert: './img/effect-sound/angry-chicken.mp4'
+        endbossAlert: './img/effect-sound/angry-chicken.mp4',
+        damage: './img/effect-sound/damage.mp3'
       };
       this.RANGE = 1200;
       this.INIT_MIN = 400;
@@ -99,6 +100,28 @@
       a.play().catch(() => {});
     }
 
+    onEndbossAlertStart(endboss) {
+      if (!this.isEnabled()) return;
+      const st = this.getState(endboss);
+      if (this.isDead(endboss) || st.blocked) return;
+      this.stopCurrentAudio(st);
+      const a = new Audio(this.SOUND_PATHS.endbossAlert);
+      a.volume = 0.7;
+      st.currentAudio = a;
+      a.play().catch(() => {});
+      const self = this;
+      setTimeout(function() {
+        self.playDamageIfAlive(endboss, st);
+      }, 10);
+    }
+
+    playDamageIfAlive(endboss, st) {
+      if (this.isDead(endboss) || st.blocked || !this.isEnabled()) return;
+      const a = new Audio(this.SOUND_PATHS.damage);
+      a.volume = 0.6;
+      a.play().catch(() => {});
+    }
+
     handleLoop(character, enemy, st, type) {
       if (st.blocked) return;
       const inRange = this.isInRange(character, enemy);
@@ -135,7 +158,6 @@
       }, delay);
     }
 
-    // hier ist die zeit wann das kleine chicken einen sound macht
     loopSrc(type) {
       if (type === 'small') return this.SOUND_PATHS.smallLoop;
       return this.SOUND_PATHS.chickenLoop;
