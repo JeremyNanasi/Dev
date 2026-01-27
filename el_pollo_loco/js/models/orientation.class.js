@@ -3,8 +3,8 @@
     window.EPL = window.EPL || {};
     window.EPL.Controllers = window.EPL.Controllers || {};
 
-    var MODES = ['auto', 'portrait', 'landscape'];
-    var STORAGE_KEY = 'orientation-mode';
+    let MODES = ['auto', 'portrait', 'landscape'];
+    let STORAGE_KEY = 'orientation-mode';
 
     function OrientationController(deps) {
         this.deps = deps;
@@ -14,13 +14,13 @@
     OrientationController.prototype.initToggle = function() {
         this.toggleButton = document.getElementById('orientation-toggle');
         if (!this.toggleButton) return;
-        var self = this;
+        let self = this;
         this.toggleButton.addEventListener('click', function() { self.handleClick(); });
     };
 
     OrientationController.prototype.handleClick = function() {
-        var current = this.getStoredMode();
-        var next = this.getNextMode(current);
+        let current = this.getStoredMode();
+        let next = this.getNextMode(current);
         localStorage.setItem(STORAGE_KEY, next);
         this.applyLayout();
     };
@@ -30,7 +30,7 @@
     };
 
     OrientationController.prototype.getNextMode = function(current) {
-        var index = MODES.indexOf(current);
+        let index = MODES.indexOf(current);
         if (index === -1) return MODES[0];
         return MODES[(index + 1) % MODES.length];
     };
@@ -40,11 +40,11 @@
     };
 
     OrientationController.prototype.applyLayout = function(forcedMode) {
-        var canvas = this.deps.getCanvas();
-        var target = this.deps.getTarget();
+        let canvas = this.deps.getCanvas();
+        let target = this.deps.getTarget();
         if (!canvas || !target) return;
-        var mode = this.resolveMode(forcedMode);
-        var vpOrientation = this.getViewportOrientation();
+        let mode = this.resolveMode(forcedMode);
+        let vpOrientation = this.getViewportOrientation();
         this.applyModeClass(mode);
         this.deps.resizeCanvas();
         this.deps.applyContainBaseStyles();
@@ -52,7 +52,7 @@
     };
 
     OrientationController.prototype.resolveMode = function(forcedMode) {
-        var stored = forcedMode || this.getStoredMode();
+        let stored = forcedMode || this.getStoredMode();
         return MODES.includes(stored) ? stored : 'auto';
     };
 
@@ -65,15 +65,15 @@
 
     OrientationController.prototype.updateButtonLabel = function(mode) {
         if (!this.toggleButton) return;
-        var labels = { auto: 'Auto', portrait: 'Hochformat', landscape: 'Querformat' };
+        let labels = { auto: 'Auto', portrait: 'Hochformat', landscape: 'Querformat' };
         this.toggleButton.textContent = 'Ausrichtung: ' + (labels[mode] || 'Auto');
     };
 
     OrientationController.prototype.applyTransform = function(target, vpOrientation) {
-        var bp = this.deps.getBreakpoint();
-        var isMobile = window.innerWidth <= bp;
-        var rotation = (isMobile && vpOrientation === 'portrait') ? 90 : 0;
-        var scale = this.computeScale(rotation);
+        let bp = this.deps.getBreakpoint();
+        let isMobile = window.innerWidth <= bp;
+        let rotation = (isMobile && vpOrientation === 'portrait') ? 90 : 0;
+        let scale = this.computeScale(rotation);
         target.style.transform = 'translate(-50%, -50%) rotate(' + rotation + 'deg) scale(' + scale + ')';
     };
 
@@ -85,12 +85,12 @@
     };
 
     OrientationController.prototype.computeScale = function(rotation) {
-        var w = this.deps.getCanvasWidth();
-        var h = this.deps.getCanvasHeight();
-        var normalized = ((rotation % 360) + 360) % 360;
-        var rotated = normalized === 90 || normalized === 270;
-        var baseW = rotated ? h : w;
-        var baseH = rotated ? w : h;
+        let w = this.deps.getCanvasWidth();
+        let h = this.deps.getCanvasHeight();
+        let normalized = ((rotation % 360) + 360) % 360;
+        let rotated = normalized === 90 || normalized === 270;
+        let baseW = rotated ? h : w;
+        let baseH = rotated ? w : h;
         return Math.min(window.innerWidth / baseW, window.innerHeight / baseH);
     };
 

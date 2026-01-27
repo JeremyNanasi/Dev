@@ -18,9 +18,9 @@
     };
 
     SoundToggleController.prototype.attachListener = function() {
-        var self = this;
+        let self = this;
         this.button.addEventListener('click', function() {
-            var next = self.deps.soundManager.toggle();
+            let next = self.deps.soundManager.toggle();
             self.updateIcon(next);
         });
     };
@@ -37,18 +37,18 @@
 
     window.EPL.Controllers.SoundToggle = SoundToggleController;
 
-    var SOUND_PATHS = {
+    let SOUND_PATHS = {
         smallchickenLoop: './img/effect-sound/small-chicken.mp3',
         chickenLoop: './img/effect-sound/chicken.mp3',
         death: './img/effect-sound/chicken-death.mp3',
         endbossAlert: './img/effect-sound/angry-chicken.mp4'
     };
 
-    var RANGE = 200;
-    var INITIAL_DELAY_MIN = 400;
-    var INITIAL_DELAY_MAX = 1000;
-    var REPEAT_DELAY_MIN = 2600;
-    var REPEAT_DELAY_MAX = 3200;
+    let RANGE = 200;
+    let INITIAL_DELAY_MIN = 400;
+    let INITIAL_DELAY_MAX = 1000;
+    let REPEAT_DELAY_MIN = 2600;
+    let REPEAT_DELAY_MAX = 3200;
 
     class EnemySfxManager {
         constructor() {
@@ -78,10 +78,10 @@
         }
 
         processEnemy(enemy, world) {
-            var state = this.getOrCreateState(enemy);
-            var type = this.getType(enemy);
+            let state = this.getOrCreateState(enemy);
+            let type = this.getType(enemy);
             if (!type) return;
-            var dead = this.isDead(enemy);
+            let dead = this.isDead(enemy);
             this.handleDeath(enemy, state, dead);
             if (dead) return;
             this.handleAlert(enemy, state);
@@ -123,8 +123,8 @@
 
         handleAlert(enemy, state) {
             if (!(enemy instanceof Endboss)) return;
-            var alerting = enemy.isAlerting === true;
-            var dead = this.isDead(enemy);
+            let alerting = enemy.isAlerting === true;
+            let dead = this.isDead(enemy);
             if (!state.wasAlerting && alerting && !dead) {
                 this.playOnce(SOUND_PATHS.endbossAlert);
             }
@@ -132,7 +132,7 @@
         }
 
         handleLoop(enemy, state, world, type) {
-            var inRange = this.isInRange(enemy, world);
+            let inRange = this.isInRange(enemy, world);
             if (inRange && !state.inRange) {
                 state.inRange = true;
                 state.started = false;
@@ -144,14 +144,14 @@
         }
 
         isInRange(enemy, world) {
-            var charX = world.character.x;
-            var enemyX = enemy.x;
+            let charX = world.character.x;
+            let enemyX = enemy.x;
             return Math.abs(charX - enemyX) <= RANGE;
         }
 
         scheduleInitial(enemy, state, type) {
-            var delay = this.randomBetween(INITIAL_DELAY_MIN, INITIAL_DELAY_MAX);
-            var self = this;
+            let delay = this.randomBetween(INITIAL_DELAY_MIN, INITIAL_DELAY_MAX);
+            let self = this;
             state.timeoutId = setTimeout(function() {
                 self.playAndReschedule(enemy, state, type);
             }, delay);
@@ -159,8 +159,8 @@
 
         // hier ist die zeit wann das kleine chicken einen sound macht
         scheduleNext(enemy, state, type) {
-            var delay = this.randomBetween(REPEAT_DELAY_MIN, REPEAT_DELAY_MAX);
-            var self = this;
+            let delay = this.randomBetween(REPEAT_DELAY_MIN, REPEAT_DELAY_MAX);
+            let self = this;
             state.timeoutId = setTimeout(function() {
                 self.playAndReschedule(enemy, state, type);
             }, delay);
@@ -168,7 +168,7 @@
 
         playAndReschedule(enemy, state, type) {
             if (!state.inRange || this.isDead(enemy) || !this.isEnabled()) return;
-            var src = this.getLoopSrc(type);
+            let src = this.getLoopSrc(type);
             this.playOnce(src);
             state.started = true;
             this.scheduleNext(enemy, state, type);
@@ -181,7 +181,7 @@
         }
 
         stopOne(enemy) {
-            var state = this.stateMap.get(enemy);
+            let state = this.stateMap.get(enemy);
             if (!state) return;
             if (state.timeoutId) {
                 clearTimeout(state.timeoutId);
@@ -193,7 +193,7 @@
 
         playOnce(src) {
             if (!this.isEnabled()) return;
-            var audio = new Audio(src);
+            let audio = new Audio(src);
             audio.volume = 0.5;
             audio.play().catch(function() {});
         }

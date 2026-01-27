@@ -3,7 +3,7 @@
     window.EPL = window.EPL || {};
     window.EPL.Controllers = window.EPL.Controllers || {};
 
-    var STORAGE_KEY = 'sound-enabled';
+    let STORAGE_KEY = 'sound-enabled';
 
     function SoundManager() {
         this.audioElement = null;
@@ -15,7 +15,7 @@
         this.initialized = true;
         this.audioElement = document.getElementById('background-music');
         if (this.audioElement) this.audioElement.removeAttribute('autoplay');
-        var enabled = this.isEnabled();
+        let enabled = this.isEnabled();
         if (this.audioElement) this.audioElement.muted = !enabled;
     };
 
@@ -34,7 +34,7 @@
     };
 
     SoundManager.prototype.apply = function(enabled) {
-        var audio = this.getAudio();
+        let audio = this.getAudio();
         if (!audio) return;
         if (enabled) {
             audio.muted = false;
@@ -48,14 +48,14 @@
     };
 
     SoundManager.prototype.toggle = function() {
-        var next = !this.isEnabled();
+        let next = !this.isEnabled();
         this.setEnabled(next);
         return next;
     };
 
     SoundManager.prototype.tryPlayOnGesture = function() {
         if (!this.isEnabled()) return;
-        var audio = this.getAudio();
+        let audio = this.getAudio();
         if (audio && audio.paused) {
             audio.currentTime = 0;
             audio.play().catch(function() {});

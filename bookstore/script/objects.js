@@ -77,7 +77,7 @@ let books = [
     {
         "name": "Menschen lesen",
         "image": "./img/book6.jpg",
-        "author": "Joe Navarro",
+        "author": "Joe Naletro",
         "likes": 30,
         "like": true,
         "publishedYear": 2008,

@@ -3,7 +3,7 @@
     window.EPL = window.EPL || {};
     window.EPL.Controllers = window.EPL.Controllers || {};
 
-    var KEYBOARD_CODE_MAP = {
+    let KEYBOARD_CODE_MAP = {
         39: 'RIGHT',
         37: 'LEFT',
         38: 'UP',
@@ -19,7 +19,7 @@
     }
 
     KeyboardInputController.prototype.attach = function() {
-        var self = this;
+        let self = this;
         this.keydownHandler = function(e) { self.handleKeydown(e); };
         this.keyupHandler = function(e) { self.handleKeyup(e); };
         window.addEventListener('keydown', this.keydownHandler);
@@ -45,9 +45,9 @@
 
     KeyboardInputController.prototype.handleEnterMenu = function(e) {
         if (!this.isEnterKey(e)) return false;
-        var locked = this.deps.getControlsLocked();
-        var shown = this.deps.getEndOverlayShown();
-        var defeated = this.deps.isBossDefeated();
+        let locked = this.deps.getControlsLocked();
+        let shown = this.deps.getEndOverlayShown();
+        let defeated = this.deps.isBossDefeated();
         if (shown || locked || defeated) {
             e.preventDefault();
             this.deps.navigateToMenu();
@@ -65,14 +65,14 @@
     };
 
     KeyboardInputController.prototype.setKey = function(keyCode, isPressed) {
-        var key = KEYBOARD_CODE_MAP[keyCode];
+        let key = KEYBOARD_CODE_MAP[keyCode];
         if (!key) return;
-        var kb = this.deps.getKeyboard();
+        let kb = this.deps.getKeyboard();
         if (kb) kb[key] = isPressed;
     };
 
     KeyboardInputController.prototype.reset = function() {
-        var kb = this.deps.getKeyboard();
+        let kb = this.deps.getKeyboard();
         if (!kb) return;
         Object.keys(KEYBOARD_CODE_MAP).forEach(function(code) {
             kb[KEYBOARD_CODE_MAP[code]] = false;

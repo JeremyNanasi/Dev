@@ -82,7 +82,7 @@ function getCanvasHeight() {
 }
 
 function initSoundOnGesture() {
-    var handler = function() {
+    let handler = function() {
         if (window.EPL && window.EPL.Sound) window.EPL.Sound.tryPlayOnGesture();
         document.removeEventListener('click', handler);
         document.removeEventListener('keydown', handler);
@@ -103,7 +103,7 @@ function startGame() {
 }
 
 function shouldStartGame() {
-    var params = new URLSearchParams(window.location.search);
+    let params = new URLSearchParams(window.location.search);
     return params.get('start') === '1';
 }
 
@@ -152,8 +152,8 @@ window.addEventListener('resize', function() { if (touchController) touchControl
 
 function startGameOverWatcher() {
     resetGameOverState();
-    var loop = function() {
-        var status = getGameOverStatus();
+    let loop = function() {
+        let status = getGameOverStatus();
         handleGameOverStatus(status);
         if (!endOverlayShown) requestAnimationFrame(loop);
     };
@@ -176,7 +176,7 @@ function resetGameOverState() {
 
 function getGameOverStatus() {
     if (world?.character?.isDead?.()) return 'dead';
-    var boss = getBoss();
+    let boss = getBoss();
     if (isBossDefeatedCheck(boss)) return 'bossDefeated';
     return null;
 }
@@ -275,7 +275,7 @@ function showFullscreenHint(text) {
 }
 
 function createFsHintEl() {
-    var el = document.createElement('div');
+    let el = document.createElement('div');
     el.id = 'fs-hint';
     Object.assign(el.style, {
         position: 'fixed',
@@ -290,8 +290,8 @@ function createFsHintEl() {
 }
 
 function appendFsHint() {
-    var host = document.fullscreenElement === canvas ? fullscreenTarget : document.fullscreenElement;
-    var target = host || document.body;
+    let host = document.fullscreenElement === canvas ? fullscreenTarget : document.fullscreenElement;
+    let target = host || document.body;
     if (fsHintEl.parentNode !== target) {
         fsHintEl.remove();
         target.appendChild(fsHintEl);
@@ -311,7 +311,7 @@ function showInlineHint(text) {
 }
 
 function createInlineHintEl() {
-    var el = document.createElement('div');
+    let el = document.createElement('div');
     el.id = 'inline-hint';
     Object.assign(el.style, { display: 'inline-block', marginTop: '14px', pointerEvents: 'none' });
     buildHintBaseStyles(el);
@@ -319,8 +319,8 @@ function createInlineHintEl() {
 }
 
 function appendInlineHint() {
-    var host = fullscreenTarget || (canvas ? canvas.parentNode : null);
-    var parent = (host ? host.parentNode : null) || document.body;
+    let host = fullscreenTarget || (canvas ? canvas.parentNode : null);
+    let parent = (host ? host.parentNode : null) || document.body;
     if (!inlineHintEl.parentNode) {
         parent.appendChild(inlineHintEl);
         parent.style.textAlign = 'center';
@@ -350,7 +350,7 @@ function resetKeyboard() {
 
 function ensureGameOverStyles() {
     if (document.getElementById(GAME_OVER_STYLE_ID)) return;
-    var style = document.createElement('style');
+    let style = document.createElement('style');
     style.id = GAME_OVER_STYLE_ID;
     style.textContent = getGameOverStyleText();
     document.head.appendChild(style);

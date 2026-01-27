@@ -3,8 +3,8 @@
     window.EPL = window.EPL || {};
     window.EPL.Controllers = window.EPL.Controllers || {};
 
-    var STORAGE_KEY = 'touch-controls-preference';
-    var BREAKPOINT = 899;
+    let STORAGE_KEY = 'touch-controls-preference';
+    let BREAKPOINT = 899;
 
     function TouchController(deps) {
         this.deps = deps;
@@ -17,7 +17,7 @@
 
     TouchController.prototype.initOnce = function() {
         if (this.initialized) return;
-        var buttons = Array.from(document.querySelectorAll('.touch-control-button'));
+        let buttons = Array.from(document.querySelectorAll('.touch-control-button'));
         if (!buttons.length) return;
         this.bindButtons(buttons);
         this.bindGlobalMouseUp();
@@ -25,9 +25,9 @@
     };
 
     TouchController.prototype.bindButtons = function(buttons) {
-        var self = this;
+        let self = this;
         buttons.forEach(function(btn) {
-            var key = btn.dataset.key;
+            let key = btn.dataset.key;
             if (!key) return;
             self.keyToButton.set(key, btn);
             self.attachButtonListeners(btn, key);
@@ -35,9 +35,9 @@
     };
 
     TouchController.prototype.attachButtonListeners = function(btn, key) {
-        var self = this;
-        var onStart = function(e, src) { self.handlePressStart(e, src, btn, key); };
-        var onEnd = function(e) { self.handlePressEnd(e, btn, key); };
+        let self = this;
+        let onStart = function(e, src) { self.handlePressStart(e, src, btn, key); };
+        let onEnd = function(e) { self.handlePressEnd(e, btn, key); };
         btn.addEventListener('touchstart', function(e) { onStart(e, 'touch'); }, { passive: false });
         btn.addEventListener('touchend', onEnd, { passive: false });
         btn.addEventListener('touchcancel', onEnd, { passive: false });
@@ -49,8 +49,8 @@
     TouchController.prototype.handlePressStart = function(e, src, btn, key) {
         if (this.deps.shouldIgnoreInput()) return;
         e.preventDefault();
-        var keys = this.getKeysForButton(key);
-        var kb = this.deps.getKeyboard();
+        let keys = this.getKeysForButton(key);
+        let kb = this.deps.getKeyboard();
         keys.forEach(function(k) { kb[k] = true; });
         btn.classList.add('is-pressed');
         if (src === 'mouse') this.mousePressedKeys.add(key);
@@ -58,9 +58,9 @@
 
     TouchController.prototype.handlePressEnd = function(e, btn, key) {
         e.preventDefault();
-        var keys = this.getKeysForButton(key);
-        var kb = this.deps.getKeyboard();
-        var isJump = keys.includes('SPACE') || keys.includes('UP');
+        let keys = this.getKeysForButton(key);
+        let kb = this.deps.getKeyboard();
+        let isJump = keys.includes('SPACE') || keys.includes('UP');
         if (isJump) {
             setTimeout(function() { keys.forEach(function(k) { kb[k] = false; }); }, 120);
         } else {
@@ -76,7 +76,7 @@
     };
 
     TouchController.prototype.bindGlobalMouseUp = function() {
-        var self = this;
+        let self = this;
         window.addEventListener('mouseup', function(e) {
             if (!self.mousePressedKeys.size) return;
             e.preventDefault();
@@ -85,12 +85,12 @@
     };
 
     TouchController.prototype.releaseAllMouseKeys = function() {
-        var self = this;
-        var kb = this.deps.getKeyboard();
+        let self = this;
+        let kb = this.deps.getKeyboard();
         this.mousePressedKeys.forEach(function(key) {
-            var keys = self.getKeysForButton(key);
+            let keys = self.getKeysForButton(key);
             keys.forEach(function(k) { kb[k] = false; });
-            var btn = self.keyToButton.get(key);
+            let btn = self.keyToButton.get(key);
             if (btn) btn.classList.remove('is-pressed');
         });
         this.mousePressedKeys.clear();
@@ -98,15 +98,15 @@
 
     TouchController.prototype.setupMediaQuery = function() {
         if (!window.matchMedia) return;
-        var self = this;
+        let self = this;
         this.mql = window.matchMedia('(max-width: ' + BREAKPOINT + 'px)');
         this.mql.addEventListener('change', function() { self.updateVisibility(); });
     };
 
     TouchController.prototype.setupMobileToggle = function() {
-        var toggle = document.getElementById('mobile-controls-toggle');
+        let toggle = document.getElementById('mobile-controls-toggle');
         if (!toggle) return;
-        var self = this;
+        let self = this;
         toggle.addEventListener('click', function() {
             self.visible = !self.visible;
             localStorage.setItem(STORAGE_KEY, self.visible ? 'on' : 'off');
@@ -115,9 +115,9 @@
     };
 
     TouchController.prototype.updateVisibility = function() {
-        var stored = localStorage.getItem(STORAGE_KEY);
-        var isMobile = document.body.classList.contains('is-mobile-tablet');
-        var withinBp = this.mql ? this.mql.matches : window.innerWidth <= BREAKPOINT;
+        let stored = localStorage.getItem(STORAGE_KEY);
+        let isMobile = document.body.classList.contains('is-mobile-tablet');
+        let withinBp = this.mql ? this.mql.matches : window.innerWidth <= BREAKPOINT;
         this.visible = this.resolveVisibility(stored, isMobile, withinBp);
         this.updateUI();
     };
@@ -130,9 +130,9 @@
     };
 
     TouchController.prototype.updateUI = function() {
-        var controls = document.getElementById('touch-controls');
-        var toggle = document.getElementById('mobile-controls-toggle');
-        var show = Boolean(this.visible);
+        let controls = document.getElementById('touch-controls');
+        let toggle = document.getElementById('mobile-controls-toggle');
+        let show = Boolean(this.visible);
         if (controls) controls.classList.toggle('is-visible', show);
         document.body.classList.toggle('touch-controls-visible', show);
         document.body.classList.toggle('touch-controls-hidden', !show);
@@ -145,21 +145,21 @@
     };
 
     TouchController.prototype.updateOrientationToggle = function(show) {
-        var btn = document.getElementById('orientation-toggle');
+        let btn = document.getElementById('orientation-toggle');
         if (!btn) return;
-        var withinBp = this.mql ? this.mql.matches : window.innerWidth <= BREAKPOINT;
+        let withinBp = this.mql ? this.mql.matches : window.innerWidth <= BREAKPOINT;
         btn.style.display = (show || withinBp) ? 'inline-flex' : 'none';
     };
 
     TouchController.prototype.detectMobileTablet = function() {
-        var touch = navigator.maxTouchPoints > 0;
-        var coarse = window.matchMedia && window.matchMedia('(pointer: coarse)').matches;
-        var noHover = window.matchMedia && window.matchMedia('(hover: none)').matches;
+        let touch = navigator.maxTouchPoints > 0;
+        let coarse = window.matchMedia && window.matchMedia('(pointer: coarse)').matches;
+        let noHover = window.matchMedia && window.matchMedia('(hover: none)').matches;
         return touch || (coarse && noHover);
     };
 
     TouchController.prototype.updateMobileTabletState = function() {
-        var detected = this.detectMobileTablet();
+        let detected = this.detectMobileTablet();
         document.body.classList.toggle('is-mobile-tablet', detected);
         return detected;
     };

@@ -9,7 +9,7 @@
     }
 
     FullscreenController.prototype.ensureTarget = function(canvasEl) {
-        var existing = document.getElementById('fullscreen-target');
+        let existing = document.getElementById('fullscreen-target');
         if (existing) {
             this.applyDefaults(existing);
             return existing;
@@ -18,9 +18,9 @@
     };
 
     FullscreenController.prototype.createTarget = function(canvasEl) {
-        var wrapper = document.createElement('div');
+        let wrapper = document.createElement('div');
         wrapper.id = 'fullscreen-target';
-        var parent = canvasEl.parentNode;
+        let parent = canvasEl.parentNode;
         parent.insertBefore(wrapper, canvasEl);
         wrapper.appendChild(canvasEl);
         this.applyDefaults(wrapper);
@@ -39,7 +39,7 @@
     };
 
     FullscreenController.prototype.registerListeners = function() {
-        var self = this;
+        let self = this;
         this.toggleButton.addEventListener('click', function() { self.handleClick(); });
         document.addEventListener('fullscreenchange', function() { self.handleChange(); });
         this.updateButtonState();
@@ -50,7 +50,7 @@
             document.exitFullscreen && document.exitFullscreen();
             return;
         }
-        var target = this.deps.getTarget() || this.deps.getCanvas();
+        let target = this.deps.getTarget() || this.deps.getCanvas();
         if (target && target.requestFullscreen) target.requestFullscreen();
     };
 
@@ -61,16 +61,16 @@
 
     FullscreenController.prototype.updateButtonState = function() {
         if (!this.toggleButton) return;
-        var isFs = Boolean(document.fullscreenElement);
+        let isFs = Boolean(document.fullscreenElement);
         this.toggleButton.textContent = isFs ? 'Vollbild verlassen' : 'Vollbild';
         this.toggleButton.classList.toggle('is-active', isFs);
     };
 
     FullscreenController.prototype.applyContainBaseStyles = function() {
-        var target = this.deps.getTarget();
+        let target = this.deps.getTarget();
         if (!target) return;
-        var w = this.deps.getCanvasWidth();
-        var h = this.deps.getCanvasHeight();
+        let w = this.deps.getCanvasWidth();
+        let h = this.deps.getCanvasHeight();
         target.style.position = 'absolute';
         target.style.left = '50%';
         target.style.top = '50%';
