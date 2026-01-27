@@ -7,6 +7,7 @@ class Chicken extends MoveableObject {
     hitboxOffsetY = 5;
     hitboxWidth = 60;
     hitboxHeight = 50;
+    proximitySoundActive = false;
 
     IMAGES_WALKING = [
         './img/3_enemies_chicken/chicken_normal/1_walk/1_w.png',
@@ -29,8 +30,10 @@ class Chicken extends MoveableObject {
 
         this.x = 500 + Math.random() * 1500;
         this.speed = 0.15 + Math.random() * 0.5;
+        this.loopSound = this.getLoopSoundElement();
 
         this.animate();
+        this.startProximitySoundCheck();
     }
 
     animate() {
@@ -65,5 +68,53 @@ class Chicken extends MoveableObject {
         this.speed = 0;
         this.currentImage = 0;
         this.playAnimation(this.deadImages);
+    }
+
+    startProximitySoundCheck() {
+        setInterval(() => this.updateProximitySound(), 1000 / 10);
+    }
+
+    updateProximitySound() {
+        if (this.isDead()) {
+            this.stopLoopSound();
+            return;
+        }
+        const character = this.world?.character;
+        if (!character) return;
+        if (!this.isSoundEnabled()) {
+            this.stopLoopSound();
+            return;
+        }
+        const inRange = Math.abs(character.x - this.x) <= 200;
+        if (inRange) this.startLoopSound();
+        else this.stopLoopSound();
+    }
+
+    startLoopSound() {
+        if (this.proximitySoundActive || !this.canPlayLoopSound()) return;
+        this.loopSound.loop = true;
+        this.loopSound.play().catch(() => {});
+        this.proximitySoundActive = true;
+    }
+
+    stopLoopSound() {
+        if (!this.proximitySoundActive || !this.loopSound) return;
+        this.loopSound.pause();
+        this.proximitySoundActive = false;
+    }
+
+    canPlayLoopSound() {
+        if (!this.loopSound) return false;
+        return this.isSoundEnabled();
+    }
+
+    isSoundEnabled() {
+        const key = typeof SOUND_ENABLED_KEY === 'string' ? SOUND_ENABLED_KEY : 'sound-enabled';
+        return localStorage.getItem(key) !== 'false';
+    }
+
+    getLoopSoundElement() {
+        const id = this.isSmall ? 'smallchicken-loop-sound' : 'chicken-loop-sound';
+        return document.getElementById(id);
     }
 }
