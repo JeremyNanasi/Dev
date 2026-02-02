@@ -55,7 +55,13 @@
           deathPlayed: false,
           blocked: false,
           wasAlerting: false,
-          currentAudio: null
+          wasHurting: false,
+          currentAudio: null,
+          damageActive: false,
+          damageCooldownUntil: 0,
+          damageTimeoutId: null,
+          damageAudio: null,
+          deathLocked: false
         });
       }
       return this.stateMap.get(enemy);
@@ -70,6 +76,8 @@
 
     handleDeath(enemy, st) {
       if (st.blocked) return;
+      st.deathLocked = true;
+      this.stopDamage(st);
       st.blocked = true;
       this.stopEnemy(st);
       if (!st.deathPlayed) this.playDeathOnce(st);
@@ -85,6 +93,7 @@
 
     handleAlert(enemy, st) {
       if (enemy?.constructor?.name !== 'Endboss') return;
+      if (st.damageActive || st.deathLocked) return;
       const alerting = enemy?.isAlerting === true;
       if (!st.wasAlerting && alerting && !st.blocked) this.playAlert(st);
       st.wasAlerting = alerting;
@@ -103,27 +112,33 @@
     onEndbossAlertStart(endboss) {
       if (!this.isEnabled()) return;
       const st = this.getState(endboss);
-      if (this.isDead(endboss) || st.blocked) return;
+      if (this.isDead(endboss) || st.blocked || st.damageActive || st.deathLocked) return;
       this.stopCurrentAudio(st);
       const a = new Audio(this.SOUND_PATHS.endbossAlert);
       a.volume = 0.7;
       st.currentAudio = a;
       a.play().catch(() => {});
-      const self = this;
-      setTimeout(function() {
-        self.playDamageIfAlive(endboss, st);
-      }, 10);
     }
 
-    playDamageIfAlive(endboss, st) {
-      if (this.isDead(endboss) || st.blocked || !this.isEnabled()) return;
-      const a = new Audio(this.SOUND_PATHS.damage);
-      a.volume = 0.6;
-      a.play().catch(() => {});
+    onEndbossHurtStart(endboss) {
+      if (!this.isEnabled()) return;
+      const st = this.getState(endboss);
+      if (this.isDead(endboss) || st.blocked || st.deathLocked) return;
+      if (Date.now() < st.damageCooldownUntil) return;
+      this.startDamage(endboss, st);
+    }
+
+    handleHurt(enemy, st) {
+      if (enemy?.constructor?.name !== 'Endboss') return;
+      const hurting = enemy?.isHurting === true;
+      if (!st.wasHurting && hurting) this.onEndbossHurtStart(enemy);
+      st.wasHurting = hurting;
     }
 
     handleLoop(character, enemy, st, type) {
       if (st.blocked) return;
+      this.handleHurt(enemy, st);
+      if (enemy?.constructor?.name === 'Endboss' && st.damageActive) return;
       const inRange = this.isInRange(character, enemy);
       if (inRange && !st.inRange) return this.enterRange(enemy, st, type);
       if (!inRange && st.inRange) return this.exitRange(st);
@@ -152,6 +167,7 @@
         if (!this.isEnabled()) return;
         if (!st.inRange) return;
         if (st.blocked) return;
+        if (enemy?.constructor?.name === 'Endboss' && st.damageActive) return;
         if (this.isDead(enemy)) return this.handleDeath(enemy, st);
         this.playLoopOnce(st, this.loopSrc(type));
         this.schedule(enemy, st, type, this.rand(this.REP_MIN, this.REP_MAX));
@@ -184,6 +200,7 @@
     stopEnemy(st) {
       this.clearTimer(st);
       this.stopCurrentAudio(st);
+      this.stopDamage(st);
       st.inRange = false;
     }
 
@@ -199,6 +216,35 @@
       a.pause();
       a.currentTime = 0;
       st.currentAudio = null;
+    }
+
+    startDamage(endboss, st) {
+      if (!this.isEnabled() || this.isDead(endboss) || st.blocked || st.deathLocked) return;
+      st.damageActive = true;
+      st.damageCooldownUntil = Date.now() + 300;
+      st.inRange = false;
+      this.clearTimer(st);
+      this.stopCurrentAudio(st);
+      const a = new Audio(this.SOUND_PATHS.damage);
+      a.volume = 0.6;
+      st.damageAudio = a;
+      const self = this;
+      a.addEventListener('ended', function () { self.stopDamage(st); });
+      a.play().catch(() => {});
+      st.damageTimeoutId = setTimeout(function () { self.stopDamage(st); }, 800);
+    }
+
+    stopDamage(st) {
+      if (st.damageTimeoutId) {
+        clearTimeout(st.damageTimeoutId);
+        st.damageTimeoutId = null;
+      }
+      if (st.damageAudio) {
+        st.damageAudio.pause();
+        st.damageAudio.currentTime = 0;
+        st.damageAudio = null;
+      }
+      st.damageActive = false;
     }
 
     rand(min, max) {
