@@ -5,6 +5,77 @@ body {
     padding: 0;
 }
 
+:root {
+    --menu-page-padding: clamp(20px, 1.6vw + 12px, 40px);
+    --menu-grid-gap: clamp(18px, 1.4vw + 8px, 36px);
+    --card-radius: clamp(12px, 1vw + 8px, 24px);
+    --card-padding-y: clamp(24px, 2vw + 12px, 48px);
+    --card-padding-x: clamp(28px, 2.4vw + 12px, 64px);
+    --menu-title-size: clamp(28px, 2.4vw + 16px, 48px);
+    --menu-subtitle-size: clamp(22px, 2vw + 12px, 36px);
+    --menu-body-size: clamp(16px, 1.4vw + 10px, 24px);
+    --menu-toggle-font: clamp(16px, 1.4vw + 10px, 24px);
+    --menu-toggle-padding-y: clamp(10px, 0.8vh + 6px, 18px);
+    --menu-toggle-padding-x: clamp(12px, 1vw + 8px, 20px);
+    --menu-toggle-radius: clamp(8px, 0.8vw + 6px, 16px);
+    --controls-gap: clamp(10px, 1vw + 4px, 20px);
+    --controls-row-gap: clamp(12px, 1.2vw + 6px, 24px);
+    --controls-desc-size: clamp(14px, 1vw + 9px, 22px);
+    --keycap-min-width: clamp(40px, 2.2vw + 12px, 68px);
+    --keycap-padding-y: clamp(6px, 0.8vw + 4px, 12px);
+    --keycap-padding-x: clamp(10px, 1vw + 6px, 20px);
+    --keycap-radius: clamp(6px, 0.8vw + 4px, 12px);
+    --keycap-font-size: clamp(16px, 1.2vw + 10px, 24px);
+    --keycap-wide-min-width: clamp(72px, 4vw + 20px, 120px);
+    --toggle-label-size: clamp(12px, 0.9vw + 8px, 18px);
+    --toggle-state-size: clamp(12px, 0.9vw + 8px, 18px);
+    --toggle-state-padding-y: clamp(2px, 0.4vw + 1px, 6px);
+    --toggle-state-padding-x: clamp(6px, 0.8vw + 4px, 12px);
+    --toggle-state-radius: clamp(6px, 0.6vw + 4px, 10px);
+    --start-button-font: clamp(18px, 1.6vw + 12px, 28px);
+    --start-button-padding-y: clamp(12px, 1vh + 6px, 20px);
+    --start-button-padding-x: clamp(24px, 2.2vw + 12px, 48px);
+    --start-button-radius: clamp(10px, 0.9vw + 6px, 18px);
+}
+
+@media (min-width: 1600px) {
+    :root {
+        --menu-page-padding: clamp(24px, 1.8vw + 16px, 56px);
+        --menu-grid-gap: clamp(20px, 1.6vw + 10px, 44px);
+        --card-radius: clamp(14px, 1.2vw + 10px, 28px);
+        --card-padding-y: clamp(28px, 2.2vw + 16px, 56px);
+        --card-padding-x: clamp(32px, 2.6vw + 16px, 72px);
+        --menu-title-size: clamp(32px, 2.6vw + 20px, 56px);
+        --menu-subtitle-size: clamp(24px, 2.2vw + 14px, 42px);
+        --menu-body-size: clamp(18px, 1.6vw + 12px, 26px);
+        --menu-toggle-font: clamp(18px, 1.6vw + 12px, 26px);
+        --controls-desc-size: clamp(16px, 1.2vw + 10px, 24px);
+        --keycap-min-width: clamp(46px, 2.6vw + 16px, 76px);
+        --keycap-font-size: clamp(18px, 1.4vw + 12px, 26px);
+        --keycap-wide-min-width: clamp(84px, 4.6vw + 24px, 140px);
+        --start-button-font: clamp(20px, 1.8vw + 14px, 32px);
+    }
+}
+
+@media (min-width: 2400px) {
+    :root {
+        --menu-page-padding: clamp(28px, 2vw + 18px, 72px);
+        --menu-grid-gap: clamp(24px, 1.8vw + 12px, 56px);
+        --card-radius: clamp(16px, 1.4vw + 12px, 32px);
+        --card-padding-y: clamp(32px, 2.6vw + 18px, 68px);
+        --card-padding-x: clamp(36px, 3vw + 18px, 84px);
+        --menu-title-size: clamp(36px, 3vw + 22px, 64px);
+        --menu-subtitle-size: clamp(28px, 2.6vw + 16px, 48px);
+        --menu-body-size: clamp(20px, 1.8vw + 12px, 30px);
+        --menu-toggle-font: clamp(20px, 1.8vw + 12px, 30px);
+        --controls-desc-size: clamp(18px, 1.4vw + 12px, 28px);
+        --keycap-min-width: clamp(52px, 3vw + 18px, 92px);
+        --keycap-font-size: clamp(20px, 1.6vw + 12px, 30px);
+        --keycap-wide-min-width: clamp(96px, 5vw + 28px, 160px);
+        --start-button-font: clamp(22px, 2vw + 14px, 36px);
+    }
+}
+
 body {
     font-family: "New Rocker", Arial, Helvetica, sans-serif;
     background-image: url("./img/10_page_background/desert.jpg");
@@ -26,14 +97,14 @@ body {
     display: flex;
     align-items: center;
     justify-content: center;
-    padding: 24px;
+    padding: var(--menu-page-padding);
     box-sizing: border-box;
 }
 
 .menu-grid {
     width: min(100%, 1100px);
     display: grid;
-    gap: 24px;
+    gap: var(--menu-grid-gap);
     align-items: start;
 }
 
@@ -41,8 +112,8 @@ body {
 .start-card {
     background: rgba(255, 255, 255, 0.92);
     color: #111;
-    border-radius: 16px;
-    padding: 32px 40px;
+    border-radius: var(--card-radius);
+    padding: var(--card-padding-y) var(--card-padding-x);
     margin-bottom: 0;
     text-align: center;
     width: 100%;
@@ -55,21 +126,30 @@ body {
     margin: 0 0 12px;
 }
 
+.menu-card h1 {
+    font-size: var(--menu-title-size);
+}
+
+.menu-card h2 {
+    font-size: var(--menu-subtitle-size);
+}
+
 .menu-card p,
 .start-card p {
     margin: 8px 0 24px;
     font-family: "Inter", Arial, Helvetica, sans-serif;
-    font-size: 18px;
+    font-size: var(--menu-body-size);
 }
 
 .menu-toggle {
     width: 100%;
     margin: 6px 0 14px;
-    padding: 12px 14px;
-    border-radius: 10px;
+    padding: var(--menu-toggle-padding-y) var(--menu-toggle-padding-x);
+    border-radius: var(--menu-toggle-radius);
     border: 1px solid rgba(0, 0, 0, 0.16);
     background: #e9a40e;
     color: #fff;
+    font-size: var(--menu-toggle-font);
     font-weight: 700;
     letter-spacing: 0.3px;
     cursor: pointer;
@@ -105,7 +185,7 @@ body {
 
 .controls-grid {
     display: grid;
-    gap: 14px;
+    gap: var(--controls-gap);
     text-align: left;
 }
 
@@ -113,18 +193,18 @@ body {
     display: grid;
     grid-template-columns: minmax(140px, 200px) 1fr;
     align-items: center;
-    gap: 16px;
+    gap: var(--controls-row-gap);
 }
 
 .controls-keycaps {
     display: flex;
-    gap: 10px;
+    gap: var(--controls-gap);
     flex-wrap: wrap;
 }
 
 .controls-desc {
     font-family: "Inter", Arial, Helvetica, sans-serif;
-    font-size: 16px;
+    font-size: var(--controls-desc-size);
     color: #1a1a1a;
 }
 
@@ -132,21 +212,21 @@ body {
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    min-width: 44px;
-    padding: 8px 12px;
-    border-radius: 8px;
+    min-width: var(--keycap-min-width);
+    padding: var(--keycap-padding-y) var(--keycap-padding-x);
+    border-radius: var(--keycap-radius);
     border: 2px solid #1f1408;
     background: #fdf8e9;
     color: #1f1408;
     font-family: "Inter", Arial, Helvetica, sans-serif;
     font-weight: 700;
-    font-size: 18px;
+    font-size: var(--keycap-font-size);
     text-transform: uppercase;
     box-shadow: inset 0 2px 0 rgba(255, 255, 255, 0.7), 0 6px 12px rgba(0, 0, 0, 0.18);
 }
 
 .keycap--wide {
-    min-width: 84px;
+    min-width: var(--keycap-wide-min-width);
 }
 
 .keycap--toggle {
@@ -157,14 +237,14 @@ body {
 }
 
 .keycap--toggle .keycap__label {
-    font-size: 13px;
+    font-size: var(--toggle-label-size);
     letter-spacing: 0.6px;
 }
 
 .keycap--toggle .keycap__state {
-    font-size: 14px;
-    padding: 2px 8px;
-    border-radius: 6px;
+    font-size: var(--toggle-state-size);
+    padding: var(--toggle-state-padding-y) var(--toggle-state-padding-x);
+    border-radius: var(--toggle-state-radius);
     background: rgba(31, 20, 8, 0.15);
 }
 
@@ -177,13 +257,13 @@ body {
     display: inline-block;
     background-color: #e89c0c;
     border: none;
-    border-radius: 12px;
+    border-radius: var(--start-button-radius);
     color: #fff;
     cursor: pointer;
-    font-size: 20px;
+    font-size: var(--start-button-font);
     font-weight: 700;
     letter-spacing: 0.5px;
-    padding: 14px 32px;
+    padding: var(--start-button-padding-y) var(--start-button-padding-x);
     text-decoration: none;
     transition: transform 120ms ease, box-shadow 120ms ease, background-color 160ms ease;
     box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
@@ -203,7 +283,7 @@ body {
 @media (max-width: 600px) {
     .menu-card,
     .start-card {
-        padding: 24px;
+        padding: var(--card-padding-y) var(--card-padding-x);
     }
 
     .controls-row {
