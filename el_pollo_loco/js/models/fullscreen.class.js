@@ -50,12 +50,13 @@
             document.exitFullscreen && document.exitFullscreen();
             return;
         }
-        let target = this.deps.getTarget() || this.deps.getCanvas();
-        if (target && target.requestFullscreen) target.requestFullscreen();
+        let fsEl = document.getElementById('viewport') || this.deps.getTarget() || this.deps.getCanvas();
+        if (fsEl && fsEl.requestFullscreen) fsEl.requestFullscreen();
     };
 
     FullscreenController.prototype.handleChange = function() {
         this.updateButtonState();
+        document.body.classList.toggle('is-fullscreen', Boolean(document.fullscreenElement));
         if (this.deps.onFullscreenChange) this.deps.onFullscreenChange();
     };
 

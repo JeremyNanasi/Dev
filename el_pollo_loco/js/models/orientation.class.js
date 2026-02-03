@@ -45,10 +45,16 @@
         if (!canvas || !target) return;
         let mode = this.resolveMode(forcedMode);
         let vpOrientation = this.getViewportOrientation();
+        let targetOrientation = mode === 'auto' ? vpOrientation : mode;
         this.applyModeClass(mode);
+        if (this.shouldBlockFullscreenPortrait(vpOrientation)) {
+            this.setOrientationBlock(true);
+            return;
+        }
+        this.setOrientationBlock(false);
         this.deps.resizeCanvas();
         this.deps.applyContainBaseStyles();
-        this.applyTransform(target, vpOrientation);
+        this.applyTransform(target, targetOrientation);
     };
 
     OrientationController.prototype.resolveMode = function(forcedMode) {
@@ -67,6 +73,18 @@
         if (!this.toggleButton) return;
         let labels = { auto: 'Auto', portrait: 'Hochformat', landscape: 'Querformat' };
         this.toggleButton.textContent = 'Ausrichtung: ' + (labels[mode] || 'Auto');
+    };
+
+    OrientationController.prototype.shouldBlockFullscreenPortrait = function(vpOrientation) {
+        let bp = this.deps.getBreakpoint();
+        return Boolean(document.fullscreenElement) && vpOrientation === 'portrait' && window.innerWidth <= bp;
+    };
+
+    OrientationController.prototype.setOrientationBlock = function(isActive) {
+        let block = document.getElementById('orientation-block');
+        if (!block) return;
+        block.classList.toggle('is-active', isActive);
+        block.setAttribute('aria-hidden', isActive ? 'false' : 'true');
     };
 
     OrientationController.prototype.applyTransform = function(target, vpOrientation) {

@@ -1,3 +1,37 @@
+:root {
+    --overlay-normal-font-size: 16px;
+    --overlay-normal-gap: 10px;
+    --overlay-normal-pad-y: 10px;
+    --overlay-normal-pad-x: 12px;
+    --overlay-normal-round: 34px;
+    --overlay-normal-icon: 20px;
+    --overlay-control-font-size: 12px;
+    --overlay-control-padding-y: 6px;
+    --overlay-control-padding-x: 10px;
+    --overlay-control-gap: 10px;
+    --overlay-control-icon: 20px;
+    --overlay-control-round: 34px;
+}
+
+body.is-fullscreen,
+body:fullscreen,
+#fullscreen-target:fullscreen,
+#fullscreen-target:-webkit-full-screen,
+#fullscreen-target:-moz-full-screen {
+    --overlay-control-font-size: var(--overlay-normal-font-size);
+    --overlay-control-gap: var(--overlay-normal-gap);
+    --overlay-control-padding-y: var(--overlay-normal-pad-y);
+    --overlay-control-padding-x: var(--overlay-normal-pad-x);
+    --overlay-control-round: var(--overlay-normal-round);
+    --overlay-control-icon: var(--overlay-normal-icon);
+    --overlay-control-font-size: clamp(12px, 1.2vmin + 0.6vw, 22px);
+    --overlay-control-padding-y: clamp(6px, 0.8vmin + 0.4vw, 14px);
+    --overlay-control-padding-x: clamp(10px, 1.1vmin + 0.5vw, 20px);
+    --overlay-control-gap: clamp(8px, 1vmin + 0.4vw, 18px);
+    --overlay-control-icon: clamp(18px, 1.6vmin + 0.6vw, 32px);
+    --overlay-control-round: clamp(34px, 2.4vmin + 0.8vw, 64px);
+}
+
 html,
 body {
     height: 100%;
@@ -53,15 +87,6 @@ body > * {
 
 body.is-fullscreen .game-title {
     display: none;
-}
-
-body.is-fullscreen {
-    --overlay-control-font-size: clamp(12px, 1.2vmin + 0.6vw, 22px);
-    --overlay-control-padding-y: clamp(6px, 0.8vmin + 0.4vw, 14px);
-    --overlay-control-padding-x: clamp(10px, 1.1vmin + 0.5vw, 20px);
-    --overlay-control-gap: clamp(8px, 1vmin + 0.4vw, 18px);
-    --overlay-control-icon: clamp(18px, 1.6vmin + 0.6vw, 32px);
-    --overlay-control-round: clamp(34px, 2.4vmin + 0.8vw, 64px);
 }
 
 #viewport {
@@ -191,9 +216,23 @@ body.is-fullscreen .game-shell {
     pointer-events: auto;
 }
 
-body.is-fullscreen .game-overlay__top-right {
+body.is-fullscreen .game-overlay__top-right,
+body:fullscreen .game-overlay__top-right,
+#fullscreen-target:fullscreen .game-overlay__top-right,
+#fullscreen-target:-webkit-full-screen .game-overlay__top-right,
+#fullscreen-target:-moz-full-screen .game-overlay__top-right {
     top: max(var(--overlay-control-gap), env(safe-area-inset-top));
     right: max(var(--overlay-control-gap), env(safe-area-inset-right));
+    gap: var(--overlay-control-gap);
+}
+
+body:fullscreen .game-overlay__top-right,
+#fullscreen-target:fullscreen .game-overlay__top-right,
+#fullscreen-target:-webkit-full-screen .game-overlay__top-right,
+#fullscreen-target:-moz-full-screen .game-overlay__top-right,
+body.is-fullscreen .game-overlay__top-right {
+    top: max(12px, env(safe-area-inset-top));
+    right: max(12px, env(safe-area-inset-right));
     gap: var(--overlay-control-gap);
 }
 
@@ -233,10 +272,24 @@ body.is-fullscreen .game-overlay__top-right {
     touch-action: manipulation;
 }
 
-body.is-fullscreen .icon-button {
+body.is-fullscreen .icon-button,
+body:fullscreen .icon-button,
+#fullscreen-target:fullscreen .icon-button,
+#fullscreen-target:-webkit-full-screen .icon-button,
+#fullscreen-target:-moz-full-screen .icon-button {
     padding: var(--overlay-control-padding-y) var(--overlay-control-padding-x);
     font-size: var(--overlay-control-font-size);
     gap: calc(var(--overlay-control-gap) * 0.6);
+}
+
+body:fullscreen .icon-button,
+#fullscreen-target:fullscreen .icon-button,
+#fullscreen-target:-webkit-full-screen .icon-button,
+#fullscreen-target:-moz-full-screen .icon-button,
+body.is-fullscreen .icon-button {
+    padding: var(--overlay-control-padding-y) var(--overlay-control-padding-x);
+    font-size: var(--overlay-control-font-size);
+    gap: 8px;
 }
 
 .icon-button--mute {
@@ -245,6 +298,19 @@ body.is-fullscreen .icon-button {
     padding: 0;
 }
 
+body.is-fullscreen .icon-button--mute,
+body:fullscreen .icon-button--mute,
+#fullscreen-target:fullscreen .icon-button--mute,
+#fullscreen-target:-webkit-full-screen .icon-button--mute,
+#fullscreen-target:-moz-full-screen .icon-button--mute {
+    width: var(--overlay-control-round);
+    height: var(--overlay-control-round);
+}
+
+body:fullscreen .icon-button--mute,
+#fullscreen-target:fullscreen .icon-button--mute,
+#fullscreen-target:-webkit-full-screen .icon-button--mute,
+#fullscreen-target:-moz-full-screen .icon-button--mute,
 body.is-fullscreen .icon-button--mute {
     width: var(--overlay-control-round);
     height: var(--overlay-control-round);
@@ -256,12 +322,29 @@ body.is-fullscreen .icon-button--mute {
     display: block;
 }
 
+body.is-fullscreen .icon-button--mute img,
+body:fullscreen .icon-button--mute img,
+#fullscreen-target:fullscreen .icon-button--mute img,
+#fullscreen-target:-webkit-full-screen .icon-button--mute img,
+#fullscreen-target:-moz-full-screen .icon-button--mute img {
+    width: var(--overlay-control-icon);
+    height: var(--overlay-control-icon);
+}
+
+body:fullscreen .icon-button--mute img,
+#fullscreen-target:fullscreen .icon-button--mute img,
+#fullscreen-target:-webkit-full-screen .icon-button--mute img,
+#fullscreen-target:-moz-full-screen .icon-button--mute img,
 body.is-fullscreen .icon-button--mute img {
     width: var(--overlay-control-icon);
     height: var(--overlay-control-icon);
 }
 
-body.is-fullscreen .game-overlay__top-right .fullscreen-button {
+body.is-fullscreen .game-overlay__top-right .fullscreen-button,
+body:fullscreen .game-overlay__top-right .fullscreen-button,
+#fullscreen-target:fullscreen .game-overlay__top-right .fullscreen-button,
+#fullscreen-target:-webkit-full-screen .game-overlay__top-right .fullscreen-button,
+#fullscreen-target:-moz-full-screen .game-overlay__top-right .fullscreen-button {
     padding: var(--overlay-control-padding-y) var(--overlay-control-padding-x);
     font-size: var(--overlay-control-font-size);
 }
@@ -370,4 +453,53 @@ body.touch-controls-visible .game-overlay__bottom-controls {
         top: 12px;
         right: 12px;
     }
+}
+
+#fullscreen-target:fullscreen .game-overlay__top-right,
+#fullscreen-target:-webkit-full-screen .game-overlay__top-right,
+#fullscreen-target:-moz-full-screen .game-overlay__top-right,
+body:fullscreen .game-overlay__top-right,
+body.is-fullscreen .game-overlay__top-right {
+    top: max(clamp(12px, 2.2vmin, 28px), env(safe-area-inset-top));
+    right: max(clamp(12px, 2.2vmin, 28px), env(safe-area-inset-right));
+    gap: clamp(10px, 2.2vmin, 28px);
+}
+
+#fullscreen-target:fullscreen .icon-button,
+#fullscreen-target:-webkit-full-screen .icon-button,
+#fullscreen-target:-moz-full-screen .icon-button,
+body:fullscreen .icon-button,
+body.is-fullscreen .icon-button {
+    padding: clamp(10px, 2.2vmin, 26px) clamp(12px, 2.6vmin, 34px);
+    font-size: var(--overlay-normal-font-size);
+    gap: clamp(8px, 1.6vmin, 18px);
+}
+
+#fullscreen-target:fullscreen .fullscreen-button,
+#fullscreen-target:-webkit-full-screen .fullscreen-button,
+#fullscreen-target:-moz-full-screen .fullscreen-button,
+body:fullscreen .fullscreen-button,
+body.is-fullscreen .fullscreen-button {
+    padding: clamp(10px, 2.2vmin, 26px) clamp(14px, 2.8vmin, 38px);
+    font-size: var(--overlay-normal-font-size);
+    border-radius: clamp(8px, 1.6vmin, 18px);
+}
+
+#fullscreen-target:fullscreen .icon-button--mute,
+#fullscreen-target:-webkit-full-screen .icon-button--mute,
+#fullscreen-target:-moz-full-screen .icon-button--mute,
+body:fullscreen .icon-button--mute,
+body.is-fullscreen .icon-button--mute {
+    width: clamp(34px, 5.2vmin, 110px);
+    height: clamp(34px, 5.2vmin, 110px);
+    padding: 0;
+}
+
+#fullscreen-target:fullscreen .icon-button--mute img,
+#fullscreen-target:-webkit-full-screen .icon-button--mute img,
+#fullscreen-target:-moz-full-screen .icon-button--mute img,
+body:fullscreen .icon-button--mute img,
+body.is-fullscreen .icon-button--mute img {
+    width: clamp(20px, 3.2vmin, 72px);
+    height: clamp(20px, 3.2vmin, 72px);
 }
