@@ -112,15 +112,14 @@
     };
 
     OrientationController.prototype.computeScalePair = function(rotation) {
-        let w = this.deps.getCanvasWidth();
-        let h = this.deps.getCanvasHeight();
-        let normalized = ((rotation % 360) + 360) % 360;
-        let rotated = normalized === 90 || normalized === 270;
-        let baseW = rotated ? h : w;
-        let baseH = rotated ? w : h;
-        let sx = window.innerWidth / baseW;
-        let sy = window.innerHeight / baseH;
-        let s = Math.min(sx, sy);
+        let w = this.deps.getCanvasWidth(), h = this.deps.getCanvasHeight();
+        let n = ((rotation % 360) + 360) % 360, rot = n === 90 || n === 270;
+        let vw = window.innerWidth, vh = window.innerHeight;
+        let sx = rot ? (vh / w) : (vw / w);
+        let sy = rot ? (vw / h) : (vh / h);
+        if (document.fullscreenElement) return { x: sx, y: sy };
+        let baseW = rot ? h : w, baseH = rot ? w : h;
+        let s = Math.min(vw / baseW, vh / baseH);
         return { x: s, y: s };
     };
 
