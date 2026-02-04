@@ -91,8 +91,10 @@
         let bp = this.deps.getBreakpoint();
         let isMobile = window.innerWidth <= bp;
         let rotation = (isMobile && vpOrientation === 'portrait') ? 90 : 0;
-        let scale = this.computeScale(rotation);
-        target.style.transform = 'translate(-50%, -50%) rotate(' + rotation + 'deg) scale(' + scale + ')';
+        let scales = this.computeScalePair(rotation);
+        target.style.left = '50%';
+        target.style.top = '50%';
+        target.style.transform = 'translate(-50%, -50%) rotate(' + rotation + 'deg) scale(' + scales.x + ', ' + scales.y + ')';
     };
 
     OrientationController.prototype.getViewportOrientation = function() {
@@ -112,5 +114,19 @@
         return Math.min(window.innerWidth / baseW, window.innerHeight / baseH);
     };
 
+    OrientationController.prototype.computeScalePair = function(rotation) {
+        let w = this.deps.getCanvasWidth();
+        let h = this.deps.getCanvasHeight();
+        let normalized = ((rotation % 360) + 360) % 360;
+        let rotated = normalized === 90 || normalized === 270;
+        let baseW = rotated ? h : w;
+        let baseH = rotated ? w : h;
+        let sx = window.innerWidth / baseW;
+        let sy = window.innerHeight / baseH;
+        if (!document.fullscreenElement) { let s = Math.min(sx, sy); return { x: s, y: s }; }
+        return { x: sx, y: sy };
+    };
+
     window.EPL.Controllers.Orientation = OrientationController;
 })();
+
