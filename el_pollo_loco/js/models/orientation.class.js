@@ -47,7 +47,7 @@
         let vpOrientation = this.getViewportOrientation();
         let targetOrientation = mode === 'auto' ? vpOrientation : mode;
         this.applyModeClass(mode);
-        if (this.shouldBlockFullscreenPortrait(vpOrientation)) {
+        if (this.shouldBlockFullscreenPortrait(targetOrientation)) {
             this.setOrientationBlock(true);
             return;
         }
@@ -75,9 +75,8 @@
         this.toggleButton.textContent = 'Ausrichtung: ' + (labels[mode] || 'Auto');
     };
 
-    OrientationController.prototype.shouldBlockFullscreenPortrait = function(vpOrientation) {
-        let bp = this.deps.getBreakpoint();
-        return Boolean(document.fullscreenElement) && vpOrientation === 'portrait' && window.innerWidth <= bp;
+    OrientationController.prototype.shouldBlockFullscreenPortrait = function(targetOrientation) {
+        return Boolean(document.fullscreenElement) && targetOrientation === 'portrait' && window.innerWidth < 800;
     };
 
     OrientationController.prototype.setOrientationBlock = function(isActive) {
@@ -87,10 +86,8 @@
         block.setAttribute('aria-hidden', isActive ? 'false' : 'true');
     };
 
-    OrientationController.prototype.applyTransform = function(target, vpOrientation) {
-        let bp = this.deps.getBreakpoint();
-        let isMobile = window.innerWidth <= bp;
-        let rotation = (isMobile && vpOrientation === 'portrait') ? 90 : 0;
+    OrientationController.prototype.applyTransform = function(target, targetOrientation) {
+        let rotation = targetOrientation === 'portrait' ? 90 : 0;
         let scales = this.computeScalePair(rotation);
         target.style.left = '50%';
         target.style.top = '50%';
@@ -123,8 +120,8 @@
         let baseH = rotated ? w : h;
         let sx = window.innerWidth / baseW;
         let sy = window.innerHeight / baseH;
-        if (!document.fullscreenElement) { let s = Math.min(sx, sy); return { x: s, y: s }; }
-        return { x: sx, y: sy };
+        let s = Math.min(sx, sy);
+        return { x: s, y: s };
     };
 
     window.EPL.Controllers.Orientation = OrientationController;
