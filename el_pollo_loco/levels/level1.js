@@ -5,15 +5,15 @@ const randomBottleX = () => bottleMinX + Math.random() * (bottleMaxX - bottleMin
 
 level1 = new Level(
     [
-        new Chicken(),
-        new Chicken(),
-        new Chicken(),
-        new Chicken(),
-        new Chicken(),
-        new smallchicken({ isSmall: true }),
-        new smallchicken({ isSmall: true }),
-        new smallchicken({ isSmall: true }),
-        new smallchicken({ isSmall: true }),
+        // new Chicken(),
+        // new Chicken(),
+        // new Chicken(),
+        // new Chicken(),
+        // new Chicken(),
+        // new smallchicken({ isSmall: true }),
+        // new smallchicken({ isSmall: true }),
+        // new smallchicken({ isSmall: true }),
+        // new smallchicken({ isSmall: true }),
         new Endboss()
     ],
     [
