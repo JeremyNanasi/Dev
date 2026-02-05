@@ -88,6 +88,119 @@ body {
     -webkit-overflow-scrolling: touch;
 }
 
+.impressum-page {
+    margin: 0;
+    min-height: 100vh;
+    font-family: Arial, Helvetica, sans-serif;
+    background-image: url("./img/10_page_background/desert.jpg");
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-color: #1f1408;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.impressum-page::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.35);
+    backdrop-filter: blur(6px);
+}
+
+.impressum-shell {
+    position: relative;
+    width: min(980px, 92vw);
+    padding: clamp(14px, 2.4vw, 28px);
+    box-sizing: border-box;
+}
+
+.impressum-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: wrap;
+    margin-bottom: clamp(12px, 2vw, 18px);
+}
+
+.impressum-back {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 14px;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.75);
+    text-decoration: none;
+    color: #111;
+    box-shadow: 0 8px 18px rgba(0, 0, 0, 0.15);
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+.impressum-back:active {
+    transform: translateY(1px);
+}
+
+.impressum-card {
+    position: relative;
+    background: rgba(255, 255, 255, 0.86);
+    border-radius: clamp(16px, 2.2vw, 28px);
+    padding: clamp(18px, 2.6vw, 34px);
+    box-shadow: 0 14px 40px rgba(0, 0, 0, 0.22);
+    color: #111;
+}
+
+.impressum-header h1 {
+    margin: 0;
+    font-size: clamp(24px, 3.1vw, 38px);
+    letter-spacing: 0.2px;
+}
+
+.impressum-card h2 {
+    margin: clamp(18px, 2.6vw, 26px) 0 8px;
+    font-size: clamp(16px, 2.2vw, 22px);
+}
+
+.impressum-card p {
+    margin: 0 0 10px;
+    line-height: 1.6;
+    font-size: clamp(14px, 1.6vw, 16px);
+}
+
+.impressum-card a {
+    color: inherit;
+}
+
+.impressum-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 14px;
+}
+
+.impressum-box {
+    background: rgba(255, 255, 255, 0.55);
+    border-radius: 18px;
+    padding: 14px 16px;
+}
+
+.menu-impressum {
+    margin: 16px 0 0;
+    font-family: "Inter", Arial, Helvetica, sans-serif;
+}
+
+.impressum-link {
+    font-family: Arial, Helvetica, sans-serif;
+    color: #111;
+    text-decoration: underline;
+    cursor: pointer;
+    display: inline-block;
+}
+
+.impressum-link:hover {
+    opacity: 0.85;
+}
+
 .hidden {
     display: none;
 }
@@ -294,5 +407,12 @@ body {
 
     .controls-desc {
         text-align: left;
+    }
+}
+
+@media (min-width: 760px) {
+    .impressum-grid {
+        grid-template-columns: 1fr 1fr;
+        gap: 18px;
     }
 }

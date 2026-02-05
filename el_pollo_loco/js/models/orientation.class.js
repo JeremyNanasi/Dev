@@ -5,13 +5,38 @@
 
     let MODES = ['auto', 'portrait', 'landscape'];
     let STORAGE_KEY = 'orientation-mode';
+    let BLOCK_QUERY = '(pointer: coarse) and (orientation: portrait)';
+
+    function isBodyBlocked() {
+        return document.body.classList.contains('epl-orientation-blocked');
+    }
+
+    function wrapIntervalCallback(cb) {
+        return function() {
+            if (isBodyBlocked()) return;
+            return cb.apply(this, arguments);
+        };
+    }
+
+    function installIntervalGuard() {
+        if (window.__eplIntervalGuarded) return;
+        let original = window.setInterval;
+        window.setInterval = function(cb, delay) {
+            if (typeof cb !== 'function') return original(cb, delay);
+            return original(wrapIntervalCallback(cb), delay);
+        };
+        window.__eplIntervalGuarded = true;
+    }
 
     function OrientationController(deps) {
         this.deps = deps;
         this.toggleButton = null;
+        this.blockMql = null;
+        this.blockHandler = null;
     }
 
     OrientationController.prototype.initToggle = function() {
+        this.initBlocker();
         this.toggleButton = document.getElementById('orientation-toggle');
         if (!this.toggleButton) return;
         let self = this;
@@ -44,17 +69,10 @@
         let target = this.deps.getTarget();
         if (!canvas || !target) return;
         let mode = this.resolveMode(forcedMode);
-        let vpOrientation = this.getViewportOrientation();
-        let targetOrientation = mode === 'auto' ? vpOrientation : mode;
         this.applyModeClass(mode);
-        if (this.shouldBlockFullscreenPortrait(targetOrientation)) {
-            this.setOrientationBlock(true);
-            return;
-        }
-        this.setOrientationBlock(false);
         this.deps.resizeCanvas();
         this.deps.applyContainBaseStyles();
-        this.applyTransform(target, targetOrientation);
+        this.applyTransform(target);
     };
 
     OrientationController.prototype.resolveMode = function(forcedMode) {
@@ -75,30 +93,11 @@
         this.toggleButton.textContent = 'Ausrichtung: ' + (labels[mode] || 'Auto');
     };
 
-    OrientationController.prototype.shouldBlockFullscreenPortrait = function(targetOrientation) {
-        return Boolean(document.fullscreenElement) && targetOrientation === 'portrait' && window.innerWidth < 800;
-    };
-
-    OrientationController.prototype.setOrientationBlock = function(isActive) {
-        let block = document.getElementById('orientation-block');
-        if (!block) return;
-        block.classList.toggle('is-active', isActive);
-        block.setAttribute('aria-hidden', isActive ? 'false' : 'true');
-    };
-
-    OrientationController.prototype.applyTransform = function(target, targetOrientation) {
-        let rotation = targetOrientation === 'portrait' ? 90 : 0;
-        let scales = this.computeScalePair(rotation);
+    OrientationController.prototype.applyTransform = function(target) {
+        let scales = this.computeScalePair(0);
         target.style.left = '50%';
         target.style.top = '50%';
-        target.style.transform = 'translate(-50%, -50%) rotate(' + rotation + 'deg) scale(' + scales.x + ', ' + scales.y + ')';
-    };
-
-    OrientationController.prototype.getViewportOrientation = function() {
-        if (window.matchMedia) {
-            return window.matchMedia('(orientation: portrait)').matches ? 'portrait' : 'landscape';
-        }
-        return window.innerWidth >= window.innerHeight ? 'landscape' : 'portrait';
+        target.style.transform = 'translate(-50%, -50%) scale(' + scales.x + ', ' + scales.y + ')';
     };
 
     OrientationController.prototype.computeScale = function(rotation) {
@@ -123,6 +122,33 @@
         return { x: s, y: s };
     };
 
+    OrientationController.prototype.initBlocker = function() {
+        installIntervalGuard();
+        if (!window.matchMedia) return this.applyBlockState(false);
+        this.blockMql = window.matchMedia(BLOCK_QUERY);
+        let self = this;
+        this.blockHandler = function() { self.handleBlockChange(); };
+        if (this.blockMql.addEventListener) this.blockMql.addEventListener('change', this.blockHandler);
+        else if (this.blockMql.addListener) this.blockMql.addListener(this.blockHandler);
+        this.handleBlockChange();
+    };
+
+    OrientationController.prototype.handleBlockChange = function() {
+        let blocked = Boolean(this.blockMql && this.blockMql.matches);
+        this.applyBlockState(blocked);
+    };
+
+    OrientationController.prototype.applyBlockState = function(blocked) {
+        document.body.classList.toggle('epl-orientation-blocked', blocked);
+        this.updateBlockAria(blocked);
+        window.dispatchEvent(new CustomEvent('epl:orientation-blocked', { detail: { blocked: blocked } }));
+    };
+
+    OrientationController.prototype.updateBlockAria = function(blocked) {
+        let block = document.getElementById('orientation-block');
+        if (!block) return;
+        block.setAttribute('aria-hidden', blocked ? 'false' : 'true');
+    };
+
     window.EPL.Controllers.Orientation = OrientationController;
 })();
-

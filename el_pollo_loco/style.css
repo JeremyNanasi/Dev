@@ -109,10 +109,6 @@ body.is-fullscreen .game-title {
     pointer-events: auto;
 }
 
-.orientation-block.is-active {
-    display: flex;
-}
-
 .orientation-block__card {
     background: rgba(0, 0, 0, 0.75);
     border-radius: 18px;
@@ -252,6 +248,7 @@ body.is-fullscreen .game-overlay__top-right {
 
 #orientation-toggle {
     order: 2;
+    display: none;
 }
 
 .icon-button {
@@ -452,6 +449,24 @@ body.touch-controls-visible .game-overlay__bottom-controls {
     .game-overlay__top-right {
         top: 12px;
         right: 12px;
+    }
+}
+
+@media (pointer: fine) {
+    .orientation-block {
+        display: none;
+    }
+}
+
+@media (pointer: coarse) and (orientation: portrait) {
+    .orientation-block {
+        display: flex;
+    }
+}
+
+@media (pointer: coarse) and (orientation: landscape) {
+    .orientation-block {
+        display: none;
     }
 }
 

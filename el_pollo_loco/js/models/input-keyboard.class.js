@@ -1,4 +1,5 @@
 (function() {
+    try{sessionStorage.setItem('epl_index_ready','1')}catch(e){}
     if (window.EPL && window.EPL.Controllers && window.EPL.Controllers.KeyboardInput) return;
     window.EPL = window.EPL || {};
     window.EPL.Controllers = window.EPL.Controllers || {};
@@ -50,7 +51,7 @@
         let defeated = this.deps.isBossDefeated();
         if (shown || locked || defeated) {
             e.preventDefault();
-            this.deps.navigateToMenu();
+            this.goToMenu();
             return true;
         }
         return false;
@@ -79,9 +80,29 @@
         });
     };
 
+    KeyboardInputController.prototype.goToMenu = function() {
+        let ref = document.referrer || '';
+        if (ref.indexOf('menu.html') !== -1 && history.length > 1) {
+            try { sessionStorage.setItem('epl_menu_back','1'); } catch (e) {}
+            history.back();
+            return;
+        }
+        this.deps.navigateToMenu();
+    };
+
     KeyboardInputController.prototype.getCodeMap = function() {
         return KEYBOARD_CODE_MAP;
     };
+
+    function handlePageShow() {
+        let force = false;
+        try { force = sessionStorage.getItem('epl_force_restart') === '1'; } catch (e) { force = false; }
+        if (!force) return;
+        try { sessionStorage.removeItem('epl_force_restart'); } catch (e) {}
+        if (typeof init === 'function') init();
+    }
+
+    window.addEventListener('pageshow', handlePageShow);
 
     window.EPL.Controllers.KeyboardInput = KeyboardInputController;
 })();

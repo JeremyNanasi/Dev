@@ -297,6 +297,10 @@ class World {
     }
 
     draw() {
+        if (document.body.classList.contains('epl-orientation-blocked')) {
+            this.queueNextFrame();
+            return;
+        }
         this.clearCanvas();
         this.startCamera();
         this.drawBackgroundLayers();

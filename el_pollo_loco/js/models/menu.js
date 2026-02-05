@@ -82,6 +82,23 @@
         document.addEventListener('keydown', handler);
     }
 
+    function readSessionFlag(key) {
+        try { return sessionStorage.getItem(key) === '1'; } catch (e) { return false; }
+    }
+
+    function setupStartButton() {
+        let button = document.querySelector('.start-button');
+        if (!button) return;
+        button.addEventListener('click', function(e) {
+            if (!(readSessionFlag('epl_index_ready') && readSessionFlag('epl_menu_back'))) return;
+            e.preventDefault();
+            try { sessionStorage.setItem('epl_force_restart','1'); sessionStorage.removeItem('epl_menu_back'); } catch (err) {}
+            let href = button.getAttribute('href');
+            history.forward();
+            setTimeout(function() { if (window.location.href.indexOf('menu.html') !== -1) window.location.href = href; }, 120);
+        });
+    }
+
     document.addEventListener('DOMContentLoaded', function() {
         let audio = document.getElementById('background-music');
         if (audio) {
@@ -96,5 +113,6 @@
         setupSoundToggle();
         setupControlsToggle();
         initSoundOnGesture();
+        setupStartButton();
     });
 })();

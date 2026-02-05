@@ -5,6 +5,8 @@
   class EnemySfxManager {
     constructor() {
       this.stateMap = new WeakMap();
+      this.orientationBlocked = false;
+      this.lastWorld = null;
       this.SOUND_PATHS = {
         smallLoop: './img/effect-sound/small-chicken.mp3',
         chickenLoop: './img/effect-sound/chicken.mp3',
@@ -17,10 +19,13 @@
       this.INIT_MAX = 1000;
       this.REP_MIN = 2600;
       this.REP_MAX = 3200;
+      this.bindOrientationEvents();
     }
 
     update(world) {
       if (!world?.level?.enemies || !world?.character) return;
+      this.lastWorld = world;
+      if (this.orientationBlocked) return this.stopAll(world.level.enemies);
       if (!this.isEnabled()) return this.stopAll(world.level.enemies);
       for (let i = 0; i < world.level.enemies.length; i++) {
         this.processEnemy(world.character, world.level.enemies[i]);
@@ -28,7 +33,20 @@
     }
 
     isEnabled() {
-      return window.EPL?.Sound?.isEnabled?.() === true;
+      return window.EPL?.Sound?.isEnabled?.() === true && !this.orientationBlocked;
+    }
+
+    bindOrientationEvents() {
+      const self = this;
+      window.addEventListener('epl:orientation-blocked', function(e) {
+        self.setOrientationBlocked(Boolean(e?.detail?.blocked));
+      });
+    }
+
+    setOrientationBlocked(blocked) {
+      this.orientationBlocked = blocked;
+      if (!blocked) return;
+      if (this.lastWorld?.level?.enemies) this.stopAll(this.lastWorld.level.enemies);
     }
 
     processEnemy(character, enemy) {
@@ -88,6 +106,7 @@
       st.deathPlayed = true;
       const a = new Audio(this.SOUND_PATHS.death);
       a.volume = 0.6;
+      st.currentAudio = a;
       a.play().catch(() => {});
     }
 
