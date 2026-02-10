@@ -14,6 +14,7 @@
         endbossAlert: './img/effect-sound/angry-chicken.mp4',
         damage: './img/effect-sound/damage.mp3'
       };
+      this.loopPools = this.createLoopPools();
       this.RANGE = 1200;
       this.INIT_MIN = 400;
       this.INIT_MAX = 1000;
@@ -188,7 +189,7 @@
         if (st.blocked) return;
         if (enemy?.constructor?.name === 'Endboss' && st.damageActive) return;
         if (this.isDead(enemy)) return this.handleDeath(enemy, st);
-        this.playLoopOnce(st, this.loopSrc(type));
+        this.playLoopOnce(st, type);
         this.schedule(enemy, st, type, this.rand(this.REP_MIN, this.REP_MAX));
       }, delay);
     }
@@ -198,12 +199,80 @@
       return this.SOUND_PATHS.chickenLoop;
     }
 
-    playLoopOnce(st, src) {
+    createLoopPools() {
+      return {
+        chicken: this.buildPool(this.SOUND_PATHS.chickenLoop, 2),
+        small: this.buildPool(this.SOUND_PATHS.smallLoop, 1)
+      };
+    }
+
+    buildPool(src, size) {
+      const pool = [];
+      for (let i = 0; i < size; i++) pool.push(this.prepareLoopAudio(new Audio(src)));
+      return pool;
+    }
+
+    prepareLoopAudio(a) {
+      a.addEventListener('ended', () => {
+        if (a._owner?.currentAudio === a) a._owner.currentAudio = null;
+        a._owner = null;
+      });
+      return a;
+    }
+
+    isLimitedType(type) {
+      return type === 'small' || type === 'chicken';
+    }
+
+    getLoopPool(type) {
+      return type === 'small' ? this.loopPools.small : this.loopPools.chicken;
+    }
+
+    isAudioPlaying(a) {
+      return a && !a.paused && !a.ended;
+    }
+
+    countActiveInPool(pool) {
+      let count = 0;
+      for (let i = 0; i < pool.length; i++) if (this.isAudioPlaying(pool[i])) count++;
+      return count;
+    }
+
+    countActiveLoops() {
+      return this.countActiveInPool(this.loopPools.chicken)
+        + this.countActiveInPool(this.loopPools.small);
+    }
+
+    acquireLoopAudio(type) {
+      if (this.countActiveLoops() >= 3) return null;
+      const pool = this.getLoopPool(type);
+      for (let i = 0; i < pool.length; i++) if (!this.isAudioPlaying(pool[i])) return pool[i];
+      return null;
+    }
+
+    startPooledAudio(st, a) {
+      a.currentTime = 0;
+      a.volume = 0.5;
+      a._owner = st;
+      st.currentAudio = a;
+      a.play().catch(() => {});
+    }
+
+    playUncappedLoop(st, src) {
       this.stopCurrentAudio(st);
       const a = new Audio(src);
       a.volume = 0.5;
       st.currentAudio = a;
       a.play().catch(() => {});
+    }
+
+    playLoopOnce(st, type) {
+      const src = this.loopSrc(type);
+      if (!this.isLimitedType(type)) return this.playUncappedLoop(st, src);
+      const a = this.acquireLoopAudio(type);
+      if (!a) return;
+      this.stopCurrentAudio(st);
+      this.startPooledAudio(st, a);
     }
 
     stopAll(enemies) {
@@ -232,8 +301,13 @@
     stopCurrentAudio(st) {
       const a = st.currentAudio;
       if (!a) return;
+      if (a._owner && a._owner !== st) {
+        st.currentAudio = null;
+        return;
+      }
       a.pause();
       a.currentTime = 0;
+      a._owner = null;
       st.currentAudio = null;
     }
 

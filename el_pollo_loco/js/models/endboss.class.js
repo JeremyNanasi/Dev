@@ -106,6 +106,26 @@ class Endboss extends MoveableObject {
         this.walkFrameIndex = 0;
     }
 
+    enterDormantMode() {
+        this.stopWalkingAnimation();
+        this.clearAlertInterval();
+        this.clearAttackInterval();
+        this.currentImage = 0;
+        this.img = this.imageCache[this.IMAGES_ENDBOSS_WALKING[0]];
+    }
+
+    exitDormantMode() {
+        this.stopWalkingAnimation();
+        this.clearAlertInterval();
+        this.clearAttackInterval();
+    }
+
+    showWakeTelegraphFrame() {
+        this.clearAlertInterval();
+        this.currentImage = 0;
+        this.img = this.imageCache[this.ALERT_ENBOSS[0]];
+    }
+
     setAlertFrame() {
         this.currentImage = 0;
         this.img = this.imageCache[this.ALERT_ENBOSS[0]];
@@ -133,6 +153,10 @@ class Endboss extends MoveableObject {
         clearInterval(this.alertInterval);
         this.alertInterval = null;
         this.isAlerting = false;
+    }
+
+    stopAlertLoopIfAny() {
+        this.clearAlertInterval();
     }
 
     prepareAlertState() {
@@ -167,11 +191,12 @@ class Endboss extends MoveableObject {
             && (withinDistance || isColliding);
     }
 
-    handleAttackOrAlert(distanceAhead) {
+    handleAttackOrAlert(distanceAhead, allowAlert = true) {
         if (this.canStartAttack(distanceAhead)) {
             this.startAttackAnimation();
             return true;
         }
+        if (!allowAlert) return false;
         return this.handleAlertState(distanceAhead);
     }
 
