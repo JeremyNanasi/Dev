@@ -116,17 +116,16 @@
 
     TouchController.prototype.updateVisibility = function() {
         let stored = localStorage.getItem(STORAGE_KEY);
-        let isMobile = document.body.classList.contains('is-mobile-tablet');
-        let withinBp = this.mql ? this.mql.matches : window.innerWidth <= BREAKPOINT;
-        this.visible = this.resolveVisibility(stored, isMobile, withinBp);
+        let isTouch = document.body.classList.contains('is-mobile-tablet');
+        this.visible = this.resolveVisibility(stored, isTouch);
         this.updateUI();
     };
 
-    TouchController.prototype.resolveVisibility = function(stored, isMobile, withinBp) {
+    TouchController.prototype.resolveVisibility = function(stored, isTouch) {
         if (stored === 'on') return true;
         if (stored === 'off') return false;
-        if (!isMobile || !withinBp) return false;
-        return isMobile && withinBp;
+        if (!isTouch) return false;
+        return true;
     };
 
     TouchController.prototype.updateUI = function() {
@@ -155,7 +154,7 @@
         let touch = navigator.maxTouchPoints > 0;
         let coarse = window.matchMedia && window.matchMedia('(pointer: coarse)').matches;
         let noHover = window.matchMedia && window.matchMedia('(hover: none)').matches;
-        return touch || (coarse && noHover);
+        return touch && (coarse || noHover);
     };
 
     TouchController.prototype.updateMobileTabletState = function() {

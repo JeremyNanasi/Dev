@@ -246,11 +246,6 @@ body.is-fullscreen .game-overlay__top-right {
     order: 1;
 }
 
-#orientation-toggle {
-    order: 2;
-    display: none;
-}
-
 .icon-button {
     border: 0;
     border-radius: 999px;
@@ -366,6 +361,32 @@ body:fullscreen .game-overlay__top-right .fullscreen-button,
     cursor: pointer;
 }
 
+#restart-button {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 6;
+    pointer-events: auto;
+    border: 0;
+    border-radius: 999px;
+    background: #ffa509;
+    color: #000;
+    padding: clamp(10px, 2.2vmin, 16px) clamp(16px, 3.2vmin, 26px);
+    font-family: "Inter", Arial, Helvetica, sans-serif;
+    font-weight: 800;
+    font-size: clamp(14px, 2.4vmin, 20px);
+    box-shadow: 0 12px 22px rgba(177, 118, 8, 0.4);
+    cursor: pointer;
+}
+
+#restart-button[hidden] {
+    display: none !important;
+}
+
+#inline-hint, #fs-hint {
+    display: none !important;
+}
+
 .touch-controls {
     position: absolute;
     left: 0;
@@ -434,7 +455,7 @@ body.touch-controls-visible .game-overlay__bottom-controls {
     display: block;
 }
 
-@media (min-width: 901px) {
+@media (hover: hover) and (pointer: fine) and (min-width: 901px) {
     .touch-controls,
     .game-overlay__bottom-controls {
         display: none !important;
