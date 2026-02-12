@@ -3,96 +3,62 @@ const bottleMinX = 200;
 const bottleMaxX = endbossSpawnX - 500;
 const randomBottleX = () => bottleMinX + Math.random() * (bottleMaxX - bottleMinX);
 
-level1 = new Level(
-    [
-        new Chicken(),
-        new Chicken(),
-        new Chicken(),
-        new Chicken(),
-        new Chicken(),
-        new smallchicken({ isSmall: true }),
-        new smallchicken({ isSmall: true }),
-        new smallchicken({ isSmall: true }),
-        new smallchicken({ isSmall: true }),
-        new Endboss()
-    ],
-    [
-        new Cloud(),
-        new Cloud(),
-        new Cloud(),
-        new Cloud(),
-        new Cloud(),
-        new Cloud(),
-        new Cloud(),
-        new Cloud(),
-        new Cloud(),
-        new Cloud(),
-        new Cloud(),
-        new Cloud()
-    ],
-    [
-        new Icons({ x: -750 + Math.random() * 750*3 + 800 }),
-        new Icons({ x: -750 + Math.random() * 750*3 + 800 }),
-        new Icons({ x: -750 + Math.random() * 750*3 + 800 }),
-        new Icons({ x: -750 + Math.random() * 750*3 + 800 }),
-        new Icons({ x: -750 + Math.random() * 750*3 + 800 }),
-        new Icons({ x: -750 + Math.random() * 750*3 + 800 }),
-        new Icons({ x: -750 + Math.random() * 750*3 + 800 }),
-        new Icons({ x: -750 + Math.random() * 750*3 + 800 }),
-        new Icons({ x: -750 + Math.random() * 750*3 + 800 }),
-        new Icons({ x: -750 + Math.random() * 750*3 + 800 }),
-        new Icons({ x: -750 + Math.random() * 750*3 + 800 }),
-        new Icons({ x: -750 + Math.random() * 750*3 + 800 }),
-        new Icons({ x: -750 + Math.random() * 750*3 + 800 }),
-        new Icons({ x: -750 + Math.random() * 750*3 + 800 }),
-        new Icons({ x: -750 + Math.random() * 750*3 + 800 }),
-        new Icons({ x: -750 + Math.random() * 750*3 + 800 }),
-        new Icons({ x: -750 + Math.random() * 750*3 + 800 }),
-        new Icons({ x: -750 + Math.random() * 750*3 + 800 }),
-        new Icons({ x: -750 + Math.random() * 750*3 + 800 }),
-        new Icons({ x: -750 + Math.random() * 750*3 + 800 })
-    ],
-    [
-        new ThrowableObject(randomBottleX(), 360, { isCollectible: true }),
-        new ThrowableObject(randomBottleX(), 360, { isCollectible: true }),
-        new ThrowableObject(randomBottleX(), 360, { isCollectible: true }),
-        new ThrowableObject(randomBottleX(), 360, { isCollectible: true }),
-        new ThrowableObject(randomBottleX(), 360, { isCollectible: true }),
-        new ThrowableObject(randomBottleX(), 360, { isCollectible: true }),
-        new ThrowableObject(randomBottleX(), 360, { isCollectible: true }),
-        new ThrowableObject(randomBottleX(), 360, { isCollectible: true }),
-        new ThrowableObject(randomBottleX(), 360, { isCollectible: true })
-    ],
-        
-    [
-        new BackgroundObject('./img/5_background/layers/air.png', -750),
-        new BackgroundObject('./img/5_background/layers/3_third_layer/2.png', -750),
-        new BackgroundObject('./img/5_background/layers/2_second_layer/2.png', -750),
-        new BackgroundObject('./img/5_background/layers/1_first_layer/2.png', -750),
+function initLevel() {
+    level1 = buildLevel1();
+    return level1;
+}
 
-        new BackgroundObject('./img/5_background/layers/air.png', 0),
-        new BackgroundObject('./img/5_background/layers/3_third_layer/1.png', 0),
-        new BackgroundObject('./img/5_background/layers/2_second_layer/1.png', 0),
-        new BackgroundObject('./img/5_background/layers/1_first_layer/1.png', 0),
+function buildLevel1() {
+    return new Level(buildEnemies(), buildClouds(), buildIcons(), buildSalsa(), buildBackgrounds());
+}
 
-        new BackgroundObject('./img/5_background/layers/air.png', 750),
-        new BackgroundObject('./img/5_background/layers/3_third_layer/2.png', 750),
-        new BackgroundObject('./img/5_background/layers/2_second_layer/2.png', 750),
-        new BackgroundObject('./img/5_background/layers/1_first_layer/2.png', 750),
+function buildEnemies() {
+    return repeat(() => new Chicken(), 5)
+        .concat(repeat(() => new smallchicken({ isSmall: true }), 4), [new Endboss()]);
+}
 
-        new BackgroundObject('./img/5_background/layers/air.png', 750*2),
-        new BackgroundObject('./img/5_background/layers/3_third_layer/1.png', 750*2),
-        new BackgroundObject('./img/5_background/layers/2_second_layer/1.png', 750*2),
-        new BackgroundObject('./img/5_background/layers/1_first_layer/1.png', 750*2),
-        
-        new BackgroundObject('./img/5_background/layers/air.png', 750*3),
-        new BackgroundObject('./img/5_background/layers/3_third_layer/2.png', 750*3),
-        new BackgroundObject('./img/5_background/layers/2_second_layer/2.png', 750*3),
-        new BackgroundObject('./img/5_background/layers/1_first_layer/2.png', 750*3),
+function buildClouds() {
+    return repeat(() => new Cloud(), 12);
+}
 
-        new BackgroundObject('./img/5_background/layers/air.png', 750*4),
-        new BackgroundObject('./img/5_background/layers/3_third_layer/1.png', 750*4),
-        new BackgroundObject('./img/5_background/layers/2_second_layer/1.png', 750*4),
-        new BackgroundObject('./img/5_background/layers/1_first_layer/1.png', 750*4),
-    ]
-);
+function buildIcons() {
+    return repeat(() => new Icons({ x: randomIconX() }), 20);
+}
+
+function randomIconX() {
+    return -750 + Math.random() * 750 * 3 + 800;
+}
+
+function buildSalsa() {
+    return repeat(() => new ThrowableObject(randomBottleX(), 360, { isCollectible: true }), 9);
+}
+
+function buildBackgrounds() {
+    const sets = [
+        createBackgroundSet(-750, 2),
+        createBackgroundSet(0, 1),
+        createBackgroundSet(750, 2),
+        createBackgroundSet(1500, 1),
+        createBackgroundSet(2250, 2),
+        createBackgroundSet(3000, 1)
+    ];
+    return sets.reduce((all, set) => all.concat(set), []);
+}
+
+function createBackgroundSet(x, variant) {
+    const v = String(variant);
+    return [
+        new BackgroundObject('./img/5_background/layers/air.png', x),
+        new BackgroundObject(`./img/5_background/layers/3_third_layer/${v}.png`, x),
+        new BackgroundObject(`./img/5_background/layers/2_second_layer/${v}.png`, x),
+        new BackgroundObject(`./img/5_background/layers/1_first_layer/${v}.png`, x)
+    ];
+}
+
+function repeat(factory, count) {
+    const items = [];
+    for (let i = 0; i < count; i++) items.push(factory());
+    return items;
+}
+
+initLevel();

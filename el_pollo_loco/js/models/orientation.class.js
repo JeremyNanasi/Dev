@@ -6,6 +6,16 @@
     let MODES = ['auto', 'portrait', 'landscape'];
     let STORAGE_KEY = 'orientation-mode';
     let BLOCK_QUERY = '(pointer: coarse) and (orientation: portrait)';
+    let HUB_MAX_LONG = 1280;
+    let HUB_MAX_SHORT = 800;
+
+    function isWithinHubMax() {
+        let w = window.innerWidth;
+        let h = window.innerHeight;
+        let longSide = Math.max(w, h);
+        let shortSide = Math.min(w, h);
+        return longSide <= HUB_MAX_LONG && shortSide <= HUB_MAX_SHORT;
+    }
 
     function isBodyBlocked() {
         return document.body.classList.contains('epl-orientation-blocked');
@@ -113,12 +123,15 @@
     OrientationController.prototype.computeScalePair = function(rotation) {
         let w = this.deps.getCanvasWidth(), h = this.deps.getCanvasHeight();
         let n = ((rotation % 360) + 360) % 360, rot = n === 90 || n === 270;
-        let vw = window.innerWidth, vh = window.innerHeight;
+        let vw = window.innerWidth, vh = window.innerHeight, factor = 0.85;
         let sx = rot ? (vh / w) : (vw / w);
         let sy = rot ? (vw / h) : (vh / h);
         if (document.fullscreenElement) return { x: sx, y: sy };
         let baseW = rot ? h : w, baseH = rot ? w : h;
-        let s = Math.min(vw / baseW, vh / baseH);
+        let baseLong = Math.max(baseW, baseH), baseShort = Math.min(baseW, baseH);
+        let s = Math.min(vw / baseW, vh / baseH) * factor;
+        let cap = Math.min(HUB_MAX_LONG / baseLong, HUB_MAX_SHORT / baseShort) * factor;
+        if (s > cap) s = cap;
         return { x: s, y: s };
     };
 
@@ -134,7 +147,7 @@
     };
 
     OrientationController.prototype.handleBlockChange = function() {
-        let blocked = Boolean(this.blockMql && this.blockMql.matches);
+        let blocked = Boolean(this.blockMql && this.blockMql.matches) && isWithinHubMax();
         this.applyBlockState(blocked);
     };
 
@@ -147,6 +160,7 @@
     OrientationController.prototype.updateBlockAria = function(blocked) {
         let block = document.getElementById('orientation-block');
         if (!block) return;
+        block.style.display = blocked ? 'flex' : 'none';
         block.setAttribute('aria-hidden', blocked ? 'false' : 'true');
     };
 

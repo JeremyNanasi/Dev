@@ -1,8 +1,7 @@
 (() => {
   const WATCH_INTERVAL = 250;
-  const MIN_RATIO = 0.6;
-  const BTN_GAP = 16;
-
+  const MIN_RATIO = 0.64;
+  const BTN_GAP = 12;
   class RestartButtonController {
     constructor(deps) {
       this.deps = deps || {};
@@ -15,22 +14,15 @@
       this.initTimers();
       this.bindHandlers();
     }
-
     initTimers() {
-      this.raf = window.requestAnimationFrame
-        ? window.requestAnimationFrame.bind(window)
-        : (cb) => window.setTimeout(() => cb(Date.now()), 16);
-      this.rafCancel = window.cancelAnimationFrame
-        ? window.cancelAnimationFrame.bind(window)
-        : window.clearTimeout;
+      this.raf = window.requestAnimationFrame ? window.requestAnimationFrame.bind(window) : (cb) => window.setTimeout(() => cb(Date.now()), 16);
+      this.rafCancel = window.cancelAnimationFrame ? window.cancelAnimationFrame.bind(window) : window.clearTimeout;
     }
-
     bindHandlers() {
       this.onResizeBound = this.onResize.bind(this);
       this.onClickBound = this.handleClick.bind(this);
       this.watchTickBound = this.watchTick.bind(this);
     }
-
     init() {
       if (this.initialized) return;
       this.initialized = true;
@@ -39,7 +31,6 @@
       this.bindEvents();
       this.startWatcher();
     }
-
     resolveElements() {
       this.shell = document.getElementById('fullscreen-target');
       this.canvas = document.getElementById('canvas');
@@ -49,11 +40,9 @@
       this.touchControls = document.getElementById('touch-controls');
       this.mobileToggle = document.getElementById('mobile-controls-toggle');
     }
-
     getContainer() {
       return this.overlay || this.shell;
     }
-
     ensureButton() {
       if (!this.shell || !this.canvas) return;
       const container = this.getContainer();
@@ -64,7 +53,6 @@
       this.button = btn;
       this.button.hidden = true;
     }
-
     createButton() {
       const btn = document.createElement('button');
       btn.id = 'restart-button';
@@ -73,30 +61,25 @@
       btn.addEventListener('click', this.onClickBound);
       return btn;
     }
-
     bindEvents() {
       window.addEventListener('resize', this.onResizeBound);
       window.addEventListener('orientationchange', this.onResizeBound);
       document.addEventListener('fullscreenchange', this.onResizeBound);
     }
-
     startWatcher() {
       if (this.watchId) return;
       this.watchId = this.trackInterval(this.watchTickBound, WATCH_INTERVAL);
       this.watchTick();
     }
-
     trackInterval(fn, ms) {
       const id = window.setInterval(fn, ms);
       this.intervalIds.add(id);
       return id;
     }
-
     watchTick() {
       const ended = this.getEndState();
       if (ended !== this.visible) this.setVisible(ended);
     }
-
     getEndState() {
       const w = this.getWorld();
       const c = w && w.character;
@@ -105,7 +88,6 @@
       if (typeof dead === 'function' ? dead.call(c) : dead === true) return true;
       return Boolean(w && w.isBossDefeated && w.isBossDefeated());
     }
-
     setVisible(show) {
       if (!this.button) return;
       if (this.visible === show) return;
@@ -113,7 +95,6 @@
       this.button.hidden = !show;
       if (show) this.schedulePosition();
     }
-
     schedulePosition() {
       if (!this.visible || this.rafId) return;
       this.rafId = this.raf(() => {
@@ -121,11 +102,9 @@
         this.position();
       });
     }
-
     onResize() {
       if (this.visible) this.schedulePosition();
     }
-
     position() {
       if (!this.button || !this.canvas || !this.shell) return;
       const bounds = this.getBounds();
@@ -133,7 +112,6 @@
       const top = this.computeTop(bounds);
       this.button.style.top = `${top}px`;
     }
-
     getBounds() {
       const root = this.shell, container = this.getContainer();
       if (!root || !container || !this.canvas || !this.button) return null;
@@ -148,24 +126,20 @@
       const topMax = this.getTopMax(localCanvasTop, canvasHeight, btnHeight, gap, blockerTop);
       return { canvasTop: localCanvasTop, canvasHeight, btnHeight, gap, topMin, topMax, blockerTop };
     }
-
     getScale(shellRect) {
       const raw = this.shell.offsetHeight || shellRect.height || 1;
       const scale = shellRect.height / raw;
       return scale || 1;
     }
-
     toLocalY(value, shellTop, scale) {
       return (value - shellTop) / scale;
     }
-
     getRect(el) {
       if (!el) return null;
       const rect = el.getBoundingClientRect();
       if (!rect || rect.height === 0 || rect.width === 0) return null;
       return rect;
     }
-
     getOffsetTop(el, root) {
       if (!el || !root) return null;
       let top = 0;
@@ -177,81 +151,62 @@
       if (node !== root) return null;
       return top;
     }
-
     getTop(el, root, containerTop) {
       const top = this.getOffsetTop(el, root);
       if (top === null) return Infinity;
       return top - containerTop;
     }
-
     getBottom(el, root, containerTop) {
       const top = this.getOffsetTop(el, root);
       if (top === null) return 0;
       return top - containerTop + (el.offsetHeight || 0);
     }
-
     getBlockerTop(root, containerTop) {
       const blocker = this.bottomControls || this.mobileToggle;
       const top = this.getOffsetTop(blocker, root);
       if (top === null) return null;
       return top - containerTop;
     }
-
     getTopMin(canvasTop, canvasHeight, gap, root, containerTop) {
       const base = canvasTop + canvasHeight * MIN_RATIO;
       const topRightBottom = this.getBottom(this.topRight, root, containerTop);
       return Math.max(base, topRightBottom + gap);
     }
-
     getTopMax(canvasTop, canvasHeight, btnHeight, gap, blockerTop) {
       if (blockerTop !== null && blockerTop !== undefined) return blockerTop - btnHeight - gap;
       return canvasTop + canvasHeight - btnHeight - gap;
     }
-
     computeTop(bounds) {
-      const target = bounds.blockerTop === null || bounds.blockerTop === undefined
-        ? bounds.topMax
-        : bounds.blockerTop - bounds.btnHeight - bounds.gap;
+      const target = bounds.blockerTop === null || bounds.blockerTop === undefined ? bounds.topMax : bounds.blockerTop - bounds.btnHeight - bounds.gap;
       const max = Math.max(bounds.topMin, bounds.topMax);
       return this.clamp(target, bounds.topMin, max);
     }
-
     clamp(value, min, max) {
       if (value < min) return min;
       if (value > max) return max;
       return value;
     }
-
     handleClick() {
       if (this.restarting) return;
       this.restarting = true;
       this.softRestart();
       this.restarting = false;
     }
-
     softRestart() {
-      this.stopLoops();
-      this.stopEnemySfxSafe();
-      this.resetGameOver();
-      this.resetLevel();
-      this.restartGame();
-      this.startWatcher();
-      this.setVisible(false);
+      this.stopLoops(); this.stopEnemySfxSafe(); this.resetGameOver();
+      this.restartGame(); this.restartGameOverWatcher();
+      this.startWatcher(); this.setVisible(false);
     }
-
     stopLoops() {
       this.intervalIds.forEach((id) => window.clearInterval(id));
-      this.intervalIds.clear();
-      this.clearRaf();
+      this.intervalIds.clear(); this.clearRaf();
       this.watchId = 0;
     }
-
     clearRaf() {
       if (!this.rafId) return;
       this.rafCancel(this.rafId);
       this.rafId = 0;
     }
-
     stopEnemySfxSafe() {
       const w = this.getWorld();
       const enemies = w && w.level && w.level.enemies;
@@ -263,7 +218,6 @@
         mgr.stopAll.call(mgr, enemies);
       } catch (_) {}
     }
-
     resetGameOver() {
       this.callIfFn('resetGameOverState');
     }
@@ -271,13 +225,7 @@
       this.callIfFn('startGameOverWatcher');
     }
     restartGame() {
-      this.detachKeyboard();
-      this.resetStartGuard();
-      this.callIfFn('startGame');
-      this.attachKeyboard();
-    }
-    resetStartGuard() {
-      if (typeof gameStarted !== 'undefined') gameStarted = false;
+      this.detachKeyboard(); this.resetWorldState(); this.attachKeyboard();
     }
     detachKeyboard() {
       if (typeof keyboardController !== 'undefined' && keyboardController?.detach) keyboardController.detach();
@@ -286,9 +234,78 @@
       if (typeof keyboardController !== 'undefined' && keyboardController?.attach) keyboardController.attach();
     }
     resetLevel() {
-      if (this.callIfFn('initLevel')) return;
-      const level = this.buildLevel1();
+      const level = this.callIfFn('initLevel') || this.buildLevel1();
       if (level) window.level1 = level;
+      return level || window.level1 || null;
+    }
+    deactivateActors(world) {
+      const actors = (world?.level?.enemies || []).slice();
+      if (world?.character) actors.push(world.character);
+      for (let i = 0; i < actors.length; i++) this.deactivateActor(actors[i]);
+    }
+    deactivateActor(actor) {
+      if (!actor) return;
+      actor.world = null;
+      if (typeof actor.energy === 'number') actor.energy = 0;
+      if ('isDeadState' in actor) actor.isDeadState = true;
+      const fn = actor.stopLoopSound;
+      if (typeof fn === 'function') fn.call(actor);
+      const clear = actor.clearIntervalsForDeath; if (typeof clear === 'function') clear.call(actor);
+      const logic = actor.logic;
+      if (typeof logic?.clearMovementInterval === 'function') logic.clearMovementInterval();
+    }
+    resetWorldState() {
+      const w = this.getWorld();
+      if (!w) return;
+      this.deactivateActors(w);
+      const level = this.resetLevel();
+      this.applyLevel(w, level);
+      this.resetActors(w);
+      this.resetWorldValues(w);
+      this.resetCollision(w);
+      this.refreshWorldHud(w);
+    }
+    applyLevel(world, level) {
+      if (!world || !level) return;
+      world.level = level;
+    }
+    resetActors(world) {
+      const character = this.createCharacter();
+      if (character) world.character = character;
+      world.throwableObject = [];
+      world.collectedSalsa = 0;
+      world.lastThrowTime = 0;
+    }
+    createCharacter() {
+      if (typeof Character !== 'function') return null;
+      return new Character();
+    }
+    resetWorldValues(world) {
+      world.camera_x = 0;
+      world.gameOverStartTime = null;
+      world.winStartTime = null;
+      this.resetStatusBars(world);
+    }
+    resetStatusBars(world) {
+      if (typeof StatusBar !== 'function') return;
+      world.statusBar = new StatusBar();
+      world.iconsStatusBar = new StatusBar('icons');
+      world.bottlesStatusBar = new StatusBar('bottles');
+    }
+    resetCollision(world) {
+      if (typeof WorldCollision !== 'function') return;
+      world.collision = new WorldCollision(world);
+    }
+    refreshWorldHud(world) {
+      this.callWorld(world, 'cacheHudElements');
+      this.callWorld(world, 'setWorld');
+      this.callWorld(world, 'setCollectibleTotals');
+      this.callWorld(world, 'refreshHud');
+    }
+    callWorld(world, name) {
+      const fn = world && world[name];
+      if (typeof fn !== 'function') return;
+      fn.call(world);
     }
     buildLevel1() {
       if (typeof Level !== 'function') return null;
@@ -299,7 +316,7 @@
         .concat(this.repeat(() => new smallchicken({ isSmall: true }), 4), [new Endboss()]);
     }
     buildClouds() {
-      return this.repeat(() => new Cloud(), 11);
+      return this.repeat(() => new Cloud(), 12);
     }
     buildIcons() {
       return this.repeat(() => new Icons({ x: this.randomIconX() }), 20);
@@ -331,9 +348,8 @@
     }
     callIfFn(name, ...args) {
       const fn = this.resolveFn(name);
-      if (typeof fn !== 'function') return false;
-      fn(...args);
-      return true;
+      if (typeof fn !== 'function') return null;
+      return fn(...args);
     }
     resolveFn(name) {
       if (!name) return null;
@@ -347,7 +363,6 @@
       }
       return target;
     }
-
     createWorld() {
       const canvas = this.canvas || document.getElementById('canvas');
       if (!canvas || typeof World !== 'function') return;
@@ -358,22 +373,16 @@
       }
       window.world = new World(canvas, kb);
     }
-
     resolveKeyboard() {
-      if (typeof keyboard !== 'undefined') return keyboard;
-      if (window.keyboard) return window.keyboard;
-      if (typeof Keyboard === 'function') return new Keyboard();
-      if (window.Keyboard) return new window.Keyboard();
+      if (typeof keyboard !== 'undefined') return keyboard; if (window.keyboard) return window.keyboard;
+      if (typeof Keyboard === 'function') return new Keyboard(); if (window.Keyboard) return new window.Keyboard();
       return null;
     }
-
     getWorld() {
-      if (window.world) return window.world;
-      if (typeof world !== 'undefined') return world;
+      if (window.world) return window.world; if (typeof world !== 'undefined') return world;
       return null;
     }
   }
-
   const boot = () => {
     if (window.EPL && window.EPL.Controllers && window.EPL.Controllers.RestartButton) return;
     const root = window.EPL || {};
@@ -383,7 +392,6 @@
     root.Controllers.RestartButton = controller;
     controller.init();
   };
-
   if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', boot);
     return;
