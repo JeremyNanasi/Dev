@@ -1,3 +1,10 @@
+/**
+ * Player-controlled character with movement, jump, and idle animations.
+ * @extends MoveableObject
+ * @property {number} idleThresholdMs
+ * @property {number} longIdleThresholdMs
+ * @property {World} world
+ */
 class Character extends MoveableObject {
 
     height = 200;
@@ -83,7 +90,7 @@ class Character extends MoveableObject {
         './img/2_character_pepe/4_hurt/H-43.png'
     ];
 
-    idleThresholdMs = 10000;
+    idleThresholdMs = 2000;
     longIdleThresholdMs = 20000;
     idleFrameDelayMs = 1000;
     lastIdleFrameTime = 0;
@@ -118,6 +125,10 @@ class Character extends MoveableObject {
         }, 1000 / 60);
     }
 
+    /**
+     * Initiates a jump if the character is on the ground.
+     * @returns {void}
+     */
     jump() {
         if (!this.isAboveGround()) {
             this.speedY = 30;
@@ -126,11 +137,21 @@ class Character extends MoveableObject {
         }
     }
 
+    /**
+     * Records the last input time for idle tracking.
+     * @param {number} timestamp
+     * @returns {void}
+     */
     registerMovement(timestamp) {
         this.lastMovementTime = timestamp;
         this.lastIdleFrameTime = timestamp;
     }
 
+    /**
+     * Updates idle animation state based on elapsed time.
+     * @param {number} now
+     * @returns {boolean}
+     */
     playIdleAnimation(now) {
         const idleDuration = now - this.lastMovementTime;
         if (idleDuration < this.idleThresholdMs) {
@@ -266,8 +287,13 @@ class Character extends MoveableObject {
         return { frames, offsetMs };
     }
 
-    hit(amount = 5) {
-        super.hit(amount);
+    /**
+     * Applies damage and triggers the game-over overlay when depleted.
+     * @param {number} amount
+     * @returns {void}
+     */
+    takeDamage(amount = 5) {
+        super.takeDamage(amount);
         if (this.energy <= 0 && typeof window.showGameOverOverlay === 'function') {
             window.showGameOverOverlay();
         }

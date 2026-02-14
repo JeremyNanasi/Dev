@@ -7,6 +7,7 @@
     function applySoundState(enabled) {
         let audio = document.getElementById('background-music');
         if (!audio) return;
+        audio.volume = 0.5;
         if (enabled) {
             audio.muted = false;
             audio.currentTime = 0;
@@ -71,7 +72,7 @@
             if (isSoundEnabled()) {
                 let audio = document.getElementById('background-music');
                 if (audio && audio.paused) {
-                    audio.currentTime = 0;
+                    audio.currentTime = 0; audio.volume = 0.5;
                     audio.play().catch(function() {});
                 }
             }
@@ -104,7 +105,7 @@
         if (audio) {
             audio.removeAttribute('autoplay');
             let enabled = isSoundEnabled();
-            audio.muted = !enabled;
+            audio.muted = !enabled; audio.volume = 0.5;
             if (!enabled) {
                 audio.pause();
                 audio.currentTime = 0;

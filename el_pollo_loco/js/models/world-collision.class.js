@@ -1,8 +1,19 @@
+/**
+ * Handles collision detection and pickup logic for the world.
+ * @property {World} world
+ */
 class WorldCollision {
+    /**
+     * @param {World} world
+     */
     constructor(world) {
         this.world = world;
     }
 
+    /**
+     * Runs collision checks for enemies, pickups, and throwables.
+     * @returns {void}
+     */
     checkCollisions() {
         this.handleEnemyCollisions();
         this.handleIconCollisions();
@@ -19,7 +30,7 @@ class WorldCollision {
             }
             if (this.isSideHit(this.world.character, enemy, collisionConfig)) {
                 const damage = enemy.contactDamageAmount ?? collisionConfig.defaultContactDamage;
-                this.world.character.hit(damage);
+                this.world.character.takeDamage(damage);
                 this.world.statusBar.setPercentage((this.world.character.energy / 600) * 100);
             }
         });
@@ -35,9 +46,9 @@ class WorldCollision {
             enemy.die();
             return;
         }
-        if (typeof enemy.hit === 'function') {
+        if (typeof enemy.takeDamage === 'function') {
             const damage = enemy.energy ?? 100;
-            enemy.hit(damage);
+            enemy.takeDamage(damage);
             return;
         }
         enemy.energy = 0;
@@ -126,7 +137,7 @@ class WorldCollision {
     }
 
     applyBottleHit(enemy) {
-        enemy.hit(10);
+        enemy.takeDamage(10);
         if (enemy instanceof Endboss) {
             this.updateBossAfterHit(enemy);
         }
@@ -215,6 +226,13 @@ class WorldCollision {
             && characterCenterX <= enemyBox.right + config.stompCenterMargin;
     }
 
+    /**
+     * Determines whether the character is stomping an enemy.
+     * @param {Object} character
+     * @param {Object} enemy
+     * @param {Object} config
+     * @returns {boolean}
+     */
     isStomping(character, enemy, config) {
         const { characterBox, enemyBox } = this.getCollisionPair(character, enemy);
         if (!this.isCollidingBoxes(characterBox, enemyBox)) { return false; }

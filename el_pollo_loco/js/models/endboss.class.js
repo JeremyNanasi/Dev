@@ -1,3 +1,11 @@
+/**
+ * Endboss enemy with alert, attack, and death behaviors.
+ * @extends MoveableObject
+ * @property {World} world
+ * @property {number} energy
+ * @property {boolean} isDeadState
+ * @property {EndbossLogic} logic
+ */
 class Endboss extends MoveableObject {
     height = 400;
     width = 385;
@@ -86,8 +94,12 @@ class Endboss extends MoveableObject {
         this.animate();
     }
 
+    /**
+     * Starts the endboss logic loop.
+     * @returns {void}
+     */
     animate() {
-        this.logic.start();
+        this.logic.startLogicLoop();
     }
 
     startWalkingAnimation() {
@@ -131,6 +143,10 @@ class Endboss extends MoveableObject {
         this.img = this.imageCache[this.ALERT_ENBOSS[0]];
     }
 
+    /**
+     * Begins the alert animation sequence.
+     * @returns {void}
+     */
     startAlertAnimation() {
         if (this.shouldSkipAlert()) return;
         this.clearAlertInterval();
@@ -286,6 +302,10 @@ class Endboss extends MoveableObject {
         }, frameDelay);
     }
 
+    /**
+     * Plays the death animation and stops active behaviors.
+     * @returns {void}
+     */
     playDeathAnimation() {
         if (this.isDeadState) return;
         this.isDeadState = true;

@@ -106,7 +106,7 @@
       if (!this.isEnabled()) return;
       st.deathPlayed = true;
       const a = new Audio(this.SOUND_PATHS.death);
-      a.volume = 0.6;
+      a.volume = 0.5;
       st.currentAudio = a;
       a.play().catch(() => {});
     }
@@ -124,7 +124,7 @@
       if (st.blocked) return;
       this.stopCurrentAudio(st);
       const a = new Audio(this.SOUND_PATHS.endbossAlert);
-      a.volume = 0.7;
+      a.volume = 0.5;
       st.currentAudio = a;
       a.play().catch(() => {});
     }
@@ -135,7 +135,7 @@
       if (this.isDead(endboss) || st.blocked || st.damageActive || st.deathLocked) return;
       this.stopCurrentAudio(st);
       const a = new Audio(this.SOUND_PATHS.endbossAlert);
-      a.volume = 0.7;
+      a.volume = 0.5;
       st.currentAudio = a;
       a.play().catch(() => {});
     }
@@ -319,7 +319,7 @@
       this.clearTimer(st);
       this.stopCurrentAudio(st);
       const a = new Audio(this.SOUND_PATHS.damage);
-      a.volume = 0.6;
+      a.volume = 0.5;
       st.damageAudio = a;
       const self = this;
       a.addEventListener('ended', function () { self.stopDamage(st); });

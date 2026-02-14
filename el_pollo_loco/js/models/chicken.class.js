@@ -53,11 +53,11 @@ class Chicken extends MoveableObject {
         }, 200);
     }
 
-    hit(amount = 5) {
+    takeDamage(amount = 5) {
         if (this.isDead()) {
             return;
         }
-        super.hit(amount);
+        super.takeDamage(amount);
         if (this.energy <= 0) {
             this.die();
         }

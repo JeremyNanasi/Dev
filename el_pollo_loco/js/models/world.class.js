@@ -1,3 +1,10 @@
+/**
+ * Game world orchestrating rendering, input, collisions, and HUD.
+ * @property {Character} character
+ * @property {HTMLCanvasElement} canvas
+ * @property {CanvasRenderingContext2D} ctx
+ * @property {number} camera_x
+ */
 class World {
     character = new Character();
     level = level1;
@@ -11,7 +18,7 @@ class World {
     throwableObject = [];
     collectedSalsa = 0;
     lastThrowTime = 0;
-    throwCooldownMs = 500;
+    throwCooldownMs = 1500;
     totalCoins = 0;
     totalSalsaBottles = 0;
     coinsCounterEl = null;
@@ -21,6 +28,10 @@ class World {
     gameOverStartTime = null;
     winStartTime = null;
 
+    /**
+     * @param {HTMLCanvasElement} canvas
+     * @param {Keyboard} keyboard
+     */
     constructor(canvas, keyboard) {
         this.setupCanvas(canvas, keyboard);
         this.loadEndScreenImages();
@@ -68,6 +79,10 @@ class World {
         });
     }
 
+    /**
+     * Starts the main world update loop.
+     * @returns {void}
+     */
     run() {
         setInterval(() => {
             this.checkCollisions();
@@ -90,6 +105,11 @@ class World {
             && now - this.lastThrowTime >= this.throwCooldownMs;
     }
 
+    /**
+     * Spawns and throws a bottle if available.
+     * @param {number} now
+     * @returns {void}
+     */
     throwBottle(now) {
         const bottle = this.createBottle();
         this.throwableObject.push(bottle);
@@ -125,6 +145,10 @@ class World {
         return this.collision.checkCollisions();
     }
 
+    /**
+     * Renders the world and queues the next frame.
+     * @returns {void}
+     */
     draw() {
         if (document.body.classList.contains('epl-orientation-blocked')) {
             this.queueNextFrame();

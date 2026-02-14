@@ -17,6 +17,7 @@
         if (this.audioElement) this.audioElement.removeAttribute('autoplay');
         let enabled = this.isEnabled();
         if (this.audioElement) this.audioElement.muted = !enabled;
+        if (this.audioElement) this.audioElement.volume = 0.5;
     };
 
     SoundManager.prototype.getAudio = function() {
@@ -36,6 +37,7 @@
     SoundManager.prototype.apply = function(enabled) {
         let audio = this.getAudio();
         if (!audio) return;
+        audio.volume = 0.5;
         if (enabled) {
             audio.muted = false;
             audio.currentTime = 0;
@@ -57,7 +59,7 @@
         if (!this.isEnabled()) return;
         let audio = this.getAudio();
         if (audio && audio.paused) {
-            audio.currentTime = 0;
+            audio.currentTime = 0; audio.volume = 0.5;
             audio.play().catch(function() {});
         }
     };

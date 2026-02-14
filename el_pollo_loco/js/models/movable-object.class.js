@@ -1,3 +1,12 @@
+/**
+ * Base movable entity with physics, hitbox helpers, and animation playback.
+ * @extends DrawableObject
+ * @property {number} speed
+ * @property {number} speedY
+ * @property {number} acceleration
+ * @property {number} energy
+ * @property {number} lastHit
+ */
 class MoveableObject extends DrawableObject {
     speed = 0.15;
     otherDirection = false;
@@ -24,6 +33,10 @@ class MoveableObject extends DrawableObject {
     };
 
 
+    /**
+     * Starts gravity updates for this object.
+     * @returns {void}
+     */
     applyGravity() {
         setInterval(() => {
             if (this.isAboveGround() || this.speedY > 0) {
@@ -46,6 +59,11 @@ class MoveableObject extends DrawableObject {
     }
 
 
+    /**
+     * Checks AABB collision against another object.
+     * @param {Object} mo
+     * @returns {boolean}
+     */
     isColliding(mo) {
         const thisX = this.getHitboxX();
         const thisY = this.getHitboxY();
@@ -79,7 +97,12 @@ class MoveableObject extends DrawableObject {
     }
 
 
-    hit(amount = 5) {
+    /**
+     * Reduces energy and records the last hit time.
+     * @param {number} amount
+     * @returns {void}
+     */
+    takeDamage(amount = 5) {
         this.energy -= amount;
         if (this.energy < 0) this.energy = 0;
         else this.lastHit = Date.now();
