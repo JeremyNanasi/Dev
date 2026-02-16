@@ -1,5 +1,11 @@
+/**
+ * Coordinates endboss AI state, activation, and damage application.
+ */
 class EndbossLogic {
 
+    /**
+     * @param {Endboss} boss
+     */
     constructor(boss) {
         this.boss = boss;
         this.helpers = new EndbossLogicHelpers(this);
@@ -22,6 +28,10 @@ class EndbossLogic {
         return { active: false, startTime: 0, baseX: 0, baseY: 0, targetX: 0, height: 260, duration: 900, impactDone: false };
     }
 
+    /**
+     * Starts the main endboss logic interval at 60 FPS.
+     * @returns {void}
+     */
     startLogicLoop() { this.clearMovementInterval(); this.movementInterval = setInterval(() => { this.updateLogic(); }, 1000 / 60); }
 
     clearMovementInterval() {
@@ -30,6 +40,10 @@ class EndbossLogic {
         this.movementInterval = null;
     }
 
+    /**
+     * Runs one AI tick including dormant/wake/aggressive handling.
+     * @returns {void}
+     */
     updateLogic() {
         const character = this.getChar();
         if (!character) return this.ensureDormantVisual();

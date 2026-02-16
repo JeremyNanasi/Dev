@@ -1,4 +1,11 @@
+/**
+ * @fileoverview Menu page setup for audio toggle, controls panel, and start action.
+ */
 (function() {
+    /**
+     * Reads persisted sound preference from local storage.
+     * @returns {boolean}
+     */
     function isSoundEnabled() {
         let key = window.EPL ? window.EPL.KEYS.SOUND_ENABLED : 'sound-enabled';
         return localStorage.getItem(key) !== 'false';
@@ -7,7 +14,7 @@
     function applySoundState(enabled) {
         let audio = document.getElementById('background-music');
         if (!audio) return;
-        audio.volume = 0.5;
+        audio.volume = 0.2;
         if (enabled) {
             audio.muted = false;
             audio.currentTime = 0;
@@ -19,6 +26,10 @@
         }
     }
 
+    /**
+     * Initializes sound toggle button and applies initial audio state.
+     * @returns {void}
+     */
     function setupSoundToggle() {
         let toggle = document.getElementById('sound-toggle');
         if (!toggle) return;
@@ -72,7 +83,7 @@
             if (isSoundEnabled()) {
                 let audio = document.getElementById('background-music');
                 if (audio && audio.paused) {
-                    audio.currentTime = 0; audio.volume = 0.5;
+                    audio.currentTime = 0; audio.volume = 0.2;
                     audio.play().catch(function() {});
                 }
             }
@@ -87,6 +98,10 @@
         try { return sessionStorage.getItem(key) === '1'; } catch (e) { return false; }
     }
 
+    /**
+     * Configures the start button with restart-aware navigation behavior.
+     * @returns {void}
+     */
     function setupStartButton() {
         let button = document.querySelector('.start-button');
         if (!button) return;
@@ -105,7 +120,7 @@
         if (audio) {
             audio.removeAttribute('autoplay');
             let enabled = isSoundEnabled();
-            audio.muted = !enabled; audio.volume = 0.5;
+            audio.muted = !enabled; audio.volume = 0.2;
             if (!enabled) {
                 audio.pause();
                 audio.currentTime = 0;

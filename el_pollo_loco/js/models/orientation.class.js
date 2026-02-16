@@ -1,3 +1,6 @@
+/**
+ * @fileoverview Orientation/layout controller with portrait blocker handling.
+ */
 (function() {
     if (window.EPL && window.EPL.Controllers && window.EPL.Controllers.Orientation) return;
     window.EPL = window.EPL || {};
@@ -28,6 +31,10 @@
         };
     }
 
+    /**
+     * Installs a guarded `setInterval` wrapper while orientation is blocked.
+     * @returns {void}
+     */
     function installIntervalGuard() {
         if (window.__eplIntervalGuarded) return;
         let original = window.setInterval;
@@ -38,6 +45,16 @@
         window.__eplIntervalGuarded = true;
     }
 
+    /**
+     * @param {{
+     *   getCanvas: function(): (HTMLCanvasElement|null),
+     *   getTarget: function(): (HTMLElement|null),
+     *   resizeCanvas: function(): void,
+     *   applyContainBaseStyles: function(): void,
+     *   getCanvasWidth: function(): number,
+     *   getCanvasHeight: function(): number
+     * }} deps
+     */
     function OrientationController(deps) {
         this.deps = deps;
         this.toggleButton = null;
@@ -74,6 +91,11 @@
         this.applyLayout(this.getStoredMode());
     };
 
+    /**
+     * Applies orientation mode classes and canvas transform.
+     * @param {'auto'|'portrait'|'landscape'} [forcedMode]
+     * @returns {void}
+     */
     OrientationController.prototype.applyLayout = function(forcedMode) {
         let canvas = this.deps.getCanvas();
         let target = this.deps.getTarget();

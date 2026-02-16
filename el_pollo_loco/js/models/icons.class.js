@@ -1,3 +1,7 @@
+/**
+ * Collectible coin/icon entity used by the HUD progress system.
+ * @extends MoveableObject
+ */
 class Icons extends MoveableObject {
     width = 50;
     height = 50;
@@ -9,6 +13,9 @@ class Icons extends MoveableObject {
         './img/8_coin/coin_2.png'
     ];
 
+    /**
+     * @param {{x?: number}} [options]
+     */
     constructor({ x } = {}) {
         super().loadImage('./img/7_statusbars/3_icons/icon_coin.png');
         this.loadImages(this.ICONSOBJECTS);

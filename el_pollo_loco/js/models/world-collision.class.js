@@ -8,6 +8,9 @@ class WorldCollision {
      */
     constructor(world) {
         this.world = world;
+        this._dbgLastAt = {};
+        this._lastContactEnemy = null;
+        this._lastContactReason = 'other';
     }
 
     /**
@@ -29,9 +32,7 @@ class WorldCollision {
                 this.applyStompDamage(enemy); this.world.character.speedY = collisionConfig.bounceSpeed; return;
             }
             if (this.isSideHit(this.world.character, enemy, collisionConfig)) {
-                const damage = enemy.contactDamageAmount ?? collisionConfig.defaultContactDamage;
-                this.world.character.takeDamage(damage);
-                this.world.statusBar.setPercentage((this.world.character.energy / 600) * 100);
+                this.applyCharacterContactDamage(enemy, collisionConfig);
             }
         });
     }
@@ -167,6 +168,15 @@ class WorldCollision {
         this.world.refreshSalsaHud();
     }
 
+    dbgContact(config, tag, payload) {
+        if (!config?.debugContact) { return; }
+        const now = Date.now();
+        const lastAt = this._dbgLastAt?.[tag] ?? 0;
+        if (now - lastAt < (config.debugThrottleMs ?? 120)) { return; }
+        this._dbgLastAt[tag] = now;
+        try { console.log(JSON.stringify({ tag, ...payload })); } catch (_) { }
+    }
+
     getCollisionConfig() {
         return {
             stompVerticalTolerance: 30,
@@ -176,9 +186,36 @@ class WorldCollision {
             minOverlapX: 5,
             minOverlapY: 10,
             topGrace: 15,
+            smallChickenBeakTipOffsetX: 0,
+            smallChickenBeakInsideTolX: 4, smallChickenBeakOutsideTolX: 2,
+            chickenBeakTipOffsetX: 6,
+            chickenBeakInsideTolX: 4, chickenBeakOutsideTolX: 2,
             bounceSpeed: 15,
-            defaultContactDamage: 5
+            defaultContactDamage: 5,
+            debugContact: false,
+            debugThrottleMs: 120,
+            debugDeltaWindowPx: 40
         };
+    }
+
+    getDamageSnapshot(character) {
+        return { energy: character.energy, lastHit: character.lastHit, cooldownOrHurtState: typeof character.isHurt === 'function' ? character.isHurt() : undefined };
+    }
+
+    logDamageApply(config, tag, enemy, reason, before, after) {
+        this.dbgContact(config, tag, { enemyType: enemy.constructor?.name ?? 'unknown', reason, energyBefore: before.energy, energyAfter: after.energy, lastHitBefore: before.lastHit, lastHitAfter: after.lastHit, cooldownOrHurtState: after.cooldownOrHurtState });
+    }
+
+    applyCharacterContactDamage(enemy, config) {
+        const character = this.world.character;
+        const reason = this._lastContactEnemy === enemy ? this._lastContactReason : 'other';
+        const damage = enemy.contactDamageAmount ?? config.defaultContactDamage;
+        const before = this.getDamageSnapshot(character);
+        this.logDamageApply(config, 'damage-before', enemy, reason, before, before);
+        character.takeDamage(damage);
+        const after = this.getDamageSnapshot(character);
+        this.logDamageApply(config, 'damage-after', enemy, reason, before, after);
+        this.world.statusBar.setPercentage((character.energy / 600) * 100);
     }
 
     getCollisionBox(object, offset = {}) {
@@ -204,6 +241,12 @@ class WorldCollision {
         const overlapX = Math.min(aBox.right, bBox.right) - Math.max(aBox.left, bBox.left);
         const overlapY = Math.min(aBox.bottom, bBox.bottom) - Math.max(aBox.top, bBox.top);
         return { x: Math.max(0, overlapX), y: Math.max(0, overlapY) };
+    }
+
+    getVerticalOverlapOnly(aBox, bBox) {
+        const top = Math.max(aBox.top, bBox.top);
+        const bottom = Math.min(aBox.bottom, bBox.bottom);
+        return Math.max(0, bottom - top);
     }
 
     getCollisionPair(character, enemy) {
@@ -244,14 +287,68 @@ class WorldCollision {
         return this.isWithinStompCenter(characterBox, enemyBox, config);
     }
 
+    getBeakEvalData(character, enemy, config, characterBox, enemyBox, tipOffsetX) {
+        const stompBlocked = this.isStomping(character, enemy, config);
+        const topGraceBlocked = this.isFalling(character) && characterBox.bottom <= enemyBox.top + config.topGrace;
+        const overlapY = this.getVerticalOverlapOnly(characterBox, enemyBox);
+        const beakOnRight = enemy.otherDirection !== true;
+        const beakX = beakOnRight ? enemy.x + enemy.width + tipOffsetX : enemy.x - tipOffsetX;
+        const edgeX = beakOnRight ? characterBox.left : characterBox.right;
+        return { beakOnRight, beakX, edgeX, delta: beakX - edgeX, overlapY, stompBlocked, topGraceBlocked };
+    }
+
+    logBeakEvaluation(config, enemy, data, insideTolX, outsideTolX) {
+        if (Math.abs(data.delta) > config.debugDeltaWindowPx && data.overlapY < config.minOverlapY) { return; }
+        this.dbgContact(config, 'beak-eval', { enemy, side: data.beakOnRight ? 'right' : 'left', beakX: data.beakX, edgeX: data.edgeX, delta: data.delta, insideTolX, outsideTolX, overlapY: data.overlapY, minOverlapY: config.minOverlapY, stompBlocked: data.stompBlocked, topGraceBlocked: data.topGraceBlocked });
+    }
+
+    isBeakDeltaHit(data, insideTolX, outsideTolX) {
+        return data.beakOnRight ? data.delta >= -outsideTolX && data.delta <= insideTolX : data.delta <= outsideTolX && data.delta >= -insideTolX;
+    }
+
+    isSmallChickenBeakHit(character, enemy, config, characterBox, enemyBox) {
+        const data = this.getBeakEvalData(character, enemy, config, characterBox, enemyBox, config.smallChickenBeakTipOffsetX);
+        this.logBeakEvaluation(config, 'SmallChicken', data, config.smallChickenBeakInsideTolX, config.smallChickenBeakOutsideTolX);
+        if (data.stompBlocked || data.topGraceBlocked || data.overlapY < config.minOverlapY) { return false; }
+        return this.isBeakDeltaHit(data, config.smallChickenBeakInsideTolX, config.smallChickenBeakOutsideTolX);
+    }
+
+    isChickenBeakHit(character, enemy, config, characterBox, enemyBox) {
+        const data = this.getBeakEvalData(character, enemy, config, characterBox, enemyBox, config.chickenBeakTipOffsetX);
+        this.logBeakEvaluation(config, 'Chicken', data, config.chickenBeakInsideTolX, config.chickenBeakOutsideTolX);
+        if (data.stompBlocked || data.topGraceBlocked || data.overlapY < config.minOverlapY) { return false; }
+        return this.isBeakDeltaHit(data, config.chickenBeakInsideTolX, config.chickenBeakOutsideTolX);
+    }
+
+    isOverlapNearThreshold(overlap, config) {
+        return Math.abs(overlap.x - config.minOverlapX) <= config.debugDeltaWindowPx || Math.abs(overlap.y - config.minOverlapY) <= config.debugDeltaWindowPx;
+    }
+
+    isOverlapContactHit(character, enemy, config, characterBox, enemyBox) {
+        const overlap = this.getOverlap(characterBox, enemyBox);
+        const colliding = this.isCollidingBoxes(characterBox, enemyBox);
+        const stompBlocked = this.isStomping(character, enemy, config);
+        const topGraceBlocked = this.isFalling(character) && characterBox.bottom <= enemyBox.top + config.topGrace;
+        const result = colliding && !stompBlocked && !topGraceBlocked && overlap.x >= config.minOverlapX && overlap.y >= config.minOverlapY;
+        if (colliding || this.isOverlapNearThreshold(overlap, config)) {
+            this.dbgContact(config, 'overlap-eval', { enemyType: enemy.constructor?.name ?? 'unknown', overlapX: overlap.x, overlapY: overlap.y, minOverlapX: config.minOverlapX, minOverlapY: config.minOverlapY, stompBlocked, topGraceBlocked, result });
+        }
+        return result;
+    }
+
+    getBeakHit(character, enemy, config, characterBox, enemyBox) {
+        if (enemy instanceof smallchicken) { return this.isSmallChickenBeakHit(character, enemy, config, characterBox, enemyBox); }
+        if (typeof Chicken !== 'undefined' && enemy instanceof Chicken) { return this.isChickenBeakHit(character, enemy, config, characterBox, enemyBox); }
+        return false;
+    }
+
     isSideHit(character, enemy, config) {
         const { characterBox, enemyBox } = this.getCollisionPair(character, enemy);
-        if (!this.isCollidingBoxes(characterBox, enemyBox)) { return false; }
-        if (this.isStomping(character, enemy, config)) { return false; }
-        const overlap = this.getOverlap(characterBox, enemyBox);
-        if (overlap.x < config.minOverlapX || overlap.y < config.minOverlapY) { return false; }
-        const characterBottom = characterBox.bottom;
-        if (this.isFalling(character) && characterBottom <= enemyBox.top + config.topGrace) { return false; }
-        return true;
+        const overlapHit = this.isOverlapContactHit(character, enemy, config, characterBox, enemyBox);
+        const beakHit = this.getBeakHit(character, enemy, config, characterBox, enemyBox);
+        const result = overlapHit || beakHit;
+        this._lastContactEnemy = enemy;
+        this._lastContactReason = overlapHit ? 'overlap' : (beakHit ? 'beak' : 'other');
+        return result;
     }
 }

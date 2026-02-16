@@ -1,3 +1,7 @@
+/**
+ * Standard chicken enemy with movement, damage, and proximity audio.
+ * @extends MoveableObject
+ */
 class Chicken extends MoveableObject {
     height = 60;
     width = 70;
@@ -19,6 +23,9 @@ class Chicken extends MoveableObject {
         './img/3_enemies_chicken/chicken_normal/2_dead/dead.png'
     ];
 
+    /**
+     * @param {{isSmall?: boolean}} [options]
+     */
     constructor({ isSmall = false } = {}) {
         super().loadImage(isSmall ? this.IMAGES_CHICKEN_SMALL_WALKING[0] : this.IMAGES_WALKING[0]);
         this.isSmall = isSmall;
@@ -36,6 +43,10 @@ class Chicken extends MoveableObject {
         this.startProximitySoundCheck();
     }
 
+    /**
+     * Starts movement and sprite frame loops.
+     * @returns {void}
+     */
     animate() {
         setInterval(() => {
             if (this.isDead()) {
@@ -53,6 +64,11 @@ class Chicken extends MoveableObject {
         }, 200);
     }
 
+    /**
+     * Applies damage and switches to dead state when depleted.
+     * @param {number} [amount=5]
+     * @returns {void}
+     */
     takeDamage(amount = 5) {
         if (this.isDead()) {
             return;

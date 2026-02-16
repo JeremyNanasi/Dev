@@ -27,6 +27,7 @@ class World {
     winImage = new Image();
     gameOverStartTime = null;
     winStartTime = null;
+    endAudioStopped = false;
 
     /**
      * @param {HTMLCanvasElement} canvas
@@ -114,6 +115,7 @@ class World {
         const bottle = this.createBottle();
         this.throwableObject.push(bottle);
         this.collectedSalsa -= 1;
+        this.character.registerMovement(now);
         this.lastThrowTime = now;
         this.refreshSalsaHud();
     }
@@ -229,16 +231,17 @@ class World {
     }
 
     drawEndScreens() {
-        if (this.character?.isDead?.() && this.gameOverImage.complete) {
+        if (this.character?.isDead?.()) {
+            this.stopEndAudioOnce();
+            if (!this.gameOverImage.complete) return;
             this.drawEndScreen(this.gameOverImage, 'gameOverStartTime');
             return;
         }
-        if (this.isBossDefeated() && this.winImage.complete) {
-            this.drawEndScreen(this.winImage, 'winStartTime', { baseScale: 0.92, pulseAmplitude: 0.02 });
-            if (typeof window.showWinOverlay === 'function') {
-                window.showWinOverlay();
-            }
-        }
+        if (!this.isBossDefeated()) return;
+        this.stopEndAudioOnce();
+        if (!this.winImage.complete) return;
+        this.drawEndScreen(this.winImage, 'winStartTime', { baseScale: 0.92, pulseAmplitude: 0.02 });
+        if (typeof window.showWinOverlay === 'function') window.showWinOverlay();
     }     
 
 
@@ -254,6 +257,12 @@ class World {
     isBossDefeated() {
         const boss = this.level.enemies?.find((enemy) => enemy instanceof Endboss);
         return Boolean(boss && (boss.isDeadState || boss.energy <= 0));
+    }
+
+    stopEndAudioOnce() {
+        if (this.endAudioStopped) return;
+        window.EPL?.Sound?.muteForEndState?.();
+        this.endAudioStopped = true;
     }
 
     drawEndScreen(image, timerKey, options = {}) {

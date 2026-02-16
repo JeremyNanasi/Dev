@@ -1,3 +1,7 @@
+/**
+ * HUD status bar for player health, coins, and bottles.
+ * @extends DrawableObject
+ */
 class StatusBar extends DrawableObject {
     IMAGES = [
         './img/7_statusbars/1_statusbar/2_statusbar_health/green/0.png',
@@ -37,6 +41,10 @@ class StatusBar extends DrawableObject {
 
     percentage = 100;
 
+    /**
+     * @param {'health'|'icons'|'bottles'|'endboss'} [type='health']
+     * @param {Object} [overrides={}]
+     */
     constructor(type = 'health', overrides = {}) {
         super();
         this.type = type;
@@ -89,6 +97,11 @@ class StatusBar extends DrawableObject {
         };
     }
 
+    /**
+     * Updates bar percentage and selects the matching sprite frame.
+     * @param {number} percentage
+     * @returns {void}
+     */
     setPercentage(percentage) {
         this.percentage = Math.max(0, Math.min(percentage, 100));
         const path = this.images[this.resolveImageIndex()];

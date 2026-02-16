@@ -1,4 +1,10 @@
+/**
+ * Helper operations for endboss movement actions, jumps, and phases.
+ */
 class EndbossLogicHelpers {
+    /**
+     * @param {EndbossLogic} logic
+     */
     constructor(logic) {
         this.logic = logic;
     }
@@ -12,6 +18,10 @@ class EndbossLogicHelpers {
         return logic.nowMs() - logic.lastJumpTime >= 2500;
     }
 
+    /**
+     * Attempts to start a targeted jump attack.
+     * @returns {boolean}
+     */
     tryTargetedJump() {
         if (!this.shouldStartJump()) return false;
         this.startJump();
@@ -151,6 +161,10 @@ class EndbossLogicHelpers {
         return this.getPhase() === 3 ? 1800 : 2400;
     }
 
+    /**
+     * Updates and steps the currently active action state.
+     * @returns {boolean}
+     */
     updateAction() {
         const logic = this.logic;
         if (!this.isActionActive()) return false;

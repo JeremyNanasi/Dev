@@ -1,3 +1,6 @@
+/**
+ * Shared keyboard state container consumed by world and controllers.
+ */
 class Keyboard {
     LEFT = false;
     RIGHT = false;

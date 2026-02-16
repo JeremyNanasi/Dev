@@ -1,3 +1,6 @@
+/**
+ * @fileoverview Defines the shared `window.EPL` namespace and constants.
+ */
 (function() {
     if (window.EPL) return;
 

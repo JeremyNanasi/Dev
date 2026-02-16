@@ -1,3 +1,7 @@
+/**
+ * Salsa bottle entity used as collectible and throwable projectile.
+ * @extends MoveableObject
+ */
 class ThrowableObject extends MoveableObject {
 
     IMAGE_ROTATION = [
@@ -27,6 +31,11 @@ class ThrowableObject extends MoveableObject {
     groundY = 360;
     throwDirection = 1;
 
+    /**
+     * @param {number} x
+     * @param {number} y
+     * @param {{isCollectible?: boolean, direction?: number}} [options={}]
+     */
     constructor(x, y, options = {}) {
         super();
         this.loadImage(this.IMAGE_ROTATION[0]);
@@ -75,6 +84,12 @@ class ThrowableObject extends MoveableObject {
         }
     }
 
+    /**
+     * Launches the bottle as a projectile from the given coordinates.
+     * @param {number} x
+     * @param {number} y
+     * @returns {void}
+     */
     throw(x, y) {
         this.stopGroundAnimation();
         this.x = x;
@@ -127,6 +142,10 @@ class ThrowableObject extends MoveableObject {
         }
     }
 
+    /**
+     * Plays the splash animation once after impact.
+     * @returns {void}
+     */
     playSplash() {
         let frameIndex = 0;
         const frameDelay = 80;

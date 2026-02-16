@@ -1,4 +1,10 @@
+/**
+ * Performs world and level reset operations for soft restart flow.
+ */
 class RestartButtonResetService {
+  /**
+   * @param {Object} controller
+   */
   constructor(controller) {
     this.controller = controller;
   }
@@ -23,16 +29,28 @@ class RestartButtonResetService {
     this.callIfFn('startGameOverWatcher');
   }
 
+  /**
+   * Rebuilds world state while preserving controller wiring.
+   * @returns {void}
+   */
   restartGame() {
-    this.detachKeyboard(); this.resetWorldState(); this.attachKeyboard();
+    this.resumeAllSoundsAfterBossGate(); this.detachKeyboard(); this.resetWorldState(); this.attachKeyboard();
+  }
+
+  resumeAllSoundsAfterBossGate() {
+    const sound = window.EPL?.Sound;
+    if (!sound) return;
+    if (typeof sound.clearEndStateMute === 'function') { sound.clearEndStateMute(); return; }
+    if (typeof sound.disableWhitelistGate === 'function') sound.disableWhitelistGate();
+    if (typeof sound.resumeFromEnd === 'function') sound.resumeFromEnd();
   }
 
   detachKeyboard() {
-    if (typeof keyboardController !== 'undefined' && keyboardController?.detach) keyboardController.detach();
+    if (typeof controllers !== 'undefined' && controllers?.keyboard?.detach) controllers.keyboard.detach();
   }
 
   attachKeyboard() {
-    if (typeof keyboardController !== 'undefined' && keyboardController?.attach) keyboardController.attach();
+    if (typeof controllers !== 'undefined' && controllers?.keyboard?.attach) controllers.keyboard.attach();
   }
 
   resetLevel() {
@@ -93,6 +111,7 @@ class RestartButtonResetService {
     world.camera_x = 0;
     world.gameOverStartTime = null;
     world.winStartTime = null;
+    world.endAudioStopped = false;
     this.resetStatusBars(world);
   }
 
@@ -121,6 +140,10 @@ class RestartButtonResetService {
     fn.call(world);
   }
 
+  /**
+   * Reconstructs `level1` with fresh entities.
+   * @returns {Level|null}
+   */
   buildLevel1() {
     if (typeof Level !== 'function') return null;
     return new Level(this.buildEnemies(), this.buildClouds(), this.buildIcons(), this.buildSalsa(), this.buildBackgrounds());

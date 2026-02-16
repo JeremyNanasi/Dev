@@ -1,3 +1,6 @@
+/**
+ * @fileoverview Keyboard input controller for gameplay and end-overlay navigation.
+ */
 (function() {
     try{sessionStorage.setItem('epl_index_ready','1')}catch(e){}
     if (window.EPL && window.EPL.Controllers && window.EPL.Controllers.KeyboardInput) return;
@@ -13,12 +16,25 @@
         68: 'D'
     };
 
+    /**
+     * @param {{
+     *   getKeyboard: function(): Keyboard,
+     *   isBossDefeated: function(): boolean,
+     *   getControlsLocked: function(): boolean,
+     *   getEndOverlayShown: function(): boolean,
+     *   navigateToMenu: function(): void
+     * }} deps
+     */
     function KeyboardInputController(deps) {
         this.deps = deps;
         this.keydownHandler = null;
         this.keyupHandler = null;
     }
 
+    /**
+     * Attaches global key listeners.
+     * @returns {void}
+     */
     KeyboardInputController.prototype.attach = function() {
         let self = this;
         this.keydownHandler = function(e) { self.handleKeydown(e); };
@@ -32,6 +48,11 @@
         if (this.keyupHandler) window.removeEventListener('keyup', this.keyupHandler);
     };
 
+    /**
+     * Handles keydown and updates keyboard flags when input is allowed.
+     * @param {KeyboardEvent} e
+     * @returns {void}
+     */
     KeyboardInputController.prototype.handleKeydown = function(e) {
         if (this.handleEnterMenu(e)) return;
         if (this.shouldIgnore()) return;

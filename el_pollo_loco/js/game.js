@@ -13,62 +13,62 @@ let inlineHintEl = null;
 let lastHintText = null;
 let endOverlayActive = false;
 
-let keyboardController;
-let fullscreenController;
-let orientationController;
-let touchController;
-let soundToggleController;
-
-let GAME_OVER_STYLE_ID = 'game-over-animations';
+const controllers = {
+    keyboard: null,
+    fullscreen: null,
+    orientation: null,
+    touch: null,
+    soundToggle: null
+};
 
 function init() {
     canvas = document.getElementById('canvas');
     initControllers();
-    fullscreenTarget = fullscreenController.ensureTarget(canvas);
-    touchController.updateMobileTabletState();
-    touchController.setupMediaQuery();
+    fullscreenTarget = controllers.fullscreen.ensureTarget(canvas);
+    controllers.touch.updateMobileTabletState();
+    controllers.touch.setupMediaQuery();
     world = new World(canvas, keyboard);
     ensureGameOverStyles();
     startGameOverWatcher();
     resizeCanvas();
-    touchController.initOnce();
-    soundToggleController.init();
-    touchController.setupMobileToggle();
-    orientationController.initToggle();
-    orientationController.applyStored();
-    touchController.updateVisibility();
+    controllers.touch.initOnce();
+    controllers.soundToggle.init();
+    controllers.touch.setupMobileToggle();
+    controllers.orientation.initToggle();
+    controllers.orientation.applyStored();
+    controllers.touch.updateVisibility();
     initSoundOnGesture();
 }
 
 function initControllers() {
-    keyboardController = new window.EPL.Controllers.KeyboardInput({
+    controllers.keyboard = new window.EPL.Controllers.KeyboardInput({
         getKeyboard: function() { return keyboard; },
         isBossDefeated: isBossDefeated,
         getControlsLocked: function() { return controlsLocked; },
         getEndOverlayShown: function() { return endOverlayShown; },
         navigateToMenu: navigateToMenu
     });
-    fullscreenController = new window.EPL.Controllers.Fullscreen({
+    controllers.fullscreen = new window.EPL.Controllers.Fullscreen({
         getCanvas: function() { return canvas; },
         getTarget: function() { return fullscreenTarget; },
         getCanvasWidth: getCanvasWidth,
         getCanvasHeight: getCanvasHeight,
         onFullscreenChange: handleFullscreenChange
     });
-    orientationController = new window.EPL.Controllers.Orientation({
+    controllers.orientation = new window.EPL.Controllers.Orientation({
         getCanvas: function() { return canvas; },
         getTarget: function() { return fullscreenTarget; },
         resizeCanvas: resizeCanvas,
-        applyContainBaseStyles: function() { fullscreenController.applyContainBaseStyles(); },
+        applyContainBaseStyles: function() { controllers.fullscreen.applyContainBaseStyles(); },
         getCanvasWidth: getCanvasWidth,
         getCanvasHeight: getCanvasHeight,
         getBreakpoint: function() { return 899; }
     });
-    touchController = new window.EPL.Controllers.Touch({
+    controllers.touch = new window.EPL.Controllers.Touch({
         getKeyboard: function() { return keyboard; },
         shouldIgnoreInput: shouldIgnoreInput
     });
-    soundToggleController = new window.EPL.Controllers.SoundToggle({
+    controllers.soundToggle = new window.EPL.Controllers.SoundToggle({
         soundManager: window.EPL.Sound
     });
 }
@@ -119,18 +119,18 @@ document.addEventListener('DOMContentLoaded', function() {
     }
     setupFullscreenToggle();
     startGame();
-    keyboardController.attach();
+    controllers.keyboard.attach();
 });
 
 function setupFullscreenToggle() {
-    fullscreenController = new window.EPL.Controllers.Fullscreen({
+    controllers.fullscreen = new window.EPL.Controllers.Fullscreen({
         getCanvas: function() { return canvas; },
         getTarget: function() { return fullscreenTarget; },
         getCanvasWidth: getCanvasWidth,
         getCanvasHeight: getCanvasHeight,
         onFullscreenChange: handleFullscreenChange
     });
-    fullscreenController.initToggle();
+    controllers.fullscreen.initToggle();
 }
 
 function handleFullscreenChange() {
@@ -145,10 +145,10 @@ function resizeCanvas() {
 }
 
 window.addEventListener('resize', updateLayout);
-window.addEventListener('resize', function() { if (touchController) touchController.updateVisibility(); });
+window.addEventListener('resize', function() { if (controllers.touch) controllers.touch.updateVisibility(); });
 window.addEventListener('orientationchange', updateLayout);
-window.addEventListener('orientationchange', function() { if (touchController) touchController.updateMobileTabletState(); });
-window.addEventListener('resize', function() { if (touchController) touchController.updateMobileTabletState(); });
+window.addEventListener('orientationchange', function() { if (controllers.touch) controllers.touch.updateMobileTabletState(); });
+window.addEventListener('resize', function() { if (controllers.touch) controllers.touch.updateMobileTabletState(); });
 
 function startGameOverWatcher() {
     resetGameOverState();
@@ -345,13 +345,13 @@ function syncHints() {
 }
 
 function resetKeyboard() {
-    if (keyboardController) keyboardController.reset();
+    if (controllers.keyboard) controllers.keyboard.reset();
 }
 
 function ensureGameOverStyles() {
-    if (document.getElementById(GAME_OVER_STYLE_ID)) return;
+    if (document.getElementById('game-over-animations')) return;
     let style = document.createElement('style');
-    style.id = GAME_OVER_STYLE_ID;
+    style.id = 'game-over-animations';
     style.textContent = getGameOverStyleText();
     document.head.appendChild(style);
 }
@@ -375,55 +375,55 @@ function navigateToMenu() {
 }
 
 function updateLayout(forcedMode) {
-    if (orientationController) orientationController.applyLayout(forcedMode);
+    if (controllers.orientation) controllers.orientation.applyLayout(forcedMode);
 }
 
 function setupTouchControls() {
-    if (touchController) touchController.initOnce();
+    if (controllers.touch) controllers.touch.initOnce();
 }
 
 function setupMobileControlsToggle() {
-    if (touchController) touchController.setupMobileToggle();
+    if (controllers.touch) controllers.touch.setupMobileToggle();
 }
 
 function setupTouchControlsMediaQuery() {
-    if (touchController) touchController.setupMediaQuery();
+    if (controllers.touch) controllers.touch.setupMediaQuery();
 }
 
 function updateTouchControlsVisibility() {
-    if (touchController) touchController.updateVisibility();
+    if (controllers.touch) controllers.touch.updateVisibility();
 }
 
 function updateTouchControlsUI() {
-    if (touchController) touchController.updateUI();
+    if (controllers.touch) controllers.touch.updateUI();
 }
 
 function setupMobileTabletDetection() {
-    if (touchController) touchController.updateMobileTabletState();
+    if (controllers.touch) controllers.touch.updateMobileTabletState();
 }
 
 function updateMobileTabletState() {
-    if (touchController) return touchController.updateMobileTabletState();
+    if (controllers.touch) return controllers.touch.updateMobileTabletState();
     return false;
 }
 
 function setupSoundToggleGame() {
-    if (soundToggleController) soundToggleController.init();
+    if (controllers.soundToggle) controllers.soundToggle.init();
 }
 
 function setupOrientationToggle() {
-    if (orientationController) orientationController.initToggle();
+    if (controllers.orientation) controllers.orientation.initToggle();
 }
 
 function applyStoredOrientation() {
-    if (orientationController) orientationController.applyStored();
+    if (controllers.orientation) controllers.orientation.applyStored();
 }
 
 function ensureFullscreenTarget(canvasEl) {
-    if (fullscreenController) return fullscreenController.ensureTarget(canvasEl);
+    if (controllers.fullscreen) return controllers.fullscreen.ensureTarget(canvasEl);
     return null;
 }
 
 function applyFullscreenContainScale() {
-    if (fullscreenController) fullscreenController.applyContainBaseStyles();
+    if (controllers.fullscreen) controllers.fullscreen.applyContainBaseStyles();
 }

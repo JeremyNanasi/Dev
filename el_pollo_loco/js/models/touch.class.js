@@ -1,3 +1,6 @@
+/**
+ * @fileoverview Touch control controller for mobile input buttons and visibility.
+ */
 (function() {
     if (window.EPL && window.EPL.Controllers && window.EPL.Controllers.Touch) return;
     window.EPL = window.EPL || {};
@@ -6,6 +9,12 @@
     let STORAGE_KEY = 'touch-controls-preference';
     let BREAKPOINT = 899;
 
+    /**
+     * @param {{
+     *   getKeyboard: function(): Keyboard,
+     *   shouldIgnoreInput: function(): boolean
+     * }} deps
+     */
     function TouchController(deps) {
         this.deps = deps;
         this.initialized = false;
@@ -15,6 +24,10 @@
         this.mousePressedKeys = new Set();
     }
 
+    /**
+     * One-time initialization for touch button event binding.
+     * @returns {void}
+     */
     TouchController.prototype.initOnce = function() {
         if (this.initialized) return;
         let buttons = Array.from(document.querySelectorAll('.touch-control-button'));
@@ -46,6 +59,14 @@
         btn.addEventListener('mouseleave', onEnd);
     };
 
+    /**
+     * Handles press-start events and applies mapped key state.
+     * @param {Event} e
+     * @param {'touch'|'mouse'} src
+     * @param {HTMLElement} btn
+     * @param {string} key
+     * @returns {void}
+     */
     TouchController.prototype.handlePressStart = function(e, src, btn, key) {
         if (this.deps.shouldIgnoreInput()) return;
         e.preventDefault();

@@ -1,3 +1,7 @@
+/**
+ * Small chicken variant with separate sprite set and loop sound id.
+ * @extends MoveableObject
+ */
 class smallchicken extends MoveableObject {
     height = 50;
     width = 60;
@@ -19,7 +23,10 @@ class smallchicken extends MoveableObject {
         './img/3_enemies_chicken/chicken_small/2_dead/dead.png',
     ];
 
-        constructor({ isSmall = false } = {}) {
+    /**
+     * @param {{isSmall?: boolean}} [options]
+     */
+    constructor({ isSmall = false } = {}) {
         super().loadImage(isSmall ? this.IMAGES_CHICKEN_SMALL_WALKING[0] : this.IMAGES_WALKING[0]);
         this.isSmall = isSmall;
         this.walkingImages = isSmall ? this.IMAGES_CHICKEN_SMALL_WALKING : this.IMAGES_WALKING;
@@ -36,6 +43,10 @@ class smallchicken extends MoveableObject {
         this.startProximitySoundCheck();
     }
 
+    /**
+     * Starts movement and sprite frame loops.
+     * @returns {void}
+     */
     animate() {
         setInterval(() => {
             if (this.isDead()) {
@@ -53,6 +64,11 @@ class smallchicken extends MoveableObject {
         }, 200);
     }
 
+    /**
+     * Applies damage and enters dead state when energy is depleted.
+     * @param {number} [amount=5]
+     * @returns {void}
+     */
     takeDamage(amount = 5) {
         if (this.isDead()) {
             return;

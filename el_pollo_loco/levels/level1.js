@@ -1,13 +1,24 @@
+/**
+ * @fileoverview Builds and initializes the default level configuration.
+ */
 const endbossSpawnX = 2500;
 const bottleMinX = 200;
 const bottleMaxX = endbossSpawnX - 500;
 const randomBottleX = () => bottleMinX + Math.random() * (bottleMaxX - bottleMinX);
 
+/**
+ * Initializes global `level1` with freshly constructed entities.
+ * @returns {Level}
+ */
 function initLevel() {
     level1 = buildLevel1();
     return level1;
 }
 
+/**
+ * Creates the complete level object with all layer/entity groups.
+ * @returns {Level}
+ */
 function buildLevel1() {
     return new Level(buildEnemies(), buildClouds(), buildIcons(), buildSalsa(), buildBackgrounds());
 }
@@ -55,6 +66,13 @@ function createBackgroundSet(x, variant) {
     ];
 }
 
+/**
+ * Utility helper for building repeated collections.
+ * @template T
+ * @param {function(): T} factory
+ * @param {number} count
+ * @returns {T[]}
+ */
 function repeat(factory, count) {
     const items = [];
     for (let i = 0; i < count; i++) items.push(factory());

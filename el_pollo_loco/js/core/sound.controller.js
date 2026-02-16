@@ -1,3 +1,6 @@
+/**
+ * @fileoverview Registers `window.EPL.Sound` with simple background-audio controls.
+ */
 (function() {
     if (window.EPL && window.EPL.Sound) return;
     if (!window.EPL) window.EPL = {};
@@ -5,6 +8,10 @@
     let audioElement = null;
     let initialized = false;
 
+    /**
+     * Resolves and caches the menu background audio element.
+     * @returns {HTMLAudioElement|null}
+     */
     function getAudio() {
         if (!audioElement) {
             audioElement = document.getElementById('background-music');
@@ -16,6 +23,11 @@
         return localStorage.getItem(window.EPL.KEYS.SOUND_ENABLED) !== 'false';
     }
 
+    /**
+     * Persists the sound preference and applies it immediately.
+     * @param {boolean} enabled
+     * @returns {void}
+     */
     function setEnabled(enabled) {
         localStorage.setItem(window.EPL.KEYS.SOUND_ENABLED, enabled ? 'true' : 'false');
         applyState(enabled);
@@ -42,6 +54,10 @@
         return next;
     }
 
+    /**
+     * One-time setup that restores stored mute state.
+     * @returns {void}
+     */
     function init() {
         if (initialized) return;
         initialized = true;

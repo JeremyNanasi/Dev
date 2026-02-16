@@ -1,8 +1,15 @@
+/**
+ * Ambient cloud layer element that loops across the sky.
+ * @extends MoveableObject
+ */
 class Cloud extends MoveableObject {
     y = 20;
     width = 500;
     height = 250;
 
+    /**
+     * Initializes cloud sprite, random position, and motion loop.
+     */
     constructor() {
         super();
         this.loadImage('./img/5_background/layers/4_clouds/1.png');
@@ -12,6 +19,9 @@ class Cloud extends MoveableObject {
         this.animate();
     }
 
+    /**
+     * Continuously moves the cloud and wraps it when off-screen.
+     */
     animate() {
         setInterval(() => {
             this.moveLeft();

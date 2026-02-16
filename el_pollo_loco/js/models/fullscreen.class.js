@@ -1,13 +1,30 @@
+/**
+ * @fileoverview Fullscreen controller for game viewport wrapping and button state.
+ */
 (function() {
     if (window.EPL && window.EPL.Controllers && window.EPL.Controllers.Fullscreen) return;
     window.EPL = window.EPL || {};
     window.EPL.Controllers = window.EPL.Controllers || {};
 
+    /**
+     * @param {{
+     *   getTarget: function(): (HTMLElement|null),
+     *   getCanvas: function(): (HTMLCanvasElement|null),
+     *   onFullscreenChange?: function(): void,
+     *   getCanvasWidth: function(): number,
+     *   getCanvasHeight: function(): number
+     * }} deps
+     */
     function FullscreenController(deps) {
         this.deps = deps;
         this.toggleButton = null;
     }
 
+    /**
+     * Ensures a stable wrapper element around the game canvas.
+     * @param {HTMLCanvasElement} canvasEl
+     * @returns {HTMLElement}
+     */
     FullscreenController.prototype.ensureTarget = function(canvasEl) {
         let existing = document.getElementById('fullscreen-target');
         if (existing) {
@@ -45,6 +62,10 @@
         this.updateButtonState();
     };
 
+    /**
+     * Toggles browser fullscreen mode for the game element.
+     * @returns {void}
+     */
     FullscreenController.prototype.handleClick = function() {
         if (document.fullscreenElement) {
             document.exitFullscreen && document.exitFullscreen();

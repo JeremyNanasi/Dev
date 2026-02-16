@@ -1,8 +1,17 @@
+/**
+ * @fileoverview Restart button controller that manages visibility and soft reset flow.
+ */
 (() => {
   const WATCH_INTERVAL = 250;
   const MIN_RATIO = 0.64;
   const BTN_GAP = 12;
+  /**
+   * Controls restart-button lifecycle, placement, and click handling.
+   */
   class RestartButtonController {
+    /**
+     * @param {Object} [deps]
+     */
     constructor(deps) {
       this.deps = deps || {};
       this.button = this.shell = this.canvas = this.overlay = null;
@@ -27,6 +36,10 @@
       this.watchTickBound = this.watchTick.bind(this);
     }
 
+    /**
+     * Initializes controller once and starts visibility watcher.
+     * @returns {void}
+     */
     init() {
       if (this.initialized) return;
       this.initialized = true;
@@ -216,6 +229,10 @@
       return value;
     }
 
+    /**
+     * Handles restart button clicks with reentrancy protection.
+     * @returns {void}
+     */
     handleClick() {
       if (this.restarting) return;
       this.restarting = true;
