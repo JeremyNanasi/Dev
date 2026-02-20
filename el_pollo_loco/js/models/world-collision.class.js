@@ -3,20 +3,15 @@
  * @property {World} world
  */
 class WorldCollision {
-    /**
-     * @param {World} world
-     */
     constructor(world) {
         this.world = world;
         this._dbgLastAt = {};
         this._lastContactEnemy = null;
         this._lastContactReason = 'other';
+        globalThis.__EPL_LAST_COLLISION__ = this;
+        if (typeof window !== 'undefined') { (window.EPL = window.EPL || {}).dumpCollisionData = () => globalThis.__EPL_LAST_COLLISION__?.dumpCollisionMetrics?.() ?? null; }
     }
 
-    /**
-     * Runs collision checks for enemies, pickups, and throwables.
-     * @returns {void}
-     */
     checkCollisions() {
         this.handleEnemyCollisions();
         this.handleIconCollisions();
@@ -269,13 +264,6 @@ class WorldCollision {
             && characterCenterX <= enemyBox.right + config.stompCenterMargin;
     }
 
-    /**
-     * Determines whether the character is stomping an enemy.
-     * @param {Object} character
-     * @param {Object} enemy
-     * @param {Object} config
-     * @returns {boolean}
-     */
     isStomping(character, enemy, config) {
         const { characterBox, enemyBox } = this.getCollisionPair(character, enemy);
         if (!this.isCollidingBoxes(characterBox, enemyBox)) { return false; }
@@ -342,13 +330,65 @@ class WorldCollision {
         return false;
     }
 
+    getContactTuning() {
+        const defaults = {
+            contactMaxGapX: 2,
+            contactMinOverlapY: 8,
+            characterInsetL: 0, characterInsetR: 0,
+            chickenInsetL: 0, chickenInsetR: 0,
+            smallChickenInsetL: 0, smallChickenInsetR: 0,
+            endbossInsetL: 0, endbossInsetR: 0
+        };
+        return Object.assign({}, defaults, globalThis.__EPL_CONTACT_TUNING__ ?? {});
+    }
+
+    getVisualContactBox(entity, insetL, insetR) {
+        const b = this.getCollisionBox(entity);
+        return { left: b.left + insetL, right: b.right - insetR, top: b.top, bottom: b.bottom };
+    }
+
+    resolveContactBoxes(character, enemy, tuning) {
+        const isSmall = enemy instanceof smallchicken;
+        const isCk = typeof Chicken !== 'undefined' && enemy instanceof Chicken;
+        const isEB = enemy instanceof Endboss;
+        const eL = isSmall ? tuning.smallChickenInsetL : isCk ? tuning.chickenInsetL : isEB ? tuning.endbossInsetL : 0;
+        const eR = isSmall ? tuning.smallChickenInsetR : isCk ? tuning.chickenInsetR : isEB ? tuning.endbossInsetR : 0;
+        const charBox = this.getVisualContactBox(character, tuning.characterInsetL, tuning.characterInsetR);
+        return { charBox, enemyBox: this.getVisualContactBox(enemy, eL, eR) };
+    }
+
+    isContactTouchX(charBox, enemyBox, gapX) {
+        if (enemyBox.left >= charBox.left) return enemyBox.left <= charBox.right + gapX;
+        return enemyBox.right >= charBox.left - gapX;
+    }
+
+    isContactDamageHit(character, enemy, tuning) {
+        const t = tuning ?? this.getContactTuning();
+        const config = this.getCollisionConfig();
+        if (this.isStomping(character, enemy, config)) return false;
+        const { charBox, enemyBox } = this.resolveContactBoxes(character, enemy, t);
+        if (this.isFalling(character) && charBox.bottom <= enemyBox.top + config.topGrace) return false;
+        const overlapY = Math.min(charBox.bottom, enemyBox.bottom) - Math.max(charBox.top, enemyBox.top);
+        if (overlapY < t.contactMinOverlapY) return false;
+        return this.isContactTouchX(charBox, enemyBox, t.contactMaxGapX);
+    }
+
+    dumpCollisionMetrics() {
+        const char = this.world?.character;
+        return {
+            config: this.getCollisionConfig(), tuning: this.getContactTuning(),
+            activeOverrides: globalThis.__EPL_CONTACT_TUNING__ ?? null,
+            charBox: char ? this.getCollisionBox(char) : null,
+            lastContactEnemy: this._lastContactEnemy?.constructor?.name ?? null,
+            lastContactReason: this._lastContactReason
+        };
+    }
+
     isSideHit(character, enemy, config) {
-        const { characterBox, enemyBox } = this.getCollisionPair(character, enemy);
-        const overlapHit = this.isOverlapContactHit(character, enemy, config, characterBox, enemyBox);
-        const beakHit = this.getBeakHit(character, enemy, config, characterBox, enemyBox);
-        const result = overlapHit || beakHit;
+        const tuning = this.getContactTuning();
+        const result = this.isContactDamageHit(character, enemy, tuning);
         this._lastContactEnemy = enemy;
-        this._lastContactReason = overlapHit ? 'overlap' : (beakHit ? 'beak' : 'other');
+        this._lastContactReason = result ? 'contact' : 'other';
         return result;
     }
 }

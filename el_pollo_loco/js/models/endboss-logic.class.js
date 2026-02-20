@@ -97,7 +97,9 @@ class EndbossLogic {
     isOverlapping() {
         const character = this.getChar();
         if (!character) return false;
-        return character.isColliding(this.boss);
+        const collision = this.boss.world?.collision;
+        if (!collision?.isContactDamageHit) return character.isColliding(this.boss);
+        return collision.isContactDamageHit(character, this.boss, collision.getContactTuning());
     }
 
     getChar() { return this.boss.world?.character; }
