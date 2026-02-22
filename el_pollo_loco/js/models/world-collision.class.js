@@ -275,69 +275,15 @@ class WorldCollision {
         return this.isWithinStompCenter(characterBox, enemyBox, config);
     }
 
-    getBeakEvalData(character, enemy, config, characterBox, enemyBox, tipOffsetX) {
-        const stompBlocked = this.isStomping(character, enemy, config);
-        const topGraceBlocked = this.isFalling(character) && characterBox.bottom <= enemyBox.top + config.topGrace;
-        const overlapY = this.getVerticalOverlapOnly(characterBox, enemyBox);
-        const beakOnRight = enemy.otherDirection !== true;
-        const beakX = beakOnRight ? enemy.x + enemy.width + tipOffsetX : enemy.x - tipOffsetX;
-        const edgeX = beakOnRight ? characterBox.left : characterBox.right;
-        return { beakOnRight, beakX, edgeX, delta: beakX - edgeX, overlapY, stompBlocked, topGraceBlocked };
-    }
-
-    logBeakEvaluation(config, enemy, data, insideTolX, outsideTolX) {
-        if (Math.abs(data.delta) > config.debugDeltaWindowPx && data.overlapY < config.minOverlapY) { return; }
-        this.dbgContact(config, 'beak-eval', { enemy, side: data.beakOnRight ? 'right' : 'left', beakX: data.beakX, edgeX: data.edgeX, delta: data.delta, insideTolX, outsideTolX, overlapY: data.overlapY, minOverlapY: config.minOverlapY, stompBlocked: data.stompBlocked, topGraceBlocked: data.topGraceBlocked });
-    }
-
-    isBeakDeltaHit(data, insideTolX, outsideTolX) {
-        return data.beakOnRight ? data.delta >= -outsideTolX && data.delta <= insideTolX : data.delta <= outsideTolX && data.delta >= -insideTolX;
-    }
-
-    isSmallChickenBeakHit(character, enemy, config, characterBox, enemyBox) {
-        const data = this.getBeakEvalData(character, enemy, config, characterBox, enemyBox, config.smallChickenBeakTipOffsetX);
-        this.logBeakEvaluation(config, 'SmallChicken', data, config.smallChickenBeakInsideTolX, config.smallChickenBeakOutsideTolX);
-        if (data.stompBlocked || data.topGraceBlocked || data.overlapY < config.minOverlapY) { return false; }
-        return this.isBeakDeltaHit(data, config.smallChickenBeakInsideTolX, config.smallChickenBeakOutsideTolX);
-    }
-
-    isChickenBeakHit(character, enemy, config, characterBox, enemyBox) {
-        const data = this.getBeakEvalData(character, enemy, config, characterBox, enemyBox, config.chickenBeakTipOffsetX);
-        this.logBeakEvaluation(config, 'Chicken', data, config.chickenBeakInsideTolX, config.chickenBeakOutsideTolX);
-        if (data.stompBlocked || data.topGraceBlocked || data.overlapY < config.minOverlapY) { return false; }
-        return this.isBeakDeltaHit(data, config.chickenBeakInsideTolX, config.chickenBeakOutsideTolX);
-    }
-
-    isOverlapNearThreshold(overlap, config) {
-        return Math.abs(overlap.x - config.minOverlapX) <= config.debugDeltaWindowPx || Math.abs(overlap.y - config.minOverlapY) <= config.debugDeltaWindowPx;
-    }
-
-    isOverlapContactHit(character, enemy, config, characterBox, enemyBox) {
-        const overlap = this.getOverlap(characterBox, enemyBox);
-        const colliding = this.isCollidingBoxes(characterBox, enemyBox);
-        const stompBlocked = this.isStomping(character, enemy, config);
-        const topGraceBlocked = this.isFalling(character) && characterBox.bottom <= enemyBox.top + config.topGrace;
-        const result = colliding && !stompBlocked && !topGraceBlocked && overlap.x >= config.minOverlapX && overlap.y >= config.minOverlapY;
-        if (colliding || this.isOverlapNearThreshold(overlap, config)) {
-            this.dbgContact(config, 'overlap-eval', { enemyType: enemy.constructor?.name ?? 'unknown', overlapX: overlap.x, overlapY: overlap.y, minOverlapX: config.minOverlapX, minOverlapY: config.minOverlapY, stompBlocked, topGraceBlocked, result });
-        }
-        return result;
-    }
-
-    getBeakHit(character, enemy, config, characterBox, enemyBox) {
-        if (enemy instanceof smallchicken) { return this.isSmallChickenBeakHit(character, enemy, config, characterBox, enemyBox); }
-        if (typeof Chicken !== 'undefined' && enemy instanceof Chicken) { return this.isChickenBeakHit(character, enemy, config, characterBox, enemyBox); }
-        return false;
-    }
-
     getContactTuning() {
         const defaults = {
             contactMaxGapX: 2,
-            contactMinOverlapY: 8,
+            contactMinOverlapY: 5,
             characterInsetL: 0, characterInsetR: 0,
-            chickenInsetL: 0, chickenInsetR: 0,
-            smallChickenInsetL: 0, smallChickenInsetR: 0,
-            endbossInsetL: 0, endbossInsetR: 0
+            chickenInsetL: 2, chickenInsetR: -3,
+            smallChickenInsetL: 2, smallChickenInsetR: -8,
+            endbossInsetL: 0, endbossInsetR: 0,
+            rearMaxGapX: 55, rearMinOverlapY: 4, rearExtraBackPx: 4
         };
         return Object.assign({}, defaults, globalThis.__EPL_CONTACT_TUNING__ ?? {});
     }
@@ -370,7 +316,21 @@ class WorldCollision {
         if (this.isFalling(character) && charBox.bottom <= enemyBox.top + config.topGrace) return false;
         const overlapY = Math.min(charBox.bottom, enemyBox.bottom) - Math.max(charBox.top, enemyBox.top);
         if (overlapY < t.contactMinOverlapY) return false;
-        return this.isContactTouchX(charBox, enemyBox, t.contactMaxGapX);
+        if (this.isContactTouchX(charBox, enemyBox, t.contactMaxGapX)) return true;
+        return this.applyRearOverride(character, enemy, charBox, enemyBox, overlapY, t);
+    }
+
+    applyRearOverride(character, enemy, charBox, enemyBox, overlapY, t) {
+        const isCk = typeof Chicken !== 'undefined' && enemy instanceof Chicken;
+        const isSm = enemy instanceof smallchicken;
+        if ((!isCk && !isSm) || character.otherDirection === undefined) return false;
+        const eCX = (enemyBox.left + enemyBox.right) / 2, cCX = (charBox.left + charBox.right) / 2;
+        if (character.otherDirection === true ? eCX < cCX : eCX >= cCX) return false;
+        const rGap = t.rearMaxGapX ?? t.contactMaxGapX;
+        const rMinY = t.rearMinOverlapY ?? t.contactMinOverlapY;
+        const xPx = t.rearExtraBackPx ?? 0;
+        const rBox = character.otherDirection === true ? { ...charBox, right: charBox.right + xPx } : { ...charBox, left: charBox.left - xPx };
+        return overlapY >= rMinY && this.isContactTouchX(rBox, enemyBox, rGap);
     }
 
     dumpCollisionMetrics() {
