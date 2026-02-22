@@ -8,10 +8,6 @@ let gameOverOverlay;
 let controlsLocked = false;
 let endOverlayShown = false;
 let endOverlayElement;
-let fsHintEl = null;
-let inlineHintEl = null;
-let lastHintText = null;
-let endOverlayActive = false;
 
 const controllers = {
     keyboard: null,
@@ -25,12 +21,28 @@ function init() {
     canvas = document.getElementById('canvas');
     initControllers();
     fullscreenTarget = controllers.fullscreen.ensureTarget(canvas);
-    controllers.touch.updateMobileTabletState();
-    controllers.touch.setupMediaQuery();
+    initEndOverlayUi();
+    initPreWorldUI();
     world = new World(canvas, keyboard);
-    ensureGameOverStyles();
+    window.EPL.UI.EndOverlay.ensureStyles();
     startGameOverWatcher();
     resizeCanvas();
+    initPostWorldUI();
+}
+
+function initEndOverlayUi() {
+    window.EPL.UI.EndOverlay.init({
+        getCanvas: function() { return canvas; },
+        getTarget: function() { return fullscreenTarget; }
+    });
+}
+
+function initPreWorldUI() {
+    controllers.touch.updateMobileTabletState();
+    controllers.touch.setupMediaQuery();
+}
+
+function initPostWorldUI() {
     controllers.touch.initOnce();
     controllers.soundToggle.init();
     controllers.touch.setupMobileToggle();
@@ -41,6 +53,14 @@ function init() {
 }
 
 function initControllers() {
+    initKeyboardController();
+    initFullscreenController();
+    initOrientationController();
+    initTouchController();
+    initSoundToggleController();
+}
+
+function initKeyboardController() {
     controllers.keyboard = new window.EPL.Controllers.KeyboardInput({
         getKeyboard: function() { return keyboard; },
         isBossDefeated: isBossDefeated,
@@ -48,6 +68,9 @@ function initControllers() {
         getEndOverlayShown: function() { return endOverlayShown; },
         navigateToMenu: navigateToMenu
     });
+}
+
+function initFullscreenController() {
     controllers.fullscreen = new window.EPL.Controllers.Fullscreen({
         getCanvas: function() { return canvas; },
         getTarget: function() { return fullscreenTarget; },
@@ -55,6 +78,9 @@ function initControllers() {
         getCanvasHeight: getCanvasHeight,
         onFullscreenChange: handleFullscreenChange
     });
+}
+
+function initOrientationController() {
     controllers.orientation = new window.EPL.Controllers.Orientation({
         getCanvas: function() { return canvas; },
         getTarget: function() { return fullscreenTarget; },
@@ -64,10 +90,16 @@ function initControllers() {
         getCanvasHeight: getCanvasHeight,
         getBreakpoint: function() { return 899; }
     });
+}
+
+function initTouchController() {
     controllers.touch = new window.EPL.Controllers.Touch({
         getKeyboard: function() { return keyboard; },
         shouldIgnoreInput: shouldIgnoreInput
     });
+}
+
+function initSoundToggleController() {
     controllers.soundToggle = new window.EPL.Controllers.SoundToggle({
         soundManager: window.EPL.Sound
     });
@@ -135,7 +167,7 @@ function setupFullscreenToggle() {
 
 function handleFullscreenChange() {
     updateLayout();
-    syncHints();
+    window.EPL.UI.EndOverlay.onFullscreenChange();
 }
 
 function resizeCanvas() {
@@ -162,10 +194,7 @@ function startGameOverWatcher() {
 
 function resetGameOverState() {
     if (endOverlayElement) endOverlayElement.remove();
-    removeFullscreenHint();
-    removeInlineHint();
-    lastHintText = null;
-    endOverlayActive = false;
+    window.EPL.UI.EndOverlay.reset();
     gameOverOverlay = null;
     endOverlayElement = null;
     gameOverShown = false;
@@ -233,131 +262,17 @@ function triggerGameOverOverlay() {
 
 function showEndOverlay(config) {
     config = config || {};
-    lastHintText = config.hint || lastHintText;
-    endOverlayActive = true;
+    window.EPL.UI.EndOverlay.activate(config.hint);
     if (!endOverlayShown) {
         endOverlayShown = true;
         controlsLocked = true;
         resetKeyboard();
     }
-    syncHintsForOverlay();
-}
-
-function syncHintsForOverlay() {
-    if (document.fullscreenElement) {
-        removeInlineHint();
-        showFullscreenHint(lastHintText);
-    } else {
-        removeFullscreenHint();
-        showInlineHint(lastHintText);
-    }
-}
-
-function buildHintBaseStyles(el) {
-    Object.assign(el.style, {
-        padding: '10px 14px',
-        borderRadius: '10px',
-        background: 'rgba(0,0,0,0.55)',
-        color: '#fff',
-        fontFamily: 'Inter, Arial, sans-serif',
-        fontWeight: '700',
-        letterSpacing: '0.6px',
-        boxShadow: '0 10px 20px rgba(0,0,0,0.35)'
-    });
-}
-
-function showFullscreenHint(text) {
-    lastHintText = text || lastHintText;
-    if (!document.fullscreenElement || !lastHintText) return;
-    if (!fsHintEl) fsHintEl = createFsHintEl();
-    fsHintEl.textContent = lastHintText;
-    appendFsHint();
-}
-
-function createFsHintEl() {
-    let el = document.createElement('div');
-    el.id = 'fs-hint';
-    Object.assign(el.style, {
-        position: 'fixed',
-        left: '50%',
-        bottom: '18px',
-        transform: 'translateX(-50%)',
-        zIndex: '99999',
-        pointerEvents: 'none'
-    });
-    buildHintBaseStyles(el);
-    return el;
-}
-
-function appendFsHint() {
-    let host = document.fullscreenElement === canvas ? fullscreenTarget : document.fullscreenElement;
-    let target = host || document.body;
-    if (fsHintEl.parentNode !== target) {
-        fsHintEl.remove();
-        target.appendChild(fsHintEl);
-    }
-}
-
-function removeFullscreenHint() {
-    if (fsHintEl && fsHintEl.parentNode) fsHintEl.parentNode.removeChild(fsHintEl);
-}
-
-function showInlineHint(text) {
-    lastHintText = text || lastHintText;
-    if (document.fullscreenElement || !lastHintText) return;
-    if (!inlineHintEl) inlineHintEl = createInlineHintEl();
-    inlineHintEl.textContent = lastHintText;
-    appendInlineHint();
-}
-
-function createInlineHintEl() {
-    let el = document.createElement('div');
-    el.id = 'inline-hint';
-    Object.assign(el.style, { display: 'inline-block', marginTop: '14px', pointerEvents: 'none' });
-    buildHintBaseStyles(el);
-    return el;
-}
-
-function appendInlineHint() {
-    let host = fullscreenTarget || (canvas ? canvas.parentNode : null);
-    let parent = (host ? host.parentNode : null) || document.body;
-    if (!inlineHintEl.parentNode) {
-        parent.appendChild(inlineHintEl);
-        parent.style.textAlign = 'center';
-    } else if (inlineHintEl.parentNode !== parent) {
-        inlineHintEl.remove();
-        parent.appendChild(inlineHintEl);
-        parent.style.textAlign = 'center';
-    }
-}
-
-function removeInlineHint() {
-    if (inlineHintEl && inlineHintEl.parentNode) inlineHintEl.parentNode.removeChild(inlineHintEl);
-}
-
-function syncHints() {
-    if (!endOverlayActive) {
-        removeFullscreenHint();
-        removeInlineHint();
-        return;
-    }
-    syncHintsForOverlay();
+    window.EPL.UI.EndOverlay.sync();
 }
 
 function resetKeyboard() {
     if (controllers.keyboard) controllers.keyboard.reset();
-}
-
-function ensureGameOverStyles() {
-    if (document.getElementById('game-over-animations')) return;
-    let style = document.createElement('style');
-    style.id = 'game-over-animations';
-    style.textContent = getGameOverStyleText();
-    document.head.appendChild(style);
-}
-
-function getGameOverStyleText() {
-    return '@keyframes gameOverPop { 0% { transform: scale(0); opacity: 0; } 100% { transform: scale(1); opacity: 1; } } @keyframes gameOverPulse { 0% { transform: scale(1); } 100% { transform: scale(0.9); } }';
 }
 
 window.showGameOverOverlay = triggerGameOverOverlay;
