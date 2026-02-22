@@ -89,28 +89,21 @@ class WorldCollision {
     }
 
     getPickupBoxForCharacter() {
-        const x = this.world.character.x + 55;
-        const y = this.world.character.y + 160;
-        const width = 70;
-        const height = 40;
-        return { x, y, width, height, left: x, right: x + width, top: y, bottom: y + height };
+        return this.getCollisionBox(this.world.character);
     }
 
     getPickupBoxForObject(object) {
-        const inset = 8;
-        const x = object.x + inset;
-        const y = object.y + inset;
-        const width = Math.max(10, (object.width || 50) - inset * 2);
-        const height = Math.max(10, (object.height || 50) - inset * 2);
+        const inset = 2;
+        const objectBox = this.getCollisionBox(object);
+        const x = objectBox.x + inset;
+        const y = objectBox.y + inset;
+        const width = Math.max(2, objectBox.width - inset * 2);
+        const height = Math.max(2, objectBox.height - inset * 2);
         return { x, y, width, height, left: x, right: x + width, top: y, bottom: y + height };
     }
 
     isPickupColliding(characterPickupBox, objectPickupBox) {
-        if (!this.isCollidingBoxes(characterPickupBox, objectPickupBox)) {
-            return false;
-        }
-        const overlap = this.getOverlap(characterPickupBox, objectPickupBox);
-        return overlap.x >= 10 && overlap.y >= 10;
+        return this.isCollidingBoxes(characterPickupBox, objectPickupBox);
     }
 
     handleThrowableCollisions() {
