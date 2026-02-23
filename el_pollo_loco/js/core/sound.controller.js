@@ -18,7 +18,7 @@
         }
         return audioElement;
     }
-
+    /** Checks `isEnabled`. @returns {*} Result. */
     function isEnabled() {
         return localStorage.getItem(window.EPL.KEYS.SOUND_ENABLED) !== 'false';
     }
@@ -32,7 +32,7 @@
         localStorage.setItem(window.EPL.KEYS.SOUND_ENABLED, enabled ? 'true' : 'false');
         applyState(enabled);
     }
-
+    /** Runs `applyState`. @param {*} enabled - Value. @returns {*} Result. */
     function applyState(enabled) {
         let audio = getAudio();
         if (!audio) return;
@@ -47,7 +47,7 @@
             audio.muted = true;
         }
     }
-
+    /** Runs `toggle`. @returns {*} Result. */
     function toggle() {
         let next = !isEnabled();
         setEnabled(next);
@@ -76,7 +76,7 @@
             }
         }
     }
-
+    /** Runs `tryPlayOnGesture`. @returns {*} Result. */
     function tryPlayOnGesture() {
         if (!isEnabled()) return;
         let audio = getAudio();

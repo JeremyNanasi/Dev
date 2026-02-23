@@ -23,7 +23,7 @@ class EndbossLogic {
     }
 
     createActionState(baseY) { return { type: null, endTime: 0, direction: 0, speed: 1, startTime: 0, baseY, height: 0 }; }
-    
+    /** Creates `createJumpState` data. @returns {*} Result. */
     createJumpState() {
         return { active: false, startTime: 0, baseX: 0, baseY: 0, targetX: 0, height: 260, duration: 900, impactDone: false };
     }
@@ -33,7 +33,7 @@ class EndbossLogic {
      * @returns {void}
      */
     startLogicLoop() { this.clearMovementInterval(); this.movementInterval = setInterval(() => { this.updateLogic(); }, 1000 / 60); }
-
+    /** Runs `clearMovementInterval`. @returns {*} Result. */
     clearMovementInterval() {
         if (!this.movementInterval) return;
         clearInterval(this.movementInterval);
@@ -56,7 +56,7 @@ class EndbossLogic {
         if (this.inWake()) return;
         this.runAggressive();
     }
-
+    /** Runs `runAggressive`. @returns {*} Result. */
     runAggressive() {
         this.updateFacingDirection();
         if (this.helpers.updateJump()) return;
@@ -68,19 +68,19 @@ class EndbossLogic {
         if (this.tryAttackOrAlert()) return;
         this.helpers.handleMovement();
     }
-
+    /** Checks `shouldSkipTick`. @returns {*} Result. */
     shouldSkipTick() {
         if (!this.boss.isHurting && !this.boss.isDeadState) return false;
         this.helpers.cancelJump();
         return true;
     }
-
+    /** Updates `updateFacingDirection` state. @returns {*} Result. */
     updateFacingDirection() {
         if (!this.canUpdateFacing()) return;
         const direction = this.helpers.getDirectionToCharacter();
         this.boss.otherDirection = direction > 0;
     }
-
+    /** Checks `canUpdateFacing`. @returns {*} Result. */
     canUpdateFacing() {
         if (!this.getChar()) return false;
         return !this.helpers.isActionActive()
@@ -88,12 +88,12 @@ class EndbossLogic {
             && !this.boss.isAttacking
             && !this.boss.isHurting;
     }
-
+    /** Runs `applyContactDamage`. @returns {*} Result. */
     applyContactDamage() {
         if (!this.isOverlapping()) return;
         this.applyBossDamage(this.boss.contactDamageAmount);
     }
-
+    /** Checks `isOverlapping`. @returns {*} Result. */
     isOverlapping() {
         const character = this.getChar();
         if (!character) return false;
@@ -108,7 +108,7 @@ class EndbossLogic {
     centerX(target) { return target.x + target.width / 2; }
     distX(a, b) { return Math.abs(this.centerX(a) - this.centerX(b)); }
     ensureDormantVisual() { if (this.didSetDormantVisual) return; this.didSetDormantVisual = true; this.boss.enterDormantMode(); }
-
+    /** Runs `tryActivate`. @param {*} character - Value. @returns {*} Result. */
     tryActivate(character) {
         if (!this.isCharAlive(character) || this.distX(this.boss, character) > 600) return false;
         const now = this.nowMs();
@@ -123,7 +123,7 @@ class EndbossLogic {
     }
 
     inWake() { return this.nowMs() < this.wakeEndsAt; }
-
+    /** Checks `isBossBusy`. @returns {*} Result. */
     isBossBusy() {
         return this.boss.isHurting
             || this.boss.isDeadState
@@ -131,35 +131,35 @@ class EndbossLogic {
             || this.boss.isAlerting
             || this.helpers.isActionActive();
     }
-
+    /** Runs `tryAttackOrAlert`. @returns {*} Result. */
     tryAttackOrAlert() {
         const distanceAhead = this.getDistanceAhead();
         return this.boss.handleAttackOrAlert(distanceAhead, !this.hasDoneFirstSightAlert);
     }
-
+    /** Gets `getDistanceAhead` data. @returns {*} Result. */
     getDistanceAhead() {
         const character = this.getChar();
         if (!character) return Infinity;
         return this.boss.x - (character.x + character.width);
     }
-
+    /** Runs `onHurtEnd`. @returns {*} Result. */
     onHurtEnd() {
         if (this.isDormant || this.inWake()) { this.boss.enterDormantMode(); return; }
         if (this.boss.isDeadState || this.helpers.isActionActive()) return;
         if (this.helpers.isMidRange()) this.helpers.startSprintTelegraph();
     }
-
+    /** Runs `tryAttackDamage`. @returns {*} Result. */
     tryAttackDamage() {
         if (!this.isOverlapping()) return false;
         return this.applyBossDamage(this.boss.contactDamageAmount);
     }
-
+    /** Runs `applyBossDamage`. @param {*} amount - Value. @returns {*} Result. */
     applyBossDamage(amount = this.boss.contactDamageAmount) {
         if (!this.canDealDamage()) return false;
         this.commitDamage(amount);
         return true;
     }
-
+    /** Runs `commitDamage`. @param {*} amount - Value. @returns {*} Result. */
     commitDamage(amount) {
         const character = this.getChar();
         if (!character) return;
@@ -167,11 +167,11 @@ class EndbossLogic {
         this.lastDamageTime = this.nowMs();
         this.updatePlayerHud(character);
     }
-
+    /** Checks `canDealDamage`. @returns {*} Result. */
     canDealDamage() {
         return this.nowMs() - this.lastDamageTime >= 900;
     }
-    
+    /** Updates `updatePlayerHud` state. @param {*} character - Value. */
     updatePlayerHud(character) {
         const percentage = (character.energy / 600) * 100;
         this.boss.world?.statusBar?.setPercentage(percentage);

@@ -42,29 +42,29 @@ class World {
         this.collision = new WorldCollision(this);
         this.initializeWorld();
     }
-
+    /** Sets `setupCanvas` state. @param {*} canvas - Value. @param {*} keyboard - Value. */
     setupCanvas(canvas, keyboard) {
         this.ctx = canvas.getContext('2d');
         this.canvas = canvas;
         this.keyboard = keyboard;
     }
-
+    /** Runs `loadEndScreenImages`. */
     loadEndScreenImages() {
         this.gameOverImage.src = './img/9_intro_outro_screens/game_over/game over.png';
         this.winImage.src = './img/You won, you lost/You Win A.png';
     }
-
+    /** Sets `setCollectibleTotals` state. */
     setCollectibleTotals() {
         this.totalCoins = this.level.icons?.length || 0;
         this.totalSalsaBottles = this.level.salsa?.length || 0;
     }
-
+    /** Runs `refreshHud`. */
     refreshHud() {
         this.updateCoinCounter();
         this.updateSalsaCounter();
         this.updateStatusBars();
     }
-
+    /** Initializes `initializeWorld`. */
     initializeWorld() {
         this.draw();
         this.setWorld();
@@ -72,7 +72,7 @@ class World {
         this.run();
         this.draw();
     }
-
+    /** Sets `setWorld` state. */
     setWorld() {
         this.character.world = this;
         this.level.enemies.forEach((enemy) => {
@@ -91,7 +91,7 @@ class World {
             window.EPL?.EnemySfx?.update(this);
         }, 1000 / 60);
     }
-
+    /** Runs `checkThrowObjects`. */
     checkThrowObjects() {
         const now = Date.now();
         if (!this.canThrowBottle(now)) {
@@ -99,7 +99,7 @@ class World {
         }
         this.throwBottle(now);
     }
-
+    /** Checks `canThrowBottle`. @param {*} now - Value. @returns {*} Result. */
     canThrowBottle(now) {
         return this.keyboard.D
             && this.collectedSalsa > 0
@@ -119,7 +119,7 @@ class World {
         this.lastThrowTime = now;
         this.refreshSalsaHud();
     }
-
+    /** Creates `createBottle` data. @returns {*} Result. */
     createBottle() {
         const direction = this.getThrowDirection();
         const offsetX = this.getThrowOffsetX(direction);
@@ -129,20 +129,20 @@ class World {
             { isCollectible: false, direction }
         );
     }
-
+    /** Gets `getThrowDirection` data. @returns {*} Result. */
     getThrowDirection() {
         return this.character.otherDirection ? -1 : 1;
     }
-
+    /** Gets `getThrowOffsetX` data. @param {*} direction - Value. @returns {*} Result. */
     getThrowOffsetX(direction) {
         return direction === -1 ? -50 : 100;
     }
-
+    /** Runs `refreshSalsaHud`. */
     refreshSalsaHud() {
         this.updateSalsaCounter();
         this.updateStatusBars();
     }
-
+    /** Runs `checkCollisions`. @returns {*} Result. */
     checkCollisions() {
         return this.collision.checkCollisions();
     }
@@ -167,48 +167,48 @@ class World {
         this.drawEndScreens();
         this.queueNextFrame();
     }
-
+    /** Runs `clearCanvas`. */
     clearCanvas() {
         this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
     }
-
+    /** Runs `startCamera`. */
     startCamera() {
         this.ctx.translate(this.camera_x, 0);
     }
-
+    /** Runs `resetCamera`. */
     resetCamera() {
         this.ctx.translate(-this.camera_x, 0);
     }
-
+    /** Runs `drawBackgroundLayers`. */
     drawBackgroundLayers() {
         const { airLayer, otherLayers } = this.getBackgroundLayers();
         this.addobjectsToMap(airLayer);
         this.addobjectsToMap(this.level.clouds);
         this.addobjectsToMap(otherLayers);
     }
-
+    /** Gets `getBackgroundLayers` data. @returns {*} Result. */
     getBackgroundLayers() {
         const backgroundObjects = this.level.backgroundObjects || [];
         const airLayer = backgroundObjects.filter((obj) => this.isAirLayer(obj));
         const otherLayers = backgroundObjects.filter((obj) => !airLayer.includes(obj));
         return { airLayer, otherLayers };
     }
-
+    /** Checks `isAirLayer`. @param {*} obj - Value. @returns {*} Result. */
     isAirLayer(obj) {
         const src = this.getBackgroundSource(obj);
         return src?.includes('/5_background/layers/air.png');
     }
-
+    /** Gets `getBackgroundSource` data. @param {*} obj - Value. @returns {*} Result. */
     getBackgroundSource(obj) {
         return typeof obj.img?.src === 'string' ? obj.img.src : obj.imagePath;
     }
-
+    /** Runs `drawHud`. */
     drawHud() {
         this.addToMap(this.statusBar);
         this.addToMap(this.iconsStatusBar);
         this.addToMap(this.bottlesStatusBar);
     }
-
+    /** Runs `drawGameplayObjects`. */
     drawGameplayObjects() {
         this.drawBossHealthBars();
         this.addToMap(this.character);
@@ -217,7 +217,7 @@ class World {
         this.addobjectsToMap(this.level.salsa);
         this.addobjectsToMap(this.throwableObject);
     }
-
+    /** Runs `drawBossHealthBars`. */
     drawBossHealthBars() {
         this.level.enemies.forEach((enemy) => {
             if (enemy instanceof Endboss && enemy.healthBar) {
@@ -229,7 +229,7 @@ class World {
             }
         });
     }
-
+    /** Runs `drawEndScreens`. @returns {*} Result. */
     drawEndScreens() {
         if (this.character?.isDead?.()) {
             this.stopEndAudioOnce();
@@ -244,7 +244,7 @@ class World {
         if (typeof window.showWinOverlay === 'function') window.showWinOverlay();
     }     
 
-
+    /** Runs `queueNextFrame`. */
     queueNextFrame() {
         const animationFrame = window.requestAnimationFrame
             || window.webkitRequestAnimationFrame
@@ -253,18 +253,18 @@ class World {
 
         animationFrame(() => this.draw());
     }
-
+    /** Checks `isBossDefeated`. @returns {*} Result. */
     isBossDefeated() {
         const boss = this.level.enemies?.find((enemy) => enemy instanceof Endboss);
         return Boolean(boss && (boss.isDeadState || boss.energy <= 0));
     }
-
+    /** Runs `stopEndAudioOnce`. @returns {*} Result. */
     stopEndAudioOnce() {
         if (this.endAudioStopped) return;
         window.EPL?.Sound?.muteForEndState?.();
         this.endAudioStopped = true;
     }
-
+    /** Runs `drawEndScreen`. @param {*} image - Value. @param {*} timerKey - Value. @param {*} options - Value. */
     drawEndScreen(image, timerKey, options = {}) {
         const { baseScale = 1.05, pulseAmplitude = 0.03 } = options;
         if (!this[timerKey]) {
@@ -280,7 +280,7 @@ class World {
         this.ctx.fillStyle = '#000';
         this.ctx.drawImage(image, drawX, drawY, drawWidth, drawHeight);
     }
-
+    /** Runs `addobjectsToMap`. @param {*} objects - Value. */
     addobjectsToMap(objects) {
         if (!objects) {
             return;
@@ -289,7 +289,7 @@ class World {
             this.addToMap(o);
         });
     }
-
+    /** Runs `addToMap`. @param {*} mo - Value. */
     addToMap(mo) {
         if (mo.otherDirection) {
             this.flipImage(mo);
@@ -301,24 +301,24 @@ class World {
             this.flipImageBack(mo);
         }
     }
-
+    /** Runs `flipImage`. @param {*} mo - Value. */
     flipImage(mo) {
         this.ctx.save();
         this.ctx.translate(mo.width, 0);
         this.ctx.scale(-1, 1);
         mo.x = mo.x * -1;
     }
-
+    /** Runs `flipImageBack`. @param {*} mo - Value. */
     flipImageBack(mo) {
         mo.x = mo.x * -1;
         this.ctx.restore();
     }
-
+    /** Runs `cacheHudElements`. */
     cacheHudElements() {
         this.coinsCounterEl = document.getElementById('coins-counter');
         this.bottlesCounterEl = document.getElementById('bottles-counter');
     }
-
+    /** Updates `updateCoinCounter` state. */
     updateCoinCounter() {
         if (!this.coinsCounterEl) {
             return;
@@ -327,7 +327,7 @@ class World {
         const collected = this.totalCoins - (this.level.icons?.length || 0);
         this.coinsCounterEl.textContent = `${collected}/${this.totalCoins}`;
     }
-
+    /** Updates `updateSalsaCounter` state. */
     updateSalsaCounter() {
         if (!this.bottlesCounterEl) {
             return;
@@ -335,7 +335,7 @@ class World {
 
         this.bottlesCounterEl.textContent = `${this.collectedSalsa}/${this.totalSalsaBottles}`;
     }
-
+    /** Updates `updateStatusBars` state. */
     updateStatusBars() {
         if (this.iconsStatusBar) {
             const collectedCoins = this.totalCoins - (this.level.icons?.length || 0);
@@ -348,7 +348,7 @@ class World {
             );
         }
     }
-
+    /** Gets `getSegmentedPercentage` data. @param {*} collected - Value. @param {*} total - Value. @returns {*} Result. */
     getSegmentedPercentage(collected, total) {
         if (!total || total <= 0 || collected <= 0) {
             return 0;

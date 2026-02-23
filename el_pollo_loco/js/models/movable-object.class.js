@@ -52,7 +52,7 @@ class MoveableObject extends DrawableObject {
             }
         }, 1000 / 25);
     }
-
+    /** Checks `isAboveGround`. @returns {*} Result. */
     isAboveGround() {
         if (this instanceof ThrowableObject) return true;
         return this.y < 190;
@@ -79,19 +79,19 @@ class MoveableObject extends DrawableObject {
             thisY < moY + moHeight &&
             thisY + thisHeight > moY;
     }
-
+    /** Gets `getHitboxX` data. @returns {*} Result. */
     getHitboxX() {
         return this.x + (this.hitboxOffsetX ?? 0);
     }
-
+    /** Gets `getHitboxY` data. @returns {*} Result. */
     getHitboxY() {
         return this.y + (this.hitboxOffsetY ?? 0);
     }
-
+    /** Gets `getHitboxWidth` data. @returns {*} Result. */
     getHitboxWidth() {
         return this.hitboxWidth ?? this.width;
     }
-
+    /** Gets `getHitboxHeight` data. @returns {*} Result. */
     getHitboxHeight() {
         return this.hitboxHeight ?? this.height;
     }
@@ -108,23 +108,23 @@ class MoveableObject extends DrawableObject {
         else this.lastHit = Date.now();
     }
 
-
+    /** Checks `isHurt`. @returns {*} Result. */
     isHurt() {
         return (Date.now() - this.lastHit) / 1000 < 1;
     }
 
-
+    /** Checks `isDead`. @returns {*} Result. */
     isDead() {
         return this.energy == 0;
     }
 
-
+    /** Runs `playAnimation`. @param {*} images - Value. */
     playAnimation(images) {
         let i = this.currentImage % images.length;
         this.img = this.imageCache[images[i]];
         this.currentImage++;
     }
-
+    /** Runs `playAnimationDead`. @param {*} images - Value. */
     playAnimationDead(images) {
         if (!this.currentImage) this.currentImage = 0;
         if (this.currentImage < images.length) {
@@ -134,10 +134,11 @@ class MoveableObject extends DrawableObject {
             this.img = this.imageCache[images[images.length - 1]];
         }
     }
-
+    /** Runs `moveRight`. */
     moveRight() { 
         this.x += this.speed;
     } 
+    /** Runs `moveLeft`. */
     moveLeft() { 
         this.x -= this.speed; 
     }

@@ -78,7 +78,7 @@ class Endboss extends MoveableObject {
         './img/4_enemie_boss_chicken/5_dead/G25.png',
         './img/4_enemie_boss_chicken/5_dead/G26.png'
     ];
-
+    /** Creates a new instance. */
     constructor() {
         super().loadImage(this.IMAGES_ENDBOSS_WALKING[0]);
         this.loadImages(this.IMAGES_ENDBOSS_WALKING);
@@ -101,7 +101,7 @@ class Endboss extends MoveableObject {
     animate() {
         this.logic.startLogicLoop();
     }
-
+    /** Runs `startWalkingAnimation`. @returns {*} Result. */
     startWalkingAnimation() {
         if (this.walkInterval) return;
         this.currentImage = 0;
@@ -110,14 +110,14 @@ class Endboss extends MoveableObject {
             this.playAnimation(this.IMAGES_ENDBOSS_WALKING);
         }, frameDelay);
     }
-
+    /** Runs `stopWalkingAnimation`. @returns {*} Result. */
     stopWalkingAnimation() {
         if (!this.walkInterval) return;
         clearInterval(this.walkInterval);
         this.walkInterval = null;
         this.walkFrameIndex = 0;
     }
-
+    /** Runs `enterDormantMode`. */
     enterDormantMode() {
         this.stopWalkingAnimation();
         this.clearAlertInterval();
@@ -125,19 +125,19 @@ class Endboss extends MoveableObject {
         this.currentImage = 0;
         this.img = this.imageCache[this.IMAGES_ENDBOSS_WALKING[0]];
     }
-
+    /** Runs `exitDormantMode`. */
     exitDormantMode() {
         this.stopWalkingAnimation();
         this.clearAlertInterval();
         this.clearAttackInterval();
     }
-
+    /** Runs `showWakeTelegraphFrame`. */
     showWakeTelegraphFrame() {
         this.clearAlertInterval();
         this.currentImage = 0;
         this.img = this.imageCache[this.ALERT_ENBOSS[0]];
     }
-
+    /** Sets `setAlertFrame` state. */
     setAlertFrame() {
         this.currentImage = 0;
         this.img = this.imageCache[this.ALERT_ENBOSS[0]];
@@ -154,33 +154,33 @@ class Endboss extends MoveableObject {
         this.startAlertInterval();
         this.playAlertSound();
     }
-
+    /** Checks `shouldSkipAlert`. @returns {*} Result. */
     shouldSkipAlert() {
         return this.isDeadState || this.energy <= 0;
     }
-
+    /** Runs `playAlertSound`. @returns {*} Result. */
     playAlertSound() {
         if (!window.EPL?.EnemySfx?.onEndbossAlertStart) return;
         window.EPL.EnemySfx.onEndbossAlertStart(this);
     }
-
+    /** Runs `clearAlertInterval`. @returns {*} Result. */
     clearAlertInterval() {
         if (!this.alertInterval) return;
         clearInterval(this.alertInterval);
         this.alertInterval = null;
         this.isAlerting = false;
     }
-
+    /** Runs `stopAlertLoopIfAny`. */
     stopAlertLoopIfAny() {
         this.clearAlertInterval();
     }
-
+    /** Runs `prepareAlertState`. */
     prepareAlertState() {
         this.isAlerting = true;
         this.stopWalkingAnimation();
         this.setAlertFrame();
     }
-
+    /** Runs `startAlertInterval`. @returns {*} Result. */
     startAlertInterval() {
         const frameDelay = this.frameTimers.alert || 200;
         let frameIndex = 1;
@@ -192,11 +192,11 @@ class Endboss extends MoveableObject {
             this.currentImage = 0;
         }, frameDelay);
     }
-
+    /** Checks `isCharacterWithinAlertRange`. @param {*} distanceAhead - Value. @returns {*} Result. */
     isCharacterWithinAlertRange(distanceAhead) {
         return distanceAhead >= 0 && distanceAhead <= this.alertDistance;
     }
-
+    /** Checks `canStartAttack`. @param {*} distanceAhead - Value. @returns {*} Result. */
     canStartAttack(distanceAhead) {
         if (!this.world?.character) return false;
         const withinDistance = distanceAhead >= 0 && distanceAhead <= this.attackDistance;
@@ -206,7 +206,7 @@ class Endboss extends MoveableObject {
             && !this.isAlerting
             && (withinDistance || isColliding);
     }
-
+    /** Handles `handleAttackOrAlert`. @param {*} distanceAhead - Value. @param {*} allowAlert - Value. @returns {*} Result. */
     handleAttackOrAlert(distanceAhead, allowAlert = true) {
         if (this.canStartAttack(distanceAhead)) {
             this.startAttackAnimation();
@@ -215,7 +215,7 @@ class Endboss extends MoveableObject {
         if (!allowAlert) return false;
         return this.handleAlertState(distanceAhead);
     }
-
+    /** Handles `handleAlertState`. @param {*} distanceAhead - Value. @returns {*} Result. */
     handleAlertState(distanceAhead) {
         const withinAlertRange = this.isCharacterWithinAlertRange(distanceAhead);
         if (withinAlertRange && !this.isAlerting && !this.alertOnCooldown && !this.isAttacking) {
@@ -226,28 +226,28 @@ class Endboss extends MoveableObject {
         if (!withinAlertRange && this.alertOnCooldown) this.alertOnCooldown = false;
         return false;
     }
-
+    /** Runs `startAttackAnimation`. */
     startAttackAnimation() {
         this.clearAttackInterval();
         this.clearAlertInterval();
         this.prepareAttackState();
         this.startAttackInterval();
     }
-
+    /** Runs `clearAttackInterval`. @returns {*} Result. */
     clearAttackInterval() {
         if (!this.attackInterval) return;
         clearInterval(this.attackInterval);
         this.attackInterval = null;
         this.isAttacking = false;
     }
-
+    /** Runs `prepareAttackState`. */
     prepareAttackState() {
         this.isAttacking = true;
         this.attackDamageApplied = false;
         this.stopWalkingAnimation();
         this.currentImage = 0;
     }
-
+    /** Runs `startAttackInterval`. @returns {*} Result. */
     startAttackInterval() {
         const frameDelay = this.frameTimers.attack || 150;
         let frameIndex = 0;
@@ -260,26 +260,26 @@ class Endboss extends MoveableObject {
             this.finishAttackAnimation();
         }, frameDelay);
     }
-
+    /** Handles `handleDamageDuringAttack`. @returns {*} Result. */
     handleDamageDuringAttack() {
         if (this.attackDamageApplied || !this.world?.character) return;
         if (!this.logic.tryAttackDamage()) return;
         this.attackDamageApplied = true;
     }
-
+    /** Runs `playHurtAnimation`. @returns {*} Result. */
     playHurtAnimation() {
         if (this.isDeadState) return;
         this.prepareHurtState();
         this.startHurtInterval();
     }
-
+    /** Runs `clearHurtInterval`. @returns {*} Result. */
     clearHurtInterval() {
         if (!this.hurtInterval) return;
         clearInterval(this.hurtInterval);
         this.hurtInterval = null;
         this.isHurting = false;
     }
-
+    /** Runs `prepareHurtState`. */
     prepareHurtState() {
         this.clearHurtInterval();
         this.isHurting = true;
@@ -287,7 +287,7 @@ class Endboss extends MoveableObject {
         this.clearAttackInterval();
         this.clearAlertInterval();
     }
-
+    /** Runs `startHurtInterval`. @returns {*} Result. */
     startHurtInterval() {
         const frameDelay = this.frameTimers.hurt || 150;
         let frameIndex = 0;
@@ -313,7 +313,7 @@ class Endboss extends MoveableObject {
         this.clearIntervalsForDeath();
         this.startDeathInterval();
     }
-
+    /** Runs `clearIntervalsForDeath`. */
     clearIntervalsForDeath() {
         this.stopWalkingAnimation();
         this.logic.clearMovementInterval();
@@ -321,7 +321,7 @@ class Endboss extends MoveableObject {
         this.clearAttackInterval();
         this.clearHurtInterval();
     }
-
+    /** Runs `startDeathInterval`. */
     startDeathInterval() {
         this.initializeDeathAnimation();
         const frameDelay = this.getDeathFrameDelay();
@@ -331,22 +331,22 @@ class Endboss extends MoveableObject {
             frameIndex = this.updateDeathFrame(frameIndex, groundY);
         }, frameDelay);
     }
-
+    /** Initializes `initializeDeathAnimation`. */
     initializeDeathAnimation() {
         this.currentImage = 0;
     }
-
+    /** Gets `getDeathFrameDelay` data. @returns {*} Result. */
     getDeathFrameDelay() {
         return this.frameTimers.dead || 200;
     }
-
+    /** Updates `updateDeathFrame` state. @param {*} frameIndex - Value. @param {*} groundY - Value. @returns {*} Result. */
     updateDeathFrame(frameIndex, groundY) {
         this.img = this.imageCache[this.DEAD_ENDBOSS[frameIndex]];
         if (frameIndex < this.DEAD_ENDBOSS.length - 1) return frameIndex + 1;
         this.applyDeathFall(groundY);
         return frameIndex;
     }
-
+    /** Runs `applyDeathFall`. @param {*} groundY - Value. */
     applyDeathFall(groundY) {
         if (this.y < groundY) {
             this.y += 20;
@@ -356,7 +356,7 @@ class Endboss extends MoveableObject {
         clearInterval(this.deathInterval);
         this.deathInterval = null;
     }
-
+    /** Runs `finishAttackAnimation`. */
     finishAttackAnimation() {
         this.isAttacking = false;
         this.currentImage = 0;
@@ -366,7 +366,7 @@ class Endboss extends MoveableObject {
         }, this.attackCooldownDuration);
         this.startWalkingAnimation();
     }
-
+    /** Updates `updateHealthBar` state. @returns {*} Result. */
     updateHealthBar() {
         if (!this.healthBar) return;
         const percentage = Math.max(0, Math.min(100, (this.energy / 50) * 100));
@@ -374,11 +374,11 @@ class Endboss extends MoveableObject {
         this.healthBar.x = this.x + (this.width / 2) - 35;
         this.healthBar.y = this.y - 60;
     }
-
+    /** Gets `getMinX` data. @returns {*} Result. */
     getMinX() {
         return 500;
     }
-
+    /** Gets `getMaxX` data. @returns {*} Result. */
     getMaxX() {
         return 2500;
     }

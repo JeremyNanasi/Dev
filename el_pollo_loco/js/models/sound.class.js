@@ -85,6 +85,7 @@
     };
 
     SoundManager.prototype.enforceWhitelistNow = function() {
+        /** Runs `stop`. @param {*} media - Value. @returns {*} Result. */
         const stop = (media) => {
             if (!media || this.isWhitelisted(media)) return;
             media.pause();

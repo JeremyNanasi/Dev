@@ -61,7 +61,7 @@ class ThrowableObject extends MoveableObject {
             throw new Error('ThrowableObject requires coordinates when not used as collectible.');
         }
     }
-
+    /** Runs `spawnCollectible`. @param {*} x - Value. @param {*} y - Value. */
     spawnCollectible(x, y) {
         this.x = x;
         this.y = y;
@@ -69,14 +69,14 @@ class ThrowableObject extends MoveableObject {
         this.img = this.imageCache[this.IMAGE_SALSA_GROUND[0]];
         this.startGroundAnimation();
     }
-
+    /** Runs `startGroundAnimation`. */
     startGroundAnimation() {
         this.stopGroundAnimation();
         this.groundAnimationInterval = setInterval(() => {
             this.playAnimation(this.IMAGE_SALSA_GROUND);
         }, 400);
     }
-
+    /** Runs `stopGroundAnimation`. */
     stopGroundAnimation() {
         if (this.groundAnimationInterval) {
             clearInterval(this.groundAnimationInterval);
@@ -101,7 +101,7 @@ class ThrowableObject extends MoveableObject {
         this.applyGravity();
         this.startRotation();
     }   
-
+    /** Runs `startRotation`. */
     startRotation() {
         this.stopRotation();
         this.rotationInterval = setInterval(() => {
@@ -109,14 +109,14 @@ class ThrowableObject extends MoveableObject {
             this.x += 15 * this.throwDirection;
         }, 25);
     }
-
+    /** Runs `stopRotation`. */
     stopRotation() {
         if (this.rotationInterval) {
             clearInterval(this.rotationInterval);
             this.rotationInterval = null;
         }
     }
-
+    /** Runs `applyGravity`. */
     applyGravity() {
         this.stopGravity();
         this.gravityInterval = setInterval(() => {
@@ -134,7 +134,7 @@ class ThrowableObject extends MoveableObject {
             }
         }, 1000 / 25);
     }
-
+    /** Runs `stopGravity`. */
     stopGravity() {
         if (this.gravityInterval) {
             clearInterval(this.gravityInterval);
@@ -158,7 +158,7 @@ class ThrowableObject extends MoveableObject {
             }
         }, frameDelay);
     }
-
+    /** Checks `isColliding`. @param {*} mo - Value. @returns {*} Result. */
     isColliding(mo) {
         const thisX = this.getHitboxX();
         const thisY = this.getHitboxY();

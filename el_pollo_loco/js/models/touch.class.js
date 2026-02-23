@@ -49,7 +49,9 @@
 
     TouchController.prototype.attachButtonListeners = function(btn, key) {
         let self = this;
+        /** Runs `onStart`. @param {*} e - Value. @param {*} src - Value. */
         let onStart = function(e, src) { self.handlePressStart(e, src, btn, key); };
+        /** Runs `onEnd`. @param {*} e - Value. */
         let onEnd = function(e) { self.handlePressEnd(e, btn, key); };
         btn.addEventListener('touchstart', function(e) { onStart(e, 'touch'); }, { passive: false });
         btn.addEventListener('touchend', onEnd, { passive: false });

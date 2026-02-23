@@ -11,7 +11,7 @@
     let BLOCK_QUERY = '(pointer: coarse) and (orientation: portrait)';
     let HUB_MAX_LONG = 1280;
     let HUB_MAX_SHORT = 800;
-
+    /** Checks `isWithinHubMax`. @returns {*} Result. */
     function isWithinHubMax() {
         let w = window.innerWidth;
         let h = window.innerHeight;
@@ -19,11 +19,11 @@
         let shortSide = Math.min(w, h);
         return longSide <= HUB_MAX_LONG && shortSide <= HUB_MAX_SHORT;
     }
-
+    /** Checks `isBodyBlocked`. @returns {*} Result. */
     function isBodyBlocked() {
         return document.body.classList.contains('epl-orientation-blocked');
     }
-
+    /** Runs `wrapIntervalCallback`. @param {*} cb - Value. @returns {*} Result. */
     function wrapIntervalCallback(cb) {
         return function() {
             if (isBodyBlocked()) return;

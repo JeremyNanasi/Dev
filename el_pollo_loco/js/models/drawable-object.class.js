@@ -19,7 +19,7 @@ class DrawableObject {
         this.img = new Image();
         this.img.src = path;
     }
-
+    /** Runs `drawFrame`. */
     drawFrame() {
         return;
     }

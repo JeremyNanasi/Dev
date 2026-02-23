@@ -114,7 +114,7 @@
     KeyboardInputController.prototype.getCodeMap = function() {
         return KEYBOARD_CODE_MAP;
     };
-
+    /** Handles `handlePageShow`. @returns {*} Result. */
     function handlePageShow() {
         let force = false;
         try { force = sessionStorage.getItem('epl_force_restart') === '1'; } catch (e) { force = false; }

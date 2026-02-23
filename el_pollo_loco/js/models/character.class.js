@@ -96,28 +96,28 @@ class Character extends MoveableObject {
     lastIdleFrameTime = 0;
     lastMovementTime = Date.now();
     world;
-
+    /** Creates a new instance. */
     constructor() {
         super().loadImage('./img/2_character_pepe/2_walk/W-21.png');
         this.loadCharacterImages();
         this.applyGravity();
         this.animate();
     }
-
+    /** Updates `updateJumpAnimationPhased` state. */
     updateJumpAnimationPhased() {
         const now = Date.now();
         this.updateJumpFrame(now);
         this.handleLandingTransition();
         this.updateAirState();
     }
-
+    /** Runs `onLanding`. */
     onLanding() {
         setTimeout(() => {
             this.currentImage = 0;
             this.img = this.imageCache[this.IMAGES_WALKING[0]];
         }, 150); 
     }
-
+    /** Runs `animate`. */
     animate() {
         setInterval(() => {
             const now = Date.now();
@@ -160,7 +160,7 @@ class Character extends MoveableObject {
         }
         return this.playIdleFrames(now, idleDuration);
     }
-
+    /** Runs `loadCharacterImages`. */
     loadCharacterImages() {
         this.loadImages(this.IMAGES_WALKING);
         this.loadImages(this.IMAGES_JUMP_START);
@@ -171,7 +171,7 @@ class Character extends MoveableObject {
         this.loadImages(this.IMAGES_DEAD);
         this.loadImages(this.IMAGES_HURT);
     }
-
+    /** Updates `updateJumpFrame` state. @param {*} now - Value. */
     updateJumpFrame(now) {
         if (now - this.lastFrameTime.jumping < this.frameTimers.jumping) {
             return;
@@ -179,7 +179,7 @@ class Character extends MoveableObject {
         this.lastFrameTime.jumping = now;
         this.playAnimation(this.getJumpFrames());
     }
-
+    /** Gets `getJumpFrames` data. @returns {*} Result. */
     getJumpFrames() {
         if (this.speedY > 20) {
             return this.IMAGES_JUMP_START;
@@ -189,20 +189,20 @@ class Character extends MoveableObject {
         }
         return this.IMAGES_JUMP_LANDING;
     }
-
+    /** Handles `handleLandingTransition`. */
     handleLandingTransition() {
         if (!this.isAboveGround() && this.wasInAir) {
             this.wasInAir = false;
             this.onLanding();
         }
     }
-
+    /** Updates `updateAirState` state. */
     updateAirState() {
         if (this.isAboveGround()) {
             this.wasInAir = true;
         }
     }
-
+    /** Handles `handleAnimationFrame`. @param {*} now - Value. */
     handleAnimationFrame(now) {
         if (this.isDead()) {
             this.handleDeadAnimation(now);
@@ -215,20 +215,20 @@ class Character extends MoveableObject {
         this.world.camera_x = -this.x + 100;
         this.handleStateAnimations(now);
     }
-
+    /** Handles `handleDeadAnimation`. @param {*} now - Value. */
     handleDeadAnimation(now) {
         if (now - this.lastFrameTime.dead > this.frameTimers.dead) {
             this.lastFrameTime.dead = now;
             this.playAnimationDead(this.IMAGES_DEAD);
         }
     }
-
+    /** Handles `handleMovementInput`. @param {*} now - Value. */
     handleMovementInput(now) {
         if (this.world.keyboard.RIGHT && this.x < this.world.level.level_end_x) { this.moveRight(); this.otherDirection = false; this.registerMovement(now); }
         if (this.world.keyboard.LEFT && this.x > 0) { this.moveLeft(); this.otherDirection = true; this.registerMovement(now); }
         if (this.world.keyboard.UP && !this.isAboveGround()) { this.jump(); this.registerMovement(now); }
     }
-
+    /** Handles `handleStateAnimations`. @param {*} now - Value. */
     handleStateAnimations(now) {
         if (this.isHurt()) {
             this.handleHurtAnimation(now);
@@ -240,14 +240,14 @@ class Character extends MoveableObject {
         }
         this.handleGroundAnimation(now);
     }
-
+    /** Handles `handleHurtAnimation`. @param {*} now - Value. */
     handleHurtAnimation(now) {
         if (now - this.lastFrameTime.hurt > this.frameTimers.hurt) {
             this.lastFrameTime.hurt = now;
             this.playAnimation(this.IMAGES_HURT);
         }
     }
-
+    /** Handles `handleGroundAnimation`. @param {*} now - Value. */
     handleGroundAnimation(now) {
         if (this.world.keyboard.RIGHT || this.world.keyboard.LEFT) {
             this.handleWalkingAnimation(now);
@@ -257,19 +257,19 @@ class Character extends MoveableObject {
             this.showLandingFrame();
         }
     }
-
+    /** Handles `handleWalkingAnimation`. @param {*} now - Value. */
     handleWalkingAnimation(now) {
         if (now - this.lastFrameTime.walking > this.frameTimers.walking) {
             this.lastFrameTime.walking = now;
             this.playAnimation(this.IMAGES_WALKING);
         }
     }
-
+    /** Runs `showLandingFrame`. */
     showLandingFrame() {
         this.currentImage = this.IMAGES_JUMP_LANDING.length - 1;
         this.img = this.imageCache[this.IMAGES_JUMP_LANDING[this.currentImage]];
     }
-
+    /** Runs `playIdleFrames`. @param {*} now - Value. @param {*} idleDuration - Value. @returns {*} Result. */
     playIdleFrames(now, idleDuration) {
         const { frames, offsetMs } = this.getIdleFrameData(idleDuration);
         if (now - this.lastIdleFrameTime >= this.idleFrameDelayMs) {
@@ -279,7 +279,7 @@ class Character extends MoveableObject {
         }
         return true;
     }
-
+    /** Gets `getIdleFrameData` data. @param {*} idleDuration - Value. @returns {*} Result. */
     getIdleFrameData(idleDuration) {
         const isLongIdle = idleDuration >= this.longIdleThresholdMs;
         const frames = isLongIdle ? this.IMAGES_LONG_IDLE : this.IMAGES_IDLE;

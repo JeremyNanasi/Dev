@@ -10,7 +10,7 @@
         let key = window.EPL ? window.EPL.KEYS.SOUND_ENABLED : 'sound-enabled';
         return localStorage.getItem(key) !== 'false';
     }
-
+    /** Runs `applySoundState`. @param {*} enabled - Value. @returns {*} Result. */
     function applySoundState(enabled) {
         let audio = document.getElementById('background-music');
         if (!audio) return;
@@ -33,7 +33,7 @@
     function setupSoundToggle() {
         let toggle = document.getElementById('sound-toggle');
         if (!toggle) return;
-
+        /** Updates `updateToggle` state. @param {*} enabled - Value. */
         let updateToggle = function(enabled) {
             toggle.classList.toggle('is-off', !enabled);
             toggle.setAttribute('aria-pressed', enabled ? 'false' : 'true');
@@ -56,13 +56,14 @@
         applySoundState(initial);
         updateToggle(initial);
     }
-
+    /** Sets `setupControlsToggle` state. @returns {*} Result. */
     function setupControlsToggle() {
         let toggleButton = document.getElementById('controls-toggle');
         let menuList = document.getElementById('controls-list');
         if (!toggleButton || !menuList) return;
 
         let expanded = false;
+        /** Updates `updateUi` state. */
         let updateUi = function() {
             menuList.classList.toggle('collapsed', !expanded);
             toggleButton.setAttribute('aria-expanded', expanded ? 'true' : 'false');
@@ -77,8 +78,9 @@
 
         updateUi();
     }
-
+    /** Initializes `initSoundOnGesture`. */
     function initSoundOnGesture() {
+        /** Handles `handler`. */
         let handler = function() {
             if (isSoundEnabled()) {
                 let audio = document.getElementById('background-music');
@@ -93,7 +95,7 @@
         document.addEventListener('click', handler);
         document.addEventListener('keydown', handler);
     }
-
+    /** Runs `readSessionFlag`. @param {*} key - Value. @returns {*} Result. */
     function readSessionFlag(key) {
         try { return sessionStorage.getItem(key) === '1'; } catch (e) { return false; }
     }
