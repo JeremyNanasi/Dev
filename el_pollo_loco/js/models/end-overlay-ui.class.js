@@ -1,3 +1,4 @@
+{
 let root = window.EPL || (window.EPL = {});
 let ui = root.UI || (root.UI = {});
 let state = window.__epl_end_overlay_state || (window.__epl_end_overlay_state = {
@@ -155,4 +156,5 @@ if (!ui.EndOverlay) {
         sync: eplEndOverlaySync,
         onFullscreenChange: eplEndOverlayOnFullscreenChange
     };
+}
 }

@@ -1,3 +1,4 @@
+{
 let root = window.EPL || (window.EPL = {});
 root.Controllers = root.Controllers || {};
 let state = window.__epl_sound_facade_state || (window.__epl_sound_facade_state = { initialized: false });
@@ -86,3 +87,4 @@ if (!root.Sound.toggle) root.Sound.toggle = eplSoundFacadeToggle;
 if (!root.Sound.applyState) root.Sound.applyState = eplSoundFacadeApplyState;
 if (!root.Sound.tryPlayOnGesture) root.Sound.tryPlayOnGesture = eplSoundFacadeTryPlayOnGesture;
 if (!root.Sound.getAudio) root.Sound.getAudio = eplSoundFacadeGetAudio;
+}
