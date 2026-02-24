@@ -1,17 +1,8 @@
-/**
- * @fileoverview Sound manager controller for persistent mute state in gameplay.
- */
-(function() {
-    if (window.EPL && window.EPL.Controllers && window.EPL.Controllers.SoundManager) return;
-    window.EPL = window.EPL || {};
-    window.EPL.Controllers = window.EPL.Controllers || {};
+window.EPL = window.EPL || {};
+window.EPL.Controllers = window.EPL.Controllers || {};
 
-    let STORAGE_KEY = 'sound-enabled';
-
-    /**
-     * Creates a sound manager for the background music element.
-     */
-    function SoundManager() {
+window.EPL.Controllers.SoundManager = window.EPL.Controllers.SoundManager || class SoundManager {
+    constructor() {
         this.audioElement = null;
         this.initialized = false;
         this.pausedForEnd = false;
@@ -23,103 +14,106 @@
         this.installMediaPlayGate();
     }
 
-    /**
-     * Initializes audio element reference and applies stored state.
-     * @returns {void}
-     */
-    SoundManager.prototype.init = function() {
+    getStorageKey() {
+        return window.EPL && window.EPL.KEYS && window.EPL.KEYS.SOUND_ENABLED ? window.EPL.KEYS.SOUND_ENABLED : 'sound-enabled';
+    }
+
+    init() {
+        var enabled;
         if (this.initialized) return;
         this.initialized = true;
         this.audioElement = document.getElementById('background-music');
         if (this.audioElement) this.audioElement.removeAttribute('autoplay');
-        let enabled = this.isEnabled();
+        enabled = this.isEnabled();
         if (this.audioElement) this.audioElement.muted = !enabled;
         if (this.audioElement) this.audioElement.volume = 0.2;
-    };
+    }
 
-    SoundManager.prototype.getAudio = function() {
+    getAudio() {
         if (!this.audioElement) this.audioElement = document.getElementById('background-music');
         return this.audioElement;
-    };
+    }
 
-    SoundManager.prototype.isEnabled = function() {
-        return localStorage.getItem(STORAGE_KEY) !== 'false';
-    };
+    isEnabled() {
+        return localStorage.getItem(this.getStorageKey()) !== 'false';
+    }
 
-    SoundManager.prototype.normalizePath = function(src) {
-        let raw = typeof src === 'string' ? src : (src?.currentSrc || src?.src || '');
+    normalizePath(src) {
+        var raw = typeof src === 'string' ? src : (src && (src.currentSrc || src.src || ''));
+        var path;
+        var idx;
         if (!raw) return '';
-        let path = String(raw).replace(/\\/g, '/').split('#')[0].split('?')[0];
-        let idx = path.indexOf('/img/');
+        path = String(raw).replace(/\\/g, '/').split('#')[0].split('?')[0];
+        idx = path.indexOf('/img/');
         if (idx >= 0) path = path.slice(idx + 1);
-        if (path.startsWith('./')) path = path.slice(2);
-        if (path.startsWith('/')) path = path.slice(1);
+        if (path.indexOf('./') === 0) path = path.slice(2);
+        if (path.indexOf('/') === 0) path = path.slice(1);
         return path;
-    };
+    }
 
-    SoundManager.prototype.isWhitelisted = function(srcOrAudio) {
-        let path = this.normalizePath(srcOrAudio);
+    isWhitelisted(srcOrAudio) {
+        var path = this.normalizePath(srcOrAudio);
         if (!path || this.whitelistGateSet.size === 0) return false;
         if (this.whitelistGateSet.has(path)) return true;
-        for (const allowed of this.whitelistGateSet) if (path.endsWith(allowed)) return true;
+        for (var allowed of this.whitelistGateSet) if (path.endsWith(allowed)) return true;
         return false;
-    };
+    }
 
-    SoundManager.prototype.shouldAllowPlayback = function(target) {
+    shouldAllowPlayback(target) {
         if (this.endStateMuted) return false;
         if (!this.isEnabled()) return false;
         if (!this.whitelistGateEnabled) return true;
         return this.isWhitelisted(target);
-    };
+    }
 
-    SoundManager.prototype.enableWhitelistGate = function(allowedPathsArray) {
-        let paths = Array.isArray(allowedPathsArray) ? allowedPathsArray : [];
-        this.whitelistGateSet = new Set(paths.map((path) => this.normalizePath(path)).filter(Boolean));
+    enableWhitelistGate(allowedPathsArray) {
+        var paths = Array.isArray(allowedPathsArray) ? allowedPathsArray : [];
+        this.whitelistGateSet = new Set(paths.map(this.normalizePath.bind(this)).filter(Boolean));
         this.whitelistGateEnabled = true;
         this.enforceWhitelistNow();
-    };
+    }
 
-    SoundManager.prototype.disableWhitelistGate = function() {
+    disableWhitelistGate() {
         this.whitelistGateEnabled = false;
         this.whitelistGateSet.clear();
-    };
+    }
 
-    SoundManager.prototype.enforceWhitelistNow = function() {
-        /** Runs `stop`. @param {*} media - Value. @returns {*} Result. */
-        const stop = (media) => {
-            if (!media || this.isWhitelisted(media)) return;
+    enforceWhitelistNow() {
+        var self = this;
+        var stop = function(media) {
+            if (!media || self.isWhitelisted(media)) return;
             media.pause();
             media.currentTime = 0;
             media.muted = true;
         };
         this.mediaRegistry.forEach(stop);
         document.querySelectorAll('audio,video').forEach(stop);
-    };
+    }
 
-    SoundManager.prototype.installMediaPlayGate = function() {
+    installMediaPlayGate() {
+        var manager = this;
+        var nativePlay;
         if (this.playGateInstalled || typeof HTMLMediaElement === 'undefined') return;
         this.playGateInstalled = true;
-        const manager = this, nativePlay = HTMLMediaElement.prototype.play;
+        nativePlay = HTMLMediaElement.prototype.play;
         HTMLMediaElement.prototype.play = function() {
             manager.mediaRegistry.add(this);
-            if (!manager.shouldAllowPlayback(this)) { manager.enforceWhitelistNow(); return Promise.resolve(); }
+            if (!manager.shouldAllowPlayback(this)) {
+                manager.enforceWhitelistNow();
+                return Promise.resolve();
+            }
             this.muted = false;
             return nativePlay.apply(this, arguments);
         };
-    };
+    }
 
-    /**
-     * Persists enabled state and applies it to the audio element.
-     * @param {boolean} enabled
-     * @returns {void}
-     */
-    SoundManager.prototype.setEnabled = function(enabled) {
-        localStorage.setItem(STORAGE_KEY, enabled ? 'true' : 'false');
+    setEnabled(enabled) {
+        localStorage.setItem(this.getStorageKey(), enabled ? 'true' : 'false');
         this.apply(enabled);
-    };
+    }
 
-    SoundManager.prototype.apply = function(enabled) {
-        let audio = this.getAudio();
+    apply(enabled) {
+        var audio = this.getAudio();
         if (!audio) return;
         audio.volume = 0.2;
         if (enabled && !this.pausedForEnd && this.shouldAllowPlayback(audio)) {
@@ -128,53 +122,56 @@
             audio.play().catch(function() {});
             return;
         }
-        audio.pause(); audio.currentTime = 0; audio.muted = true;
+        audio.pause();
+        audio.currentTime = 0;
+        audio.muted = true;
         if (!enabled) this.enforceWhitelistNow();
-    };
+    }
 
-    SoundManager.prototype.toggle = function() {
-        let next = !this.isEnabled();
+    toggle() {
+        var next = !this.isEnabled();
         this.setEnabled(next);
         return next;
-    };
+    }
 
-    SoundManager.prototype.tryPlayOnGesture = function() {
-        let audio = this.getAudio();
+    tryPlayOnGesture() {
+        var audio = this.getAudio();
         if (this.endStateMuted || this.pausedForEnd || !audio || !this.shouldAllowPlayback(audio)) return;
-        if (audio && audio.paused) {
-            audio.currentTime = 0; audio.volume = 0.2;
-            audio.play().catch(function() {});
-        }
-    };
+        if (!audio.paused) return;
+        audio.currentTime = 0;
+        audio.volume = 0.2;
+        audio.play().catch(function() {});
+    }
 
-    SoundManager.prototype.muteForEndState = function() {
+    muteForEndState() {
+        var audio;
         if (this.endStateMuted) return;
         this.endStateMuted = true;
         this.pausedForEnd = true;
         this.enableWhitelistGate([]);
         this.enforceWhitelistNow();
-        let audio = this.getAudio();
+        audio = this.getAudio();
         if (!audio) return;
         audio.pause();
         audio.currentTime = 0;
         audio.muted = true;
-    };
+    }
 
-    SoundManager.prototype.clearEndStateMute = function() {
+    clearEndStateMute() {
         this.endStateMuted = false;
         this.pausedForEnd = false;
         this.disableWhitelistGate();
         if (this.isEnabled()) this.apply(true);
-    };
+    }
 
-    SoundManager.prototype.pauseForEnd = function() {
+    pauseForEnd() {
         this.muteForEndState();
-    };
+    }
 
-    SoundManager.prototype.resumeFromEnd = function() {
+    resumeFromEnd() {
         this.clearEndStateMute();
-    };
+    }
+};
 
-    window.EPL.Controllers.SoundManager = SoundManager;
-    window.EPL.Sound = new SoundManager();
-})();
+window.__epl_sound_singleton = window.__epl_sound_singleton || new window.EPL.Controllers.SoundManager();
+window.EPL.Sound = window.__epl_sound_singleton;

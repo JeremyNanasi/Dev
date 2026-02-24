@@ -1,116 +1,93 @@
-/**
- * @fileoverview Fullscreen controller for game viewport wrapping and button state.
- */
-(function() {
-    if (window.EPL && window.EPL.Controllers && window.EPL.Controllers.Fullscreen) return;
-    window.EPL = window.EPL || {};
-    window.EPL.Controllers = window.EPL.Controllers || {};
+window.EPL = window.EPL || {};
+window.EPL.Controllers = window.EPL.Controllers || {};
 
-    /**
-     * @param {{
-     *   getTarget: function(): (HTMLElement|null),
-     *   getCanvas: function(): (HTMLCanvasElement|null),
-     *   onFullscreenChange?: function(): void,
-     *   getCanvasWidth: function(): number,
-     *   getCanvasHeight: function(): number
-     * }} deps
-     */
-    function FullscreenController(deps) {
+window.EPL.Controllers.Fullscreen = window.EPL.Controllers.Fullscreen || class FullscreenController {
+    constructor(deps) {
         this.deps = deps;
         this.toggleButton = null;
     }
 
-    /**
-     * Ensures a stable wrapper element around the game canvas.
-     * @param {HTMLCanvasElement} canvasEl
-     * @returns {HTMLElement}
-     */
-    FullscreenController.prototype.ensureTarget = function(canvasEl) {
-        let existing = document.getElementById('fullscreen-target');
+    ensureTarget(canvasEl) {
+        var existing = document.getElementById('fullscreen-target');
         if (existing) {
             this.applyDefaults(existing);
             return existing;
         }
         return this.createTarget(canvasEl);
-    };
+    }
 
-    FullscreenController.prototype.createTarget = function(canvasEl) {
-        let wrapper = document.createElement('div');
+    createTarget(canvasEl) {
+        var wrapper = document.createElement('div');
+        var parent = canvasEl && canvasEl.parentNode;
         wrapper.id = 'fullscreen-target';
-        let parent = canvasEl.parentNode;
-        parent.insertBefore(wrapper, canvasEl);
-        wrapper.appendChild(canvasEl);
+        if (parent) parent.insertBefore(wrapper, canvasEl);
+        if (canvasEl) wrapper.appendChild(canvasEl);
         this.applyDefaults(wrapper);
         return wrapper;
-    };
+    }
 
-    FullscreenController.prototype.applyDefaults = function(wrapper) {
+    applyDefaults(wrapper) {
         wrapper.style.display = 'block';
         wrapper.style.position = 'absolute';
-    };
+    }
 
-    FullscreenController.prototype.initToggle = function() {
+    initToggle() {
         this.toggleButton = document.getElementById('fullscreen-toggle');
         if (!this.toggleButton) return;
         this.registerListeners();
-    };
+    }
 
-    FullscreenController.prototype.registerListeners = function() {
-        let self = this;
-        this.toggleButton.addEventListener('click', function() { self.handleClick(); });
-        document.addEventListener('fullscreenchange', function() { self.handleChange(); });
+    registerListeners() {
+        this.toggleButton.addEventListener('click', this.handleClick.bind(this));
+        document.addEventListener('fullscreenchange', this.handleChange.bind(this));
         this.updateButtonState();
-    };
+    }
 
-    /**
-     * Toggles browser fullscreen mode for the game element.
-     * @returns {void}
-     */
-    FullscreenController.prototype.handleClick = function() {
+    handleClick() {
+        var fsEl;
         if (document.fullscreenElement) {
-            document.exitFullscreen && document.exitFullscreen();
+            if (document.exitFullscreen) document.exitFullscreen();
             return;
         }
-        let fsEl = document.getElementById('viewport') || this.deps.getTarget() || this.deps.getCanvas();
+        fsEl = document.getElementById('viewport') || this.deps.getTarget() || this.deps.getCanvas();
         if (fsEl && fsEl.requestFullscreen) fsEl.requestFullscreen();
-    };
+    }
 
-    FullscreenController.prototype.handleChange = function() {
+    handleChange() {
         this.updateButtonState();
         document.body.classList.toggle('is-fullscreen', Boolean(document.fullscreenElement));
         if (this.deps.onFullscreenChange) this.deps.onFullscreenChange();
-    };
+    }
 
-    FullscreenController.prototype.updateButtonState = function() {
+    updateButtonState() {
+        var isFs;
         if (!this.toggleButton) return;
-        let isFs = Boolean(document.fullscreenElement);
+        isFs = Boolean(document.fullscreenElement);
         this.toggleButton.textContent = isFs ? 'Vollbild verlassen' : 'Vollbild';
         this.toggleButton.classList.toggle('is-active', isFs);
-    };
+    }
 
-    FullscreenController.prototype.applyContainBaseStyles = function() {
-        let target = this.deps.getTarget();
+    applyContainBaseStyles() {
+        var target = this.deps.getTarget();
+        var w = this.deps.getCanvasWidth();
+        var h = this.deps.getCanvasHeight();
         if (!target) return;
-        let w = this.deps.getCanvasWidth();
-        let h = this.deps.getCanvasHeight();
         target.style.position = 'absolute';
         target.style.left = '50%';
         target.style.top = '50%';
         target.style.width = w + 'px';
         target.style.height = h + 'px';
         this.applyExtraStyles(target);
-    };
+    }
 
-    FullscreenController.prototype.applyExtraStyles = function(target) {
+    applyExtraStyles(target) {
         target.style.display = 'block';
         target.style.alignItems = '';
         target.style.justifyContent = '';
         target.style.background = 'transparent';
-    };
+    }
 
-    FullscreenController.prototype.isFullscreen = function() {
+    isFullscreen() {
         return Boolean(document.fullscreenElement);
-    };
-
-    window.EPL.Controllers.Fullscreen = FullscreenController;
-})();
+    }
+};

@@ -1,21 +1,8 @@
-/**
- * @fileoverview Touch control controller for mobile input buttons and visibility.
- */
-(function() {
-    if (window.EPL && window.EPL.Controllers && window.EPL.Controllers.Touch) return;
-    window.EPL = window.EPL || {};
-    window.EPL.Controllers = window.EPL.Controllers || {};
+window.EPL = window.EPL || {};
+window.EPL.Controllers = window.EPL.Controllers || {};
 
-    let STORAGE_KEY = 'touch-controls-preference';
-    let BREAKPOINT = 899;
-
-    /**
-     * @param {{
-     *   getKeyboard: function(): Keyboard,
-     *   shouldIgnoreInput: function(): boolean
-     * }} deps
-     */
-    function TouchController(deps) {
+window.EPL.Controllers.Touch = window.EPL.Controllers.Touch || class TouchController {
+    constructor(deps) {
         this.deps = deps;
         this.initialized = false;
         this.visible = false;
@@ -24,167 +11,160 @@
         this.mousePressedKeys = new Set();
     }
 
-    /**
-     * One-time initialization for touch button event binding.
-     * @returns {void}
-     */
-    TouchController.prototype.initOnce = function() {
+    getStorageKey() {
+        return window.EPL && window.EPL.KEYS && window.EPL.KEYS.TOUCH_CONTROLS ? window.EPL.KEYS.TOUCH_CONTROLS : 'touch-controls-preference';
+    }
+
+    getBreakpoint() {
+        return window.EPL && typeof window.EPL.BREAKPOINT_MOBILE === 'number' ? window.EPL.BREAKPOINT_MOBILE : 899;
+    }
+
+    initOnce() {
+        var buttons;
         if (this.initialized) return;
-        let buttons = Array.from(document.querySelectorAll('.touch-control-button'));
+        buttons = Array.from(document.querySelectorAll('.touch-control-button'));
         if (!buttons.length) return;
         this.bindButtons(buttons);
         this.bindGlobalMouseUp();
         this.initialized = true;
-    };
+    }
 
-    TouchController.prototype.bindButtons = function(buttons) {
-        let self = this;
+    bindButtons(buttons) {
+        var self = this;
         buttons.forEach(function(btn) {
-            let key = btn.dataset.key;
+            var key = btn.dataset.key;
             if (!key) return;
             self.keyToButton.set(key, btn);
             self.attachButtonListeners(btn, key);
         });
-    };
+    }
 
-    TouchController.prototype.attachButtonListeners = function(btn, key) {
-        let self = this;
-        /** Runs `onStart`. @param {*} e - Value. @param {*} src - Value. */
-        let onStart = function(e, src) { self.handlePressStart(e, src, btn, key); };
-        /** Runs `onEnd`. @param {*} e - Value. */
-        let onEnd = function(e) { self.handlePressEnd(e, btn, key); };
+    attachButtonListeners(btn, key) {
+        var self = this;
+        var onStart = function(e, src) { self.handlePressStart(e, src, btn, key); };
+        var onEnd = function(e) { self.handlePressEnd(e, btn, key); };
         btn.addEventListener('touchstart', function(e) { onStart(e, 'touch'); }, { passive: false });
         btn.addEventListener('touchend', onEnd, { passive: false });
         btn.addEventListener('touchcancel', onEnd, { passive: false });
         btn.addEventListener('mousedown', function(e) { onStart(e, 'mouse'); });
         btn.addEventListener('mouseup', onEnd);
         btn.addEventListener('mouseleave', onEnd);
-    };
+    }
 
-    /**
-     * Handles press-start events and applies mapped key state.
-     * @param {Event} e
-     * @param {'touch'|'mouse'} src
-     * @param {HTMLElement} btn
-     * @param {string} key
-     * @returns {void}
-     */
-    TouchController.prototype.handlePressStart = function(e, src, btn, key) {
-        if (this.deps.shouldIgnoreInput()) return;
+    handlePressStart(e, src, btn, key) {
+        var kb = this.deps.getKeyboard();
+        var keys;
+        if (this.deps.shouldIgnoreInput() || !kb) return;
         e.preventDefault();
-        let keys = this.getKeysForButton(key);
-        let kb = this.deps.getKeyboard();
+        keys = this.getKeysForButton(key);
         keys.forEach(function(k) { kb[k] = true; });
         btn.classList.add('is-pressed');
         if (src === 'mouse') this.mousePressedKeys.add(key);
-    };
+    }
 
-    TouchController.prototype.handlePressEnd = function(e, btn, key) {
-        e.preventDefault();
-        let keys = this.getKeysForButton(key);
-        let kb = this.deps.getKeyboard();
-        let isJump = keys.includes('SPACE') || keys.includes('UP');
-        if (isJump) {
-            setTimeout(function() { keys.forEach(function(k) { kb[k] = false; }); }, 120);
-        } else {
-            keys.forEach(function(k) { kb[k] = false; });
-        }
+    handlePressEnd(e, btn, key) {
+        var kb = this.deps.getKeyboard();
+        var keys = this.getKeysForButton(key);
+        var isJump = keys.indexOf('SPACE') !== -1 || keys.indexOf('UP') !== -1;
+        if (e && e.preventDefault) e.preventDefault();
+        if (!kb) return;
+        if (isJump) setTimeout(function() { keys.forEach(function(k) { kb[k] = false; }); }, 120);
+        else keys.forEach(function(k) { kb[k] = false; });
         btn.classList.remove('is-pressed');
         this.mousePressedKeys.delete(key);
-    };
+    }
 
-    TouchController.prototype.getKeysForButton = function(key) {
+    getKeysForButton(key) {
         if (key === 'SPACE' || key === 'UP') return ['SPACE', 'UP'];
         return [key];
-    };
+    }
 
-    TouchController.prototype.bindGlobalMouseUp = function() {
-        let self = this;
+    bindGlobalMouseUp() {
+        var self = this;
         window.addEventListener('mouseup', function(e) {
             if (!self.mousePressedKeys.size) return;
-            e.preventDefault();
+            if (e && e.preventDefault) e.preventDefault();
             self.releaseAllMouseKeys();
         });
-    };
+    }
 
-    TouchController.prototype.releaseAllMouseKeys = function() {
-        let self = this;
-        let kb = this.deps.getKeyboard();
+    releaseAllMouseKeys() {
+        var self = this;
+        var kb = this.deps.getKeyboard();
+        if (!kb) return;
         this.mousePressedKeys.forEach(function(key) {
-            let keys = self.getKeysForButton(key);
+            var keys = self.getKeysForButton(key);
+            var btn = self.keyToButton.get(key);
             keys.forEach(function(k) { kb[k] = false; });
-            let btn = self.keyToButton.get(key);
             if (btn) btn.classList.remove('is-pressed');
         });
         this.mousePressedKeys.clear();
-    };
+    }
 
-    TouchController.prototype.setupMediaQuery = function() {
+    setupMediaQuery() {
+        var self = this;
         if (!window.matchMedia) return;
-        let self = this;
-        this.mql = window.matchMedia('(max-width: ' + BREAKPOINT + 'px)');
-        this.mql.addEventListener('change', function() { self.updateVisibility(); });
-    };
+        this.mql = window.matchMedia('(max-width: ' + this.getBreakpoint() + 'px)');
+        if (this.mql.addEventListener) this.mql.addEventListener('change', function() { self.updateVisibility(); });
+        else if (this.mql.addListener) this.mql.addListener(function() { self.updateVisibility(); });
+    }
 
-    TouchController.prototype.setupMobileToggle = function() {
-        let toggle = document.getElementById('mobile-controls-toggle');
+    setupMobileToggle() {
+        var self = this;
+        var toggle = document.getElementById('mobile-controls-toggle');
         if (!toggle) return;
-        let self = this;
         toggle.addEventListener('click', function() {
             self.visible = !self.visible;
-            localStorage.setItem(STORAGE_KEY, self.visible ? 'on' : 'off');
+            localStorage.setItem(self.getStorageKey(), self.visible ? 'on' : 'off');
             self.updateUI();
         });
-    };
+    }
 
-    TouchController.prototype.updateVisibility = function() {
-        let stored = localStorage.getItem(STORAGE_KEY);
-        let isTouch = document.body.classList.contains('is-mobile-tablet');
+    updateVisibility() {
+        var stored = localStorage.getItem(this.getStorageKey());
+        var isTouch = document.body.classList.contains('is-mobile-tablet');
         this.visible = this.resolveVisibility(stored, isTouch);
         this.updateUI();
-    };
+    }
 
-    TouchController.prototype.resolveVisibility = function(stored, isTouch) {
+    resolveVisibility(stored, isTouch) {
         if (stored === 'on') return true;
         if (stored === 'off') return false;
-        if (!isTouch) return false;
-        return true;
-    };
+        return Boolean(isTouch);
+    }
 
-    TouchController.prototype.updateUI = function() {
-        let controls = document.getElementById('touch-controls');
-        let toggle = document.getElementById('mobile-controls-toggle');
-        let show = Boolean(this.visible);
+    updateUI() {
+        var controls = document.getElementById('touch-controls');
+        var toggle = document.getElementById('mobile-controls-toggle');
+        var show = Boolean(this.visible);
         if (controls) controls.classList.toggle('is-visible', show);
         document.body.classList.toggle('touch-controls-visible', show);
         document.body.classList.toggle('touch-controls-hidden', !show);
         this.updateToggleText(toggle, show);
         this.updateOrientationToggle(show);
-    };
+    }
 
-    TouchController.prototype.updateToggleText = function(toggle, show) {
+    updateToggleText(toggle, show) {
         if (toggle) toggle.textContent = show ? 'Mobile-Steuerung aus' : 'Mobile-Steuerung an';
-    };
+    }
 
-    TouchController.prototype.updateOrientationToggle = function(show) {
-        let btn = document.getElementById('orientation-toggle');
+    updateOrientationToggle(show) {
+        var btn = document.getElementById('orientation-toggle');
+        var withinBp = this.mql ? this.mql.matches : window.innerWidth <= this.getBreakpoint();
         if (!btn) return;
-        let withinBp = this.mql ? this.mql.matches : window.innerWidth <= BREAKPOINT;
         btn.style.display = (show || withinBp) ? 'inline-flex' : 'none';
-    };
+    }
 
-    TouchController.prototype.detectMobileTablet = function() {
-        let touch = navigator.maxTouchPoints > 0;
-        let coarse = window.matchMedia && window.matchMedia('(pointer: coarse)').matches;
-        let noHover = window.matchMedia && window.matchMedia('(hover: none)').matches;
+    detectMobileTablet() {
+        var touch = navigator.maxTouchPoints > 0;
+        var coarse = window.matchMedia && window.matchMedia('(pointer: coarse)').matches;
+        var noHover = window.matchMedia && window.matchMedia('(hover: none)').matches;
         return touch && (coarse || noHover);
-    };
+    }
 
-    TouchController.prototype.updateMobileTabletState = function() {
-        let detected = this.detectMobileTablet();
+    updateMobileTabletState() {
+        var detected = this.detectMobileTablet();
         document.body.classList.toggle('is-mobile-tablet', detected);
         return detected;
-    };
-
-    window.EPL.Controllers.Touch = TouchController;
-})();
+    }
+};
