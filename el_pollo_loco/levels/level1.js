@@ -23,27 +23,33 @@ function initLevel() {
 function buildLevel1() {
     return new Level(buildEnemies(), buildClouds(), buildIcons(), buildSalsa(), buildBackgrounds());
 }
+
 /** Creates `buildEnemies` data. @returns {*} Result. */
 function buildEnemies() {
     return repeat(() => new Chicken(), 5)
         .concat(repeat(() => new smallchicken({ isSmall: true }), 4), [new Endboss()]);
 }
+
 /** Creates `buildClouds` data. @returns {*} Result. */
 function buildClouds() {
     return repeat(() => new Cloud(), 12);
 }
+
 /** Creates `buildIcons` data. @returns {*} Result. */
 function buildIcons() {
     return repeat(() => new Icons({ x: randomIconX() }), 20);
 }
+
 /** Runs `randomIconX`. @returns {*} Result. */
 function randomIconX() {
     return -750 + Math.random() * 750 * 3 + 800;
 }
+
 /** Creates `buildSalsa` data. @returns {*} Result. */
 function buildSalsa() {
     return repeat(() => new ThrowableObject(randomBottleX(), 360, { isCollectible: true }), 9);
 }
+
 /** Creates `buildBackgrounds` data. @returns {*} Result. */
 function buildBackgrounds() {
     const sets = [
@@ -56,6 +62,7 @@ function buildBackgrounds() {
     ];
     return sets.reduce((all, set) => all.concat(set), []);
 }
+
 /** Creates `createBackgroundSet` data. @param {*} x - Value. @param {*} variant - Value. @returns {*} Result. */
 function createBackgroundSet(x, variant) {
     const v = String(variant);

@@ -78,6 +78,7 @@ class smallchicken extends MoveableObject {
             this.die();
         }
     }
+
     /** Runs `die`. */
     die() {
         this.energy = 0;
@@ -85,10 +86,12 @@ class smallchicken extends MoveableObject {
         this.currentImage = 0;
         this.playAnimation(this.deadImages);
     }
+
     /** Runs `startProximitySoundCheck`. */
     startProximitySoundCheck() {
         setInterval(() => this.updateProximitySound(), 1000 / 10);
     }
+
     /** Updates `updateProximitySound` state. @returns {*} Result. */
     updateProximitySound() {
         if (this.isDead()) {
@@ -105,6 +108,7 @@ class smallchicken extends MoveableObject {
         if (inRange) this.startLoopSound();
         else this.stopLoopSound();
     }
+
     /** Runs `startLoopSound`. @returns {*} Result. */
     startLoopSound() {
         if (this.proximitySoundActive || !this.canPlayLoopSound()) return;
@@ -112,22 +116,26 @@ class smallchicken extends MoveableObject {
         this.loopSound.play().catch(() => {});
         this.proximitySoundActive = true;
     }
+
     /** Runs `stopLoopSound`. @returns {*} Result. */
     stopLoopSound() {
         if (!this.proximitySoundActive || !this.loopSound) return;
         this.loopSound.pause();
         this.proximitySoundActive = false;
     }
+
     /** Checks `canPlayLoopSound`. @returns {*} Result. */
     canPlayLoopSound() {
         if (!this.loopSound) return false;
         return this.isSoundEnabled();
     }
+    
     /** Checks `isSoundEnabled`. @returns {*} Result. */
     isSoundEnabled() {
         const key = typeof SOUND_ENABLED_KEY === 'string' ? SOUND_ENABLED_KEY : 'sound-enabled';
         return localStorage.getItem(key) !== 'false';
     }
+
     /** Gets `getLoopSoundElement` data. @returns {*} Result. */
     getLoopSoundElement() {
         return document.getElementById('smallchicken-loop-sound');

@@ -2,6 +2,7 @@ window.EPL = window.EPL || {};
 window.EPL.Controllers = window.EPL.Controllers || {};
 
 window.__epl_restart_button_controller_class = window.__epl_restart_button_controller_class || class RestartButtonController {
+  /** Initialize restart-button controller dependencies. @param {*=} deps */
   constructor(deps) {
     this.deps = deps || {};
     this.button = this.shell = this.canvas = this.overlay = null;
@@ -15,29 +16,35 @@ window.__epl_restart_button_controller_class = window.__epl_restart_button_contr
     this.bindHandlers();
   }
 
+  /** Return watcher interval in milliseconds. @returns {number} */
   getWatchInterval() {
     return 250;
   }
 
+  /** Return the minimum vertical ratio for button placement. @returns {number} */
   getMinRatio() {
     return 0.64;
   }
 
+  /** Return the vertical button gap in pixels. @returns {number} */
   getButtonGap() {
     return 12;
   }
 
+  /** Initialize RAF helper functions. */
   initTimers() {
     this.raf = window.requestAnimationFrame ? window.requestAnimationFrame.bind(window) : (cb) => window.setTimeout(() => cb(Date.now()), 16);
     this.rafCancel = window.cancelAnimationFrame ? window.cancelAnimationFrame.bind(window) : window.clearTimeout;
   }
 
+  /** Bind reusable event handler references. */
   bindHandlers() {
     this.onResizeBound = this.onResize.bind(this);
     this.onClickBound = this.handleClick.bind(this);
     this.watchTickBound = this.watchTick.bind(this);
   }
 
+  /** Initialize controller once. */
   init() {
     if (this.initialized) return;
     this.initialized = true;
@@ -47,6 +54,7 @@ window.__epl_restart_button_controller_class = window.__epl_restart_button_contr
     this.startWatcher();
   }
 
+  /** Resolve required DOM elements. */
   resolveElements() {
     this.shell = document.getElementById('fullscreen-target');
     this.canvas = document.getElementById('canvas');
@@ -57,13 +65,15 @@ window.__epl_restart_button_controller_class = window.__epl_restart_button_contr
     this.mobileToggle = document.getElementById('mobile-controls-toggle');
   }
 
+  /** Return the preferred button container. @returns {HTMLElement|null} */
   getContainer() {
     return this.overlay || this.shell;
   }
 
+  /** Ensure the restart button exists and is attached. */
   ensureButton() {
-    var btn;
-    var container;
+    let btn;
+    let container;
     if (!this.shell || !this.canvas) return;
     container = this.getContainer();
     if (!container) return;
@@ -74,8 +84,9 @@ window.__epl_restart_button_controller_class = window.__epl_restart_button_contr
     this.button.hidden = true;
   }
 
+  /** Create the restart button element. @returns {HTMLButtonElement} */
   createButton() {
-    var btn = document.createElement('button');
+    let btn = document.createElement('button');
     btn.id = 'restart-button';
     btn.type = 'button';
     btn.textContent = 'Neustart';
@@ -83,39 +94,45 @@ window.__epl_restart_button_controller_class = window.__epl_restart_button_contr
     return btn;
   }
 
+  /** Bind resize and fullscreen listeners. */
   bindEvents() {
     window.addEventListener('resize', this.onResizeBound);
     window.addEventListener('orientationchange', this.onResizeBound);
     document.addEventListener('fullscreenchange', this.onResizeBound);
   }
 
+  /** Start the end-state watcher loop. */
   startWatcher() {
     if (this.watchId) return;
     this.watchId = this.trackInterval(this.watchTickBound, this.getWatchInterval());
     this.watchTick();
   }
 
+  /** Track an interval id for later cleanup. @param {Function} fn @param {number} ms @returns {number} */
   trackInterval(fn, ms) {
-    var id = window.setInterval(fn, ms);
+    let id = window.setInterval(fn, ms);
     this.intervalIds.add(id);
     return id;
   }
 
+  /** Update restart button visibility from game end state. */
   watchTick() {
-    var ended = this.getEndState();
+    let ended = this.getEndState();
     if (ended !== this.visible) this.setVisible(ended);
   }
 
+  /** Return whether the current world is in an end state. @returns {boolean} */
   getEndState() {
-    var w = this.getWorld();
-    var c = w && w.character;
-    var dead;
+    let w = this.getWorld();
+    let c = w && w.character;
+    let dead;
     if (!c) return false;
     dead = c.isDead;
     if (typeof dead === 'function' ? dead.call(c) : dead === true) return true;
     return Boolean(w && w.isBossDefeated && w.isBossDefeated());
   }
 
+  /** Toggle button visibility and schedule placement. @param {boolean} show */
   setVisible(show) {
     if (!this.button) return;
     if (this.visible === show) return;
@@ -124,6 +141,7 @@ window.__epl_restart_button_controller_class = window.__epl_restart_button_contr
     if (show) this.schedulePosition();
   }
 
+  /** Queue a position update on the next animation frame. */
   schedulePosition() {
     if (!this.visible || this.rafId) return;
     this.rafId = this.raf(() => {
@@ -132,13 +150,15 @@ window.__epl_restart_button_controller_class = window.__epl_restart_button_contr
     });
   }
 
+  /** Handle resize and orientation updates. */
   onResize() {
     if (this.visible) this.schedulePosition();
   }
 
+  /** Recompute and apply button position. */
   position() {
-    var bounds;
-    var top;
+    let bounds;
+    let top;
     if (!this.button || !this.canvas || !this.shell) return;
     bounds = this.getBounds();
     if (!bounds) return;
@@ -146,18 +166,19 @@ window.__epl_restart_button_controller_class = window.__epl_restart_button_contr
     this.button.style.top = top + 'px';
   }
 
+  /** Calculate positioning bounds for restart button placement. @returns {*|null} */
   getBounds() {
-    var root = this.shell;
-    var container = this.getContainer();
-    var containerTop;
-    var canvasTop;
-    var canvasHeight;
-    var btnHeight;
-    var gap;
-    var blockerTop;
-    var localCanvasTop;
-    var topMin;
-    var topMax;
+    let root = this.shell;
+    let container = this.getContainer();
+    let containerTop;
+    let canvasTop;
+    let canvasHeight;
+    let btnHeight;
+    let gap;
+    let blockerTop;
+    let localCanvasTop;
+    let topMin;
+    let topMax;
     if (!root || !container || !this.canvas || !this.button) return null;
     containerTop = this.getOffsetTop(container, root) || 0;
     canvasTop = this.getOffsetTop(this.canvas, root);
@@ -172,27 +193,31 @@ window.__epl_restart_button_controller_class = window.__epl_restart_button_contr
     return { canvasTop: localCanvasTop, canvasHeight, btnHeight, gap, topMin, topMax, blockerTop };
   }
 
+  /** Return current shell scale relative to offset height. @param {DOMRect} shellRect @returns {number} */
   getScale(shellRect) {
-    var raw = this.shell.offsetHeight || shellRect.height || 1;
-    var scale = shellRect.height / raw;
+    let raw = this.shell.offsetHeight || shellRect.height || 1;
+    let scale = shellRect.height / raw;
     return scale || 1;
   }
 
+  /** Convert viewport Y to local shell Y. @param {number} value @param {number} shellTop @param {number} scale @returns {number} */
   toLocalY(value, shellTop, scale) {
     return (value - shellTop) / scale;
   }
 
+  /** Return a usable element rect or null. @param {Element|null} el @returns {DOMRect|null} */
   getRect(el) {
-    var rect;
+    let rect;
     if (!el) return null;
     rect = el.getBoundingClientRect();
     if (!rect || rect.height === 0 || rect.width === 0) return null;
     return rect;
   }
 
+  /** Return element top offset relative to root. @param {HTMLElement|null} el @param {HTMLElement|null} root @returns {number|null} */
   getOffsetTop(el, root) {
-    var top = 0;
-    var node = el;
+    let top = 0;
+    let node = el;
     if (!el || !root) return null;
     while (node && node !== root) {
       top += node.offsetTop || 0;
@@ -202,48 +227,56 @@ window.__epl_restart_button_controller_class = window.__epl_restart_button_contr
     return top;
   }
 
+  /** Return element top relative to container. @param {HTMLElement|null} el @param {HTMLElement} root @param {number} containerTop @returns {number} */
   getTop(el, root, containerTop) {
-    var top = this.getOffsetTop(el, root);
+    let top = this.getOffsetTop(el, root);
     if (top === null) return Infinity;
     return top - containerTop;
   }
 
+  /** Return element bottom relative to container. @param {HTMLElement|null} el @param {HTMLElement} root @param {number} containerTop @returns {number} */
   getBottom(el, root, containerTop) {
-    var top = this.getOffsetTop(el, root);
+    let top = this.getOffsetTop(el, root);
     if (top === null) return 0;
     return top - containerTop + (el.offsetHeight || 0);
   }
 
+  /** Return blocker top relative to container. @param {HTMLElement} root @param {number} containerTop @returns {number|null} */
   getBlockerTop(root, containerTop) {
-    var blocker = this.bottomControls || this.mobileToggle;
-    var top = this.getOffsetTop(blocker, root);
+    let blocker = this.bottomControls || this.mobileToggle;
+    let top = this.getOffsetTop(blocker, root);
     if (top === null) return null;
     return top - containerTop;
   }
 
+  /** Return minimum allowed top for the button. @param {number} canvasTop @param {number} canvasHeight @param {number} gap @param {HTMLElement} root @param {number} containerTop @returns {number} */
   getTopMin(canvasTop, canvasHeight, gap, root, containerTop) {
-    var base = canvasTop + canvasHeight * this.getMinRatio();
-    var topRightBottom = this.getBottom(this.topRight, root, containerTop);
+    let base = canvasTop + canvasHeight * this.getMinRatio();
+    let topRightBottom = this.getBottom(this.topRight, root, containerTop);
     return Math.max(base, topRightBottom + gap);
   }
 
+  /** Return maximum allowed top for the button. @param {number} canvasTop @param {number} canvasHeight @param {number} btnHeight @param {number} gap @param {number|null} blockerTop @returns {number} */
   getTopMax(canvasTop, canvasHeight, btnHeight, gap, blockerTop) {
     if (blockerTop !== null && blockerTop !== undefined) return blockerTop - btnHeight - gap;
     return canvasTop + canvasHeight - btnHeight - gap;
   }
 
+  /** Compute clamped button top from bounds. @param {*} bounds @returns {number} */
   computeTop(bounds) {
-    var target = bounds.blockerTop === null || bounds.blockerTop === undefined ? bounds.topMax : bounds.blockerTop - bounds.btnHeight - bounds.gap;
-    var max = Math.max(bounds.topMin, bounds.topMax);
+    let target = bounds.blockerTop === null || bounds.blockerTop === undefined ? bounds.topMax : bounds.blockerTop - bounds.btnHeight - bounds.gap;
+    let max = Math.max(bounds.topMin, bounds.topMax);
     return this.clamp(target, bounds.topMin, max);
   }
 
+  /** Clamp a number to the given range. @param {number} value @param {number} min @param {number} max @returns {number} */
   clamp(value, min, max) {
     if (value < min) return min;
     if (value > max) return max;
     return value;
   }
 
+  /** Handle restart button clicks. */
   handleClick() {
     if (this.restarting) return;
     this.restarting = true;
@@ -251,6 +284,7 @@ window.__epl_restart_button_controller_class = window.__epl_restart_button_contr
     this.restarting = false;
   }
 
+  /** Run a soft in-place game restart flow. */
   softRestart() {
     this.stopLoops();
     this.resetService.stopEnemySfxSafe();
@@ -261,6 +295,7 @@ window.__epl_restart_button_controller_class = window.__epl_restart_button_contr
     this.setVisible(false);
   }
 
+  /** Stop all tracked intervals and RAF callbacks. */
   stopLoops() {
     this.intervalIds.forEach((id) => window.clearInterval(id));
     this.intervalIds.clear();
@@ -268,19 +303,22 @@ window.__epl_restart_button_controller_class = window.__epl_restart_button_contr
     this.watchId = 0;
   }
 
+  /** Cancel any pending position RAF callback. */
   clearRaf() {
     if (!this.rafId) return;
     this.rafCancel(this.rafId);
     this.rafId = 0;
   }
 
+  /** Return the active world instance. @returns {*} */
   getWorld() {
     return this.resetService.getWorld();
   }
 };
 
+/** Boot and register the global restart button controller instance. */
 window.__epl_boot_restart_button = window.__epl_boot_restart_button || function() {
-  var root = window.EPL || {};
+  let root = window.EPL || {};
   root.Controllers = root.Controllers || {};
   window.EPL = root;
   if (root.Controllers.RestartButton) return;

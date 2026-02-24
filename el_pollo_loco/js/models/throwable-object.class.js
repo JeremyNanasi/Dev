@@ -61,6 +61,7 @@ class ThrowableObject extends MoveableObject {
             throw new Error('ThrowableObject requires coordinates when not used as collectible.');
         }
     }
+
     /** Runs `spawnCollectible`. @param {*} x - Value. @param {*} y - Value. */
     spawnCollectible(x, y) {
         this.x = x;
@@ -69,6 +70,7 @@ class ThrowableObject extends MoveableObject {
         this.img = this.imageCache[this.IMAGE_SALSA_GROUND[0]];
         this.startGroundAnimation();
     }
+
     /** Runs `startGroundAnimation`. */
     startGroundAnimation() {
         this.stopGroundAnimation();
@@ -76,6 +78,7 @@ class ThrowableObject extends MoveableObject {
             this.playAnimation(this.IMAGE_SALSA_GROUND);
         }, 400);
     }
+
     /** Runs `stopGroundAnimation`. */
     stopGroundAnimation() {
         if (this.groundAnimationInterval) {
@@ -100,7 +103,8 @@ class ThrowableObject extends MoveableObject {
         this.otherDirection = this.throwDirection === -1;
         this.applyGravity();
         this.startRotation();
-    }   
+    }  
+
     /** Runs `startRotation`. */
     startRotation() {
         this.stopRotation();
@@ -109,6 +113,7 @@ class ThrowableObject extends MoveableObject {
             this.x += 15 * this.throwDirection;
         }, 25);
     }
+
     /** Runs `stopRotation`. */
     stopRotation() {
         if (this.rotationInterval) {
@@ -116,6 +121,7 @@ class ThrowableObject extends MoveableObject {
             this.rotationInterval = null;
         }
     }
+    
     /** Runs `applyGravity`. */
     applyGravity() {
         this.stopGravity();
@@ -134,6 +140,7 @@ class ThrowableObject extends MoveableObject {
             }
         }, 1000 / 25);
     }
+
     /** Runs `stopGravity`. */
     stopGravity() {
         if (this.gravityInterval) {
@@ -158,6 +165,7 @@ class ThrowableObject extends MoveableObject {
             }
         }, frameDelay);
     }
+
     /** Checks `isColliding`. @param {*} mo - Value. @returns {*} Result. */
     isColliding(mo) {
         const thisX = this.getHitboxX();

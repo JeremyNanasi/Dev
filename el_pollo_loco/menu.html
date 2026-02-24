@@ -5,36 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="./startmenu.css">
     <style>
-        #sound-toggle {
-            --keycap-min-width: clamp(128px, 24vmin, 180px);
-            --keycap-padding-y: clamp(8px, 1.2vmin, 12px);
-            --keycap-padding-x: clamp(14px, 2.2vmin, 22px);
-            --keycap-font-size: clamp(16px, 2.4vmin, 22px);
-            --toggle-label-size: clamp(12px, 2vmin, 16px);
-            --toggle-state-size: clamp(12px, 2vmin, 16px);
-            --toggle-state-padding-y: clamp(2px, 0.8vmin, 6px);
-            --toggle-state-padding-x: clamp(6px, 1.4vmin, 12px);
-            --toggle-state-radius: clamp(6px, 0.8vmin, 10px);
-            white-space: nowrap;
-        }
 
-        #sound-toggle .keycap__label,
-        #sound-toggle .keycap__state {
-            white-space: nowrap;
-        }
-
-        @media (max-width: 299px) {
-            #sound-toggle {
-                --keycap-min-width: 112px;
-                --keycap-padding-y: 6px;
-                --keycap-padding-x: 10px;
-                --keycap-font-size: 14px;
-                --toggle-label-size: 11px;
-                --toggle-state-size: 11px;
-                --toggle-state-padding-y: 2px;
-                --toggle-state-padding-x: 6px;
-            }
-        }
     </style>
     <title>El Pollo Loco - Start</title>
     <link rel="icon" type="image/png" href="./img/boots.png">
@@ -44,6 +15,8 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=New+Rocker&display=swap" rel="stylesheet">
 
     <script src="./js/core/epl.namespace.js" defer></script>
+    <script src="./js/models/sound.class.js" defer></script>
+    <script src="./js/core/sound.controller.js" defer></script>
     <script src="./js/models/menu.js" defer></script>
 </head>
 <body>

@@ -58,6 +58,7 @@ class StatusBar extends DrawableObject {
         this.percentage = config.percentage;
         this.setPercentage(this.percentage);
     }
+
     /** Gets `getConfiguration` data. @param {*} type - Value. @param {*} overrides - Value. @returns {*} Result. */
     getConfiguration(type, overrides) {
         const defaults = {
@@ -107,6 +108,7 @@ class StatusBar extends DrawableObject {
         const path = this.images[this.resolveImageIndex()];
         this.img = this.imageCache[path];
     }
+    
     /** Runs `resolveImageIndex`. @returns {*} Result. */
     resolveImageIndex() {
         if (this.percentage <= 0) {

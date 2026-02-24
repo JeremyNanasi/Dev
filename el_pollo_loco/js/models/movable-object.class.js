@@ -16,7 +16,6 @@ class MoveableObject extends DrawableObject {
     lastHit = 0;
     currentImage = 0;
 
-
     frameTimers = {
         walking: 111.1,
         jumping: 250,
@@ -24,14 +23,12 @@ class MoveableObject extends DrawableObject {
         dead: 200
     };
 
-
     lastFrameTime = {
         walking: 0,
         jumping: 0,
         hurt: 0,
         dead: 0
     };
-
 
     /**
      * Starts gravity updates for this object.
