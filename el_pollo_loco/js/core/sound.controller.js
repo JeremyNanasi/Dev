@@ -1,20 +1,38 @@
+/**
+ * @fileoverview
+ * Provides a small sound facade for persisting the sound preference and applying it to the background music element.
+ *
+ * Exposes helper functions and a simple UI toggle controller while keeping a shared singleton state on `window`.
+ */
+
 {
 let root = window.EPL || (window.EPL = {});
 root.Controllers = root.Controllers || {};
 let state = window.__epl_sound_facade_state || (window.__epl_sound_facade_state = { initialized: false });
-
-/** Return the persisted sound setting key. @returns {string} */
+/**
+ * Returns the key.
+ * This helper centralizes read access for callers.
+ * @returns {string} Returns the resulting string value.
+ */
 function eplSoundFacadeGetKey() {
     let keys = root.KEYS || {};
     return keys.SOUND_ENABLED || 'sound-enabled';
 }
 
-/** Return the background music element. @returns {HTMLAudioElement|null} */
+/**
+ * Returns the audio.
+ * This helper centralizes read access for callers.
+ * @returns {unknown} Returns the value produced by this routine.
+ */
 function eplSoundFacadeGetAudio() {
     return document.getElementById('background-music');
 }
 
-/** Return whether sound is enabled. @returns {boolean} */
+/**
+ * Evaluates the enabled condition.
+ * Returns whether the current runtime state satisfies that condition.
+ * @returns {boolean} Returns `true` when the condition is satisfied; otherwise `false`.
+ */
 function eplSoundFacadeIsEnabled() {
     let api = root.Sound;
     let fn = api && api.isEnabled;
@@ -22,7 +40,12 @@ function eplSoundFacadeIsEnabled() {
     return localStorage.getItem(eplSoundFacadeGetKey()) !== 'false';
 }
 
-/** Apply audio state for the selected enabled flag. @param {boolean} enabled @returns {boolean} */
+/**
+ * Applies state.
+ * The operation is isolated here to keep behavior predictable.
+ * @param {boolean} enabled - Boolean flag controlling this branch.
+ * @returns {boolean} Returns `true` when the condition is satisfied; otherwise `false`.
+ */
 function eplSoundFacadeApplyState(enabled) {
     let api = root.Sound;
     let fn = api && api.applyState;
@@ -35,7 +58,12 @@ function eplSoundFacadeApplyState(enabled) {
     audio.pause(); audio.currentTime = 0; audio.muted = true; return false;
 }
 
-/** Persist and apply the sound enabled flag. @param {boolean} enabled @returns {boolean} */
+/**
+ * Sets the enabled.
+ * This keeps persistent and in-memory state aligned.
+ * @param {boolean} enabled - Boolean flag controlling this branch.
+ * @returns {unknown} Returns the value produced by this routine.
+ */
 function eplSoundFacadeSetEnabled(enabled) {
     let value = !!enabled;
     let api = root.Sound;
@@ -45,14 +73,22 @@ function eplSoundFacadeSetEnabled(enabled) {
     return eplSoundFacadeApplyState(value);
 }
 
-/** Toggle sound state and return the new value. @returns {boolean} */
+/**
+ * Toggles routine.
+ * The operation is isolated here to keep behavior predictable.
+ * @returns {unknown} Returns the value produced by this routine.
+ */
 function eplSoundFacadeToggle() {
     let next = !eplSoundFacadeIsEnabled();
     eplSoundFacadeSetEnabled(next);
     return next;
 }
 
-/** Try to start playback after a user gesture. */
+/**
+ * Plays on gesture.
+ * The operation is isolated here to keep behavior predictable.
+ * @returns {unknown} Returns the value produced by this routine.
+ */
 function eplSoundFacadeTryPlayOnGesture() {
     let api = root.Sound;
     let fn = api && api.tryPlayOnGesture;
@@ -63,7 +99,11 @@ function eplSoundFacadeTryPlayOnGesture() {
     audio.play().catch(function() {});
 }
 
-/** Initialize the facade once. */
+/**
+ * Initializes routine.
+ * It is part of the module startup flow.
+ * @returns {unknown} Returns the value produced by this routine.
+ */
 function eplSoundFacadeInit() {
     let api = root.Sound;
     let fn = api && api.init;
@@ -79,6 +119,58 @@ function eplSoundFacadeInit() {
     if (!enabled) { audio.pause(); audio.currentTime = 0; }
 }
 
+/**
+ * Toggles controller.
+ * The operation is isolated here to keep behavior predictable.
+ * @param {object} deps - Object argument used by this routine.
+ */
+function SoundToggleController(deps) {
+    this.deps = deps;
+    this.button = null;
+    this.icon = null;
+}
+
+/**
+ * Initializes routine.
+ * It is part of the module startup flow.
+ */
+SoundToggleController.prototype.init = function () {
+    this.button = document.getElementById('mute-toggle');
+    this.icon = document.getElementById('mute-icon');
+    if (!this.button || !this.icon) return;
+    this.attachListener();
+    this.updateIcon(this.deps.soundManager.isEnabled());
+};
+
+/**
+ * Attaches listener.
+ * The operation is isolated here to keep behavior predictable.
+ */
+SoundToggleController.prototype.attachListener = function () {
+    const self = this;
+    this.button.addEventListener('click', function () {
+        const next = self.deps.soundManager.toggle();
+        self.updateIcon(next);
+    });
+};
+
+/**
+ * Updates icon.
+ * This synchronizes runtime state with current inputs.
+ * @param {boolean} enabled - Boolean flag controlling this branch.
+ */
+SoundToggleController.prototype.updateIcon = function (enabled) {
+    if (this.icon) {
+        this.icon.src = enabled ? './img/mobile/sound.png' : './img/mobile/mute.png';
+        this.icon.alt = enabled ? 'Sound an' : 'Sound aus';
+    }
+    if (this.button) {
+        this.button.setAttribute('aria-pressed', enabled ? 'false' : 'true');
+    }
+};
+if (!window.EPL.Controllers.SoundToggle) {
+    window.EPL.Controllers.SoundToggle = SoundToggleController;
+}
 if (!root.Sound) root.Sound = {};
 if (!root.Sound.init) root.Sound.init = eplSoundFacadeInit;
 if (!root.Sound.isEnabled) root.Sound.isEnabled = eplSoundFacadeIsEnabled;

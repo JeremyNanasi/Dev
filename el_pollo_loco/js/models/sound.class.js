@@ -1,8 +1,17 @@
+/**
+ * @fileoverview
+ * Global sound manager responsible for background music and SFX playback policies across the game lifecycle.
+ *
+ * Exposed under `window.EPL.Controllers.SoundManager`.
+ */
 window.EPL = window.EPL || {};
 window.EPL.Controllers = window.EPL.Controllers || {};
-
 window.EPL.Controllers.SoundManager = window.EPL.Controllers.SoundManager || class SoundManager {
-    /** Initialize global sound manager state. */
+
+    /**
+     * Initializes a new methods instance and sets up default runtime state.
+     * The constructor prepares dependencies used by class behavior.
+     */
     constructor() {
         this.audioElement = null;
         this.initialized = false;
@@ -15,12 +24,19 @@ window.EPL.Controllers.SoundManager = window.EPL.Controllers.SoundManager || cla
         this.installMediaPlayGate();
     }
 
-    /** Return the storage key for sound preference. @returns {string} */
+    /**
+     * Returns the storage key.
+     * This helper centralizes read access for callers.
+     * @returns {string} Returns the resulting string value.
+     */
     getStorageKey() {
         return window.EPL && window.EPL.KEYS && window.EPL.KEYS.SOUND_ENABLED ? window.EPL.KEYS.SOUND_ENABLED : 'sound-enabled';
     }
 
-    /** Initialize background audio state once. */
+    /**
+     * Initializes routine.
+     * It is part of the module startup flow.
+     */
     init() {
         let enabled;
         if (this.initialized) return;
@@ -32,13 +48,22 @@ window.EPL.Controllers.SoundManager = window.EPL.Controllers.SoundManager || cla
         if (this.audioElement) this.audioElement.volume = 0.2;
     }
 
-    /** Return the cached or resolved background audio element. @returns {HTMLAudioElement|null} */
+    /**
+     * Returns the audio.
+     * This helper centralizes read access for callers.
+     * @returns {unknown} Returns the value produced by this routine.
+     */
     getAudio() {
         if (!this.audioElement) this.audioElement = document.getElementById('background-music');
         return this.audioElement;
     }
 
-    /** Create an SFX audio element with retry-on-error. @param {string} src @returns {HTMLAudioElement} */
+    /**
+     * Creates SFX.
+     * The result is consumed by downstream game logic.
+     * @param {string} src - String value used by this routine.
+     * @returns {unknown} Returns the value produced by this routine.
+     */
     createSfx(src) {
         let base = String(src || '');
         let audio = new Audio(base);
@@ -54,12 +79,21 @@ window.EPL.Controllers.SoundManager = window.EPL.Controllers.SoundManager || cla
         return audio;
     }
 
-    /** Return whether sound is enabled in storage. @returns {boolean} */
+    /**
+     * Evaluates the enabled condition.
+     * Returns whether the current runtime state satisfies that condition.
+     * @returns {boolean} Returns `true` when the condition is satisfied; otherwise `false`.
+     */
     isEnabled() {
         return localStorage.getItem(this.getStorageKey()) !== 'false';
     }
 
-    /** Normalize an audio source path for whitelist matching. @param {*=} src @returns {string} */
+    /**
+     * Executes the normalize path routine.
+     * The logic is centralized here for maintainability.
+     * @param {string} src - String value used by this routine.
+     * @returns {string} Returns the resulting string value.
+     */
     normalizePath(src) {
         let raw = typeof src === 'string' ? src : (src && (src.currentSrc || src.src || ''));
         let path;
@@ -73,7 +107,12 @@ window.EPL.Controllers.SoundManager = window.EPL.Controllers.SoundManager || cla
         return path;
     }
 
-    /** Return whether a source is allowed by whitelist rules. @param {*=} srcOrAudio @returns {boolean} */
+    /**
+     * Evaluates the whitelisted condition.
+     * Returns whether the current runtime state satisfies that condition.
+     * @param {HTMLAudioElement} srcOrAudio - Input value used by this routine.
+     * @returns {boolean} Returns `true` when the condition is satisfied; otherwise `false`.
+     */
     isWhitelisted(srcOrAudio) {
         let path = this.normalizePath(srcOrAudio);
         if (!path || this.whitelistGateSet.size === 0) return false;
@@ -82,7 +121,12 @@ window.EPL.Controllers.SoundManager = window.EPL.Controllers.SoundManager || cla
         return false;
     }
 
-    /** Return whether playback should be allowed for a media target. @param {*=} target @returns {boolean} */
+    /**
+     * Evaluates the allow playback condition.
+     * Returns whether the current runtime state satisfies that condition.
+     * @param {unknown} target - Input value used by this routine.
+     * @returns {boolean} Returns `true` when the condition is satisfied; otherwise `false`.
+     */
     shouldAllowPlayback(target) {
         if (this.endStateMuted) return false;
         if (!this.isEnabled()) return false;
@@ -90,7 +134,11 @@ window.EPL.Controllers.SoundManager = window.EPL.Controllers.SoundManager || cla
         return this.isWhitelisted(target);
     }
 
-    /** Enable whitelist playback gating for allowed paths. @param {string[]} allowedPathsArray */
+    /**
+     * Executes the enable whitelist gate routine.
+     * The logic is centralized here for maintainability.
+     * @param {unknown} allowedPathsArray - Input value used by this routine.
+     */
     enableWhitelistGate(allowedPathsArray) {
         let paths = Array.isArray(allowedPathsArray) ? allowedPathsArray : [];
         this.whitelistGateSet = new Set(paths.map(this.normalizePath.bind(this)).filter(Boolean));
@@ -98,16 +146,26 @@ window.EPL.Controllers.SoundManager = window.EPL.Controllers.SoundManager || cla
         this.enforceWhitelistNow();
     }
 
-    /** Disable whitelist playback gating. */
+    /**
+     * Executes the disable whitelist gate routine.
+     * The logic is centralized here for maintainability.
+     */
     disableWhitelistGate() {
         this.whitelistGateEnabled = false;
         this.whitelistGateSet.clear();
     }
 
-    /** Pause and mute media that is not currently whitelisted. */
+    /**
+     * Executes the enforce whitelist now routine.
+     * The logic is centralized here for maintainability.
+     */
     enforceWhitelistNow() {
         let self = this;
-        /** Stop non-whitelisted media playback. @param {HTMLMediaElement} media */
+        /**
+         * Stops routine.
+         * The operation is isolated here to keep behavior predictable.
+         * @param {object} media - Object argument used by this routine.
+         */
         let stop = function(media) {
             if (!media || self.isWhitelisted(media)) return;
             media.pause();
@@ -118,14 +176,21 @@ window.EPL.Controllers.SoundManager = window.EPL.Controllers.SoundManager || cla
         document.querySelectorAll('audio,video').forEach(stop);
     }
 
-    /** Install a global HTMLMediaElement play gate once. */
+    /**
+     * Plays gate.
+     * The operation is isolated here to keep behavior predictable.
+     */
     installMediaPlayGate() {
         let manager = this;
         let nativePlay;
         if (this.playGateInstalled || typeof HTMLMediaElement === 'undefined') return;
         this.playGateInstalled = true;
         nativePlay = HTMLMediaElement.prototype.play;
-        /** Gate media playback through manager policy. @returns {Promise<void>|undefined} */
+        /**
+         * Plays routine.
+         * The operation is isolated here to keep behavior predictable.
+         * @returns {unknown} Returns the value produced by this routine.
+         */
         HTMLMediaElement.prototype.play = function() {
             manager.mediaRegistry.add(this);
             if (!manager.shouldAllowPlayback(this)) {
@@ -137,13 +202,21 @@ window.EPL.Controllers.SoundManager = window.EPL.Controllers.SoundManager || cla
         };
     }
 
-    /** Persist and apply a new sound enabled state. @param {boolean} enabled */
+    /**
+     * Sets the enabled.
+     * This keeps persistent and in-memory state aligned.
+     * @param {boolean} enabled - Boolean flag controlling this branch.
+     */
     setEnabled(enabled) {
         localStorage.setItem(this.getStorageKey(), enabled ? 'true' : 'false');
         this.apply(enabled);
     }
 
-    /** Apply sound playback state to background audio. @param {boolean} enabled */
+    /**
+     * Applies routine.
+     * The operation is isolated here to keep behavior predictable.
+     * @param {boolean} enabled - Boolean flag controlling this branch.
+     */
     apply(enabled) {
         let audio = this.getAudio();
         if (!audio) return;
@@ -160,14 +233,21 @@ window.EPL.Controllers.SoundManager = window.EPL.Controllers.SoundManager || cla
         if (!enabled) this.enforceWhitelistNow();
     }
 
-    /** Toggle and return the new sound enabled state. @returns {boolean} */
+    /**
+     * Toggles routine.
+     * The operation is isolated here to keep behavior predictable.
+     * @returns {unknown} Returns the value produced by this routine.
+     */
     toggle() {
         let next = !this.isEnabled();
         this.setEnabled(next);
         return next;
     }
 
-    /** Try to play background audio after a user gesture. */
+    /**
+     * Plays on gesture.
+     * The operation is isolated here to keep behavior predictable.
+     */
     tryPlayOnGesture() {
         let audio = this.getAudio();
         if (this.endStateMuted || this.pausedForEnd || !audio || !this.shouldAllowPlayback(audio)) return;
@@ -177,7 +257,10 @@ window.EPL.Controllers.SoundManager = window.EPL.Controllers.SoundManager || cla
         audio.play().catch(function() {});
     }
 
-    /** Mute all playback for end-state screens. */
+    /**
+     * Executes the mute for end state routine.
+     * The logic is centralized here for maintainability.
+     */
     muteForEndState() {
         let audio;
         if (this.endStateMuted) return;
@@ -192,7 +275,10 @@ window.EPL.Controllers.SoundManager = window.EPL.Controllers.SoundManager || cla
         audio.muted = true;
     }
 
-    /** Clear end-state mute and restore normal playback policy. */
+    /**
+     * Executes the clear end state mute routine.
+     * The logic is centralized here for maintainability.
+     */
     clearEndStateMute() {
         this.endStateMuted = false;
         this.pausedForEnd = false;
@@ -200,16 +286,21 @@ window.EPL.Controllers.SoundManager = window.EPL.Controllers.SoundManager || cla
         if (this.isEnabled()) this.apply(true);
     }
 
-    /** Alias muteForEndState for existing call sites. */
+    /**
+     * Executes the pause for end routine.
+     * The logic is centralized here for maintainability.
+     */
     pauseForEnd() {
         this.muteForEndState();
     }
 
-    /** Alias clearEndStateMute for existing call sites. */
+    /**
+     * Executes the resume from end routine.
+     * The logic is centralized here for maintainability.
+     */
     resumeFromEnd() {
         this.clearEndStateMute();
     }
 };
-
 window.__epl_sound_singleton = window.__epl_sound_singleton || new window.EPL.Controllers.SoundManager();
 window.EPL.Sound = window.__epl_sound_singleton;

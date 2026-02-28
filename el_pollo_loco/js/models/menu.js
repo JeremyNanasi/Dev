@@ -1,3 +1,9 @@
+/**
+ * @fileoverview
+ * Menu page runtime logic: binds UI controls, persists preferences (sound/touch/orientation), and triggers game start.
+ *
+ * Uses a shared window-backed state object to prevent duplicate event bindings.
+ */
 let state = window.__epl_menu_state || (window.__epl_menu_state = {
     domBound: false,
     booted: false,
@@ -6,33 +12,52 @@ let state = window.__epl_menu_state || (window.__epl_menu_state = {
     gestureBound: false,
     startBound: false
 });
-
-/** Return the global sound API when available. @returns {*|null} */
+/**
+ * Returns the sound api.
+ * This helper centralizes read access for callers.
+ * @returns {unknown|null} Returns the value computed for the active runtime branch.
+ */
 function eplMenuGetSoundApi() {
     return window.EPL && window.EPL.Sound ? window.EPL.Sound : null;
 }
 
-/** Return the localStorage key for sound preferences. @returns {string} */
+/**
+ * Returns the sound key.
+ * This helper centralizes read access for callers.
+ * @returns {string} Returns the resulting string value.
+ */
 function eplMenuGetSoundKey() {
     let keys = window.EPL && window.EPL.KEYS ? window.EPL.KEYS : {};
     return keys.SOUND_ENABLED || 'sound-enabled';
 }
 
-/** Return whether menu sound is currently enabled. @returns {boolean} */
+/**
+ * Evaluates the sound enabled condition.
+ * Returns whether the current runtime state satisfies that condition.
+ * @returns {boolean} Returns `true` when the condition is satisfied; otherwise `false`.
+ */
 function eplMenuIsSoundEnabled() {
     let api = eplMenuGetSoundApi();
     if (api && typeof api.isEnabled === 'function') return api.isEnabled();
     return localStorage.getItem(eplMenuGetSoundKey()) !== 'false';
 }
 
-/** Return the background audio element used in the menu. @returns {HTMLAudioElement|null} */
+/**
+ * Returns the audio.
+ * This helper centralizes read access for callers.
+ * @returns {unknown} Returns the value produced by this routine.
+ */
 function eplMenuGetAudio() {
     let api = eplMenuGetSoundApi();
     if (api && typeof api.getAudio === 'function') return api.getAudio();
     return document.getElementById('background-music');
 }
 
-/** Apply the selected menu sound state. @param {boolean} enabled */
+/**
+ * Applies sound state.
+ * The operation is isolated here to keep behavior predictable.
+ * @param {boolean} enabled - Boolean flag controlling this branch.
+ */
 function eplMenuApplySoundState(enabled) {
     let api = eplMenuGetSoundApi();
     let audio = eplMenuGetAudio();
@@ -43,7 +68,11 @@ function eplMenuApplySoundState(enabled) {
     if (audio) audio.volume = 0.2;
 }
 
-/** Apply initial menu audio preferences and return enabled state. @returns {boolean} */
+/**
+ * Applies initial audio state.
+ * The operation is isolated here to keep behavior predictable.
+ * @returns {unknown} Returns the value produced by this routine.
+ */
 function eplMenuApplyInitialAudioState() {
     let api = eplMenuGetSoundApi();
     let audio = eplMenuGetAudio();
@@ -57,7 +86,12 @@ function eplMenuApplyInitialAudioState() {
     return enabled;
 }
 
-/** Update the sound toggle UI state. @param {HTMLElement|null} toggle @param {boolean} enabled */
+/**
+ * Updates sound toggle.
+ * This synchronizes runtime state with current inputs.
+ * @param {Function} toggle - Function callback invoked by this routine.
+ * @param {boolean} enabled - Boolean flag controlling this branch.
+ */
 function eplMenuUpdateSoundToggle(toggle, enabled) {
     let stateLabel;
     if (!toggle) return;
@@ -67,7 +101,10 @@ function eplMenuUpdateSoundToggle(toggle, enabled) {
     if (stateLabel) stateLabel.textContent = enabled ? 'an' : 'aus';
 }
 
-/** Toggle sound preference from the menu UI. */
+/**
+ * Handles sound toggle.
+ * It applies side effects required by this branch.
+ */
 function eplMenuHandleSoundToggle() {
     let api = eplMenuGetSoundApi();
     let toggle = document.getElementById('sound-toggle');
@@ -79,7 +116,10 @@ function eplMenuHandleSoundToggle() {
     eplMenuUpdateSoundToggle(toggle, next);
 }
 
-/** Wire the sound toggle button once. */
+/**
+ * Initializes sound toggle.
+ * It is part of the module startup flow.
+ */
 function eplMenuSetupSoundToggle() {
     let toggle = document.getElementById('sound-toggle');
     let initial;
@@ -91,7 +131,10 @@ function eplMenuSetupSoundToggle() {
     eplMenuUpdateSoundToggle(toggle, initial);
 }
 
-/** Wire the expandable controls list button once. */
+/**
+ * Initializes controls toggle.
+ * It is part of the module startup flow.
+ */
 function eplMenuSetupControlsToggle() {
     let button = document.getElementById('controls-toggle');
     let list = document.getElementById('controls-list');
@@ -102,7 +145,13 @@ function eplMenuSetupControlsToggle() {
     eplMenuRenderControls(button, list, expanded);
 }
 
-/** Render the controls toggle state. @param {HTMLElement} button @param {HTMLElement} list @param {boolean} expanded */
+/**
+ * Executes the epl menu render controls routine.
+ * The logic is centralized here for maintainability.
+ * @param {object} button - Object argument used by this routine.
+ * @param {Array<unknown>} list - Array argument consumed by this routine.
+ * @param {boolean} expanded - Boolean flag controlling this branch.
+ */
 function eplMenuRenderControls(button, list, expanded) {
     list.classList.toggle('collapsed', !expanded);
     button.setAttribute('aria-expanded', expanded ? 'true' : 'false');
@@ -110,12 +159,18 @@ function eplMenuRenderControls(button, list, expanded) {
     button.classList.toggle('is-expanded', expanded);
 }
 
-/** Install one-time gesture playback unlock handlers. */
+/**
+ * Plays on gesture once.
+ * The operation is isolated here to keep behavior predictable.
+ */
 function eplMenuTryPlayOnGestureOnce() {
     let handler;
     if (state.gestureBound) return;
     state.gestureBound = true;
-    /** Handle first click or keydown gesture for audio playback. */
+    /**
+     * Executes the handler routine.
+     * The logic is centralized here for maintainability.
+     */
     handler = function() {
         let api = eplMenuGetSoundApi();
         let audio = eplMenuGetAudio();
@@ -126,13 +181,20 @@ function eplMenuTryPlayOnGestureOnce() {
     document.addEventListener('click', handler); document.addEventListener('keydown', handler);
 }
 
-/** Read a boolean session flag value. @param {string} key @returns {boolean} */
+/**
+ * Executes the epl menu read session flag routine.
+ * The logic is centralized here for maintainability.
+ * @param {unknown} key - Input value used by this routine.
+ */
 function eplMenuReadSessionFlag(key) {
     try { return sessionStorage.getItem(key) === '1'; }
     catch (e) { return false; }
 }
 
-/** Wire the start button restart-forward behavior once. */
+/**
+ * Initializes start button.
+ * It is part of the module startup flow.
+ */
 function eplMenuSetupStartButton() {
     let button = document.querySelector('.start-button');
     if (!button || state.startBound) return;
@@ -145,7 +207,10 @@ function eplMenuSetupStartButton() {
     });
 }
 
-/** Run menu bootstrap logic after DOM ready. */
+/**
+ * Handles dom ready.
+ * It applies side effects required by this branch.
+ */
 function eplMenuOnDomReady() {
     if (state.booted) return;
     state.booted = true;
@@ -156,11 +221,13 @@ function eplMenuOnDomReady() {
     eplMenuSetupStartButton();
 }
 
-/** Bind DOM-ready bootstrap exactly once. */
+/**
+ * Executes the epl menu boot routine.
+ * The logic is centralized here for maintainability.
+ */
 function eplMenuBoot() {
     if (state.domBound) return;
     state.domBound = true;
     document.addEventListener('DOMContentLoaded', eplMenuOnDomReady);
 }
-
 eplMenuBoot();

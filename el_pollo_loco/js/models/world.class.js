@@ -1,4 +1,7 @@
 /**
+ * @fileoverview
+ * Defines `World`, the main game orchestrator coordinating rendering, input, collisions, HUD updates, and camera movement.
+ *
  * Game world orchestrating rendering, input, collisions, and HUD.
  * @property {Character} character
  * @property {HTMLCanvasElement} canvas
@@ -28,10 +31,11 @@ class World {
     gameOverStartTime = null;
     winStartTime = null;
     endAudioStopped = false;
-
     /**
-     * @param {HTMLCanvasElement} canvas
-     * @param {Keyboard} keyboard
+     * Initializes a new methods instance and sets up default runtime state.
+     * The constructor prepares dependencies used by class behavior.
+     * @param {HTMLCanvasElement} canvas - Canvas element used for rendering or layout operations.
+     * @param {Keyboard} keyboard - Keyboard input model consumed by game logic.
      */
     constructor(canvas, keyboard) {
         this.setupCanvas(canvas, keyboard);
@@ -43,33 +47,50 @@ class World {
         this.initializeWorld();
     }
 
-    /** Sets `setupCanvas` state. @param {*} canvas - Value. @param {*} keyboard - Value. */
+    /**
+     * Initializes canvas.
+     * It is part of the module startup flow.
+     * @param {HTMLCanvasElement} canvas - Canvas element used for rendering or layout operations.
+     * @param {Keyboard} keyboard - Keyboard input model consumed by game logic.
+     */
     setupCanvas(canvas, keyboard) {
         this.ctx = canvas.getContext('2d');
         this.canvas = canvas;
         this.keyboard = keyboard;
     }
 
-    /** Runs `loadEndScreenImages`. */
+    /**
+     * Loads end screen images.
+     * The operation is isolated here to keep behavior predictable.
+     */
     loadEndScreenImages() {
         this.gameOverImage.src = './img/9_intro_outro_screens/game_over/game over.png';
         this.winImage.src = './img/You won, you lost/You Win A.png';
     }
 
-    /** Sets `setCollectibleTotals` state. */
+    /**
+     * Sets the collectible totals.
+     * This keeps persistent and in-memory state aligned.
+     */
     setCollectibleTotals() {
         this.totalCoins = this.level.icons?.length || 0;
         this.totalSalsaBottles = this.level.salsa?.length || 0;
     }
 
-    /** Runs `refreshHud`. */
+    /**
+     * Refreshes hud.
+     * The operation is isolated here to keep behavior predictable.
+     */
     refreshHud() {
         this.updateCoinCounter();
         this.updateSalsaCounter();
         this.updateStatusBars();
     }
 
-    /** Initializes `initializeWorld`. */
+    /**
+     * Initializes world.
+     * It is part of the module startup flow.
+     */
     initializeWorld() {
         this.draw();
         this.setWorld();
@@ -78,7 +99,10 @@ class World {
         this.draw();
     }
 
-    /** Sets `setWorld` state. */
+    /**
+     * Sets the world.
+     * This keeps persistent and in-memory state aligned.
+     */
     setWorld() {
         this.character.world = this;
         this.level.enemies.forEach((enemy) => {
@@ -87,8 +111,8 @@ class World {
     }
 
     /**
-     * Starts the main world update loop.
-     * @returns {void}
+     * Executes the run routine.
+     * The logic is centralized here for maintainability.
      */
     run() {
         setInterval(() => {
@@ -98,7 +122,10 @@ class World {
         }, 1000 / 60);
     }
 
-    /** Runs `checkThrowObjects`. */
+    /**
+     * Executes the check throw objects routine.
+     * The logic is centralized here for maintainability.
+     */
     checkThrowObjects() {
         const now = Date.now();
         if (!this.canThrowBottle(now)) {
@@ -107,7 +134,12 @@ class World {
         this.throwBottle(now);
     }
 
-    /** Checks `canThrowBottle`. @param {*} now - Value. @returns {*} Result. */
+    /**
+     * Evaluates the throw bottle condition.
+     * Returns whether the current runtime state satisfies that condition.
+     * @param {number} now - Current timestamp in milliseconds used for timing checks.
+     * @returns {boolean} Returns `true` when the condition is satisfied; otherwise `false`.
+     */
     canThrowBottle(now) {
         return this.keyboard.D
             && this.collectedSalsa > 0
@@ -115,9 +147,9 @@ class World {
     }
 
     /**
-     * Spawns and throws a bottle if available.
-     * @param {number} now
-     * @returns {void}
+     * Executes the throw bottle routine.
+     * The logic is centralized here for maintainability.
+     * @param {number} now - Current timestamp in milliseconds used for timing checks.
      */
     throwBottle(now) {
         const bottle = this.createBottle();
@@ -128,7 +160,11 @@ class World {
         this.refreshSalsaHud();
     }
 
-    /** Creates `createBottle` data. @returns {*} Result. */
+    /**
+     * Creates bottle.
+     * The result is consumed by downstream game logic.
+     * @returns {ThrowableObject} Returns the resulting ThrowableObject instance.
+     */
     createBottle() {
         const direction = this.getThrowDirection();
         const offsetX = this.getThrowOffsetX(direction);
@@ -139,30 +175,46 @@ class World {
         );
     }
 
-    /** Gets `getThrowDirection` data. @returns {*} Result. */
+    /**
+     * Returns the throw direction.
+     * This helper centralizes read access for callers.
+     * @returns {number} Returns the computed numeric value.
+     */
     getThrowDirection() {
         return this.character.otherDirection ? -1 : 1;
     }
 
-    /** Gets `getThrowOffsetX` data. @param {*} direction - Value. @returns {*} Result. */
+    /**
+     * Returns the throw offset x.
+     * This helper centralizes read access for callers.
+     * @param {unknown} direction - Horizontal direction factor (`-1` for left, `1` for right).
+     * @returns {number} Returns the computed numeric value.
+     */
     getThrowOffsetX(direction) {
         return direction === -1 ? -50 : 100;
     }
 
-    /** Runs `refreshSalsaHud`. */
+    /**
+     * Refreshes salsa hud.
+     * The operation is isolated here to keep behavior predictable.
+     */
     refreshSalsaHud() {
         this.updateSalsaCounter();
         this.updateStatusBars();
     }
 
-    /** Runs `checkCollisions`. @returns {*} Result. */
+    /**
+     * Executes the check collisions routine.
+     * The logic is centralized here for maintainability.
+     * @returns {unknown} Returns the value produced by this routine.
+     */
     checkCollisions() {
         return this.collision.checkCollisions();
     }
 
     /**
-     * Renders the world and queues the next frame.
-     * @returns {void}
+     * Draws routine.
+     * The operation is isolated here to keep behavior predictable.
      */
     draw() {
         if (document.body.classList.contains('epl-orientation-blocked')) {
@@ -181,22 +233,34 @@ class World {
         this.queueNextFrame();
     }
 
-    /** Runs `clearCanvas`. */
+    /**
+     * Executes the clear canvas routine.
+     * The logic is centralized here for maintainability.
+     */
     clearCanvas() {
         this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
     }
 
-    /** Runs `startCamera`. */
+    /**
+     * Starts camera.
+     * The operation is isolated here to keep behavior predictable.
+     */
     startCamera() {
         this.ctx.translate(this.camera_x, 0);
     }
 
-    /** Runs `resetCamera`. */
+    /**
+     * Resets camera.
+     * The operation is isolated here to keep behavior predictable.
+     */
     resetCamera() {
         this.ctx.translate(-this.camera_x, 0);
     }
 
-    /** Runs `drawBackgroundLayers`. */
+    /**
+     * Draws background layers.
+     * The operation is isolated here to keep behavior predictable.
+     */
     drawBackgroundLayers() {
         const { airLayer, otherLayers } = this.getBackgroundLayers();
         this.addobjectsToMap(airLayer);
@@ -204,7 +268,11 @@ class World {
         this.addobjectsToMap(otherLayers);
     }
 
-    /** Gets `getBackgroundLayers` data. @returns {*} Result. */
+    /**
+     * Returns the background layers.
+     * This helper centralizes read access for callers.
+     * @returns {object} Returns an object containing computed state values.
+     */
     getBackgroundLayers() {
         const backgroundObjects = this.level.backgroundObjects || [];
         const airLayer = backgroundObjects.filter((obj) => this.isAirLayer(obj));
@@ -212,25 +280,41 @@ class World {
         return { airLayer, otherLayers };
     }
 
-    /** Checks `isAirLayer`. @param {*} obj - Value. @returns {*} Result. */
+    /**
+     * Evaluates the air layer condition.
+     * Returns whether the current runtime state satisfies that condition.
+     * @param {unknown} obj - Input value used by this routine.
+     * @returns {boolean} Returns `true` when the condition is satisfied; otherwise `false`.
+     */
     isAirLayer(obj) {
         const src = this.getBackgroundSource(obj);
         return src?.includes('/5_background/layers/air.png');
     }
 
-    /** Gets `getBackgroundSource` data. @param {*} obj - Value. @returns {*} Result. */
+    /**
+     * Returns the background source.
+     * This helper centralizes read access for callers.
+     * @param {object} obj - Object argument used by this routine.
+     * @returns {unknown} Returns the value produced by this routine.
+     */
     getBackgroundSource(obj) {
         return typeof obj.img?.src === 'string' ? obj.img.src : obj.imagePath;
     }
 
-    /** Runs `drawHud`. */
+    /**
+     * Draws hud.
+     * The operation is isolated here to keep behavior predictable.
+     */
     drawHud() {
         this.addToMap(this.statusBar);
         this.addToMap(this.iconsStatusBar);
         this.addToMap(this.bottlesStatusBar);
     }
 
-    /** Runs `drawGameplayObjects`. */
+    /**
+     * Draws gameplay objects.
+     * The operation is isolated here to keep behavior predictable.
+     */
     drawGameplayObjects() {
         this.drawBossHealthBars();
         this.addToMap(this.character);
@@ -240,7 +324,10 @@ class World {
         this.addobjectsToMap(this.throwableObject);
     }
 
-    /** Runs `drawBossHealthBars`. */
+    /**
+     * Draws boss health bars.
+     * The operation is isolated here to keep behavior predictable.
+     */
     drawBossHealthBars() {
         this.level.enemies.forEach((enemy) => {
             if (enemy instanceof Endboss && enemy.healthBar) {
@@ -253,7 +340,10 @@ class World {
         });
     }
 
-    /** Runs `drawEndScreens`. @returns {*} Result. */
+    /**
+     * Draws end screens.
+     * The operation is isolated here to keep behavior predictable.
+     */
     drawEndScreens() {
         if (this.character?.isDead?.()) {
             this.stopEndAudioOnce();
@@ -266,32 +356,47 @@ class World {
         if (!this.winImage.complete) return;
         this.drawEndScreen(this.winImage, 'winStartTime', { baseScale: 0.92, pulseAmplitude: 0.02 });
         if (typeof window.showWinOverlay === 'function') window.showWinOverlay();
-    }     
+    }
 
-    /** Runs `queueNextFrame`. */
+    /**
+     * Queues next frame.
+     * The operation is isolated here to keep behavior predictable.
+     */
     queueNextFrame() {
         const animationFrame = window.requestAnimationFrame
             || window.webkitRequestAnimationFrame
             || window.mozRequestAnimationFrame
             || ((callback) => setTimeout(callback, 1000 / 60));
-
         animationFrame(() => this.draw());
     }
 
-    /** Checks `isBossDefeated`. @returns {*} Result. */
+    /**
+     * Evaluates the boss defeated condition.
+     * Returns whether the current runtime state satisfies that condition.
+     * @returns {boolean} Returns `true` when the condition is satisfied; otherwise `false`.
+     */
     isBossDefeated() {
         const boss = this.level.enemies?.find((enemy) => enemy instanceof Endboss);
         return Boolean(boss && (boss.isDeadState || boss.energy <= 0));
     }
 
-    /** Runs `stopEndAudioOnce`. @returns {*} Result. */
+    /**
+     * Stops end audio once.
+     * The operation is isolated here to keep behavior predictable.
+     */
     stopEndAudioOnce() {
         if (this.endAudioStopped) return;
         window.EPL?.Sound?.muteForEndState?.();
         this.endAudioStopped = true;
     }
 
-    /** Runs `drawEndScreen`. @param {*} image - Value. @param {*} timerKey - Value. @param {*} options - Value. */
+    /**
+     * Draws end screen.
+     * The operation is isolated here to keep behavior predictable.
+     * @param {unknown} image - Input value used by this routine.
+     * @param {string} timerKey - Property key used to store animation timing state.
+     * @param {object} options - Optional settings that customize this operation.
+     */
     drawEndScreen(image, timerKey, options = {}) {
         const { baseScale = 1.05, pulseAmplitude = 0.03 } = options;
         if (!this[timerKey]) {
@@ -308,7 +413,11 @@ class World {
         this.ctx.drawImage(image, drawX, drawY, drawWidth, drawHeight);
     }
 
-    /** Runs `addobjectsToMap`. @param {*} objects - Value. */
+    /**
+     * Executes the addobjects to map routine.
+     * The logic is centralized here for maintainability.
+     * @param {Array<unknown>} objects - Collection processed by this routine.
+     */
     addobjectsToMap(objects) {
         if (!objects) {
             return;
@@ -318,20 +427,27 @@ class World {
         });
     }
 
-    /** Runs `addToMap`. @param {*} mo - Value. */
+    /**
+     * Executes the add to map routine.
+     * The logic is centralized here for maintainability.
+     * @param {object} mo - Object argument used by this routine.
+     */
     addToMap(mo) {
         if (mo.otherDirection) {
             this.flipImage(mo);
         }
         mo.draw(this.ctx);
         mo.drawFrame(this.ctx);
-
         if (mo.otherDirection) {
             this.flipImageBack(mo);
         }
     }
 
-    /** Runs `flipImage`. @param {*} mo - Value. */
+    /**
+     * Executes the flip image routine.
+     * The logic is centralized here for maintainability.
+     * @param {object} mo - Object argument used by this routine.
+     */
     flipImage(mo) {
         this.ctx.save();
         this.ctx.translate(mo.width, 0);
@@ -339,52 +455,71 @@ class World {
         mo.x = mo.x * -1;
     }
 
-    /** Runs `flipImageBack`. @param {*} mo - Value. */
+    /**
+     * Executes the flip image back routine.
+     * The logic is centralized here for maintainability.
+     * @param {object} mo - Object argument used by this routine.
+     */
     flipImageBack(mo) {
         mo.x = mo.x * -1;
         this.ctx.restore();
     }
 
-    /** Runs `cacheHudElements`. */
+    /**
+     * Executes the cache hud elements routine.
+     * The logic is centralized here for maintainability.
+     */
     cacheHudElements() {
         this.coinsCounterEl = document.getElementById('coins-counter');
         this.bottlesCounterEl = document.getElementById('bottles-counter');
     }
 
-    /** Updates `updateCoinCounter` state. */
+    /**
+     * Updates coin counter.
+     * This synchronizes runtime state with current inputs.
+     */
     updateCoinCounter() {
         if (!this.coinsCounterEl) {
             return;
         }
-
         const collected = this.totalCoins - (this.level.icons?.length || 0);
         this.coinsCounterEl.textContent = `${collected}/${this.totalCoins}`;
     }
 
-    /** Updates `updateSalsaCounter` state. */
+    /**
+     * Updates salsa counter.
+     * This synchronizes runtime state with current inputs.
+     */
     updateSalsaCounter() {
         if (!this.bottlesCounterEl) {
             return;
         }
-
         this.bottlesCounterEl.textContent = `${this.collectedSalsa}/${this.totalSalsaBottles}`;
     }
 
-    /** Updates `updateStatusBars` state. */
+    /**
+     * Updates status bars.
+     * This synchronizes runtime state with current inputs.
+     */
     updateStatusBars() {
         if (this.iconsStatusBar) {
             const collectedCoins = this.totalCoins - (this.level.icons?.length || 0);
             this.iconsStatusBar.setPercentage(this.getSegmentedPercentage(collectedCoins, this.totalCoins));
         }
-
         if (this.bottlesStatusBar) {
             this.bottlesStatusBar.setPercentage(
                 this.getSegmentedPercentage(this.collectedSalsa, this.totalSalsaBottles)
             );
         }
     }
-    
-    /** Gets `getSegmentedPercentage` data. @param {*} collected - Value. @param {*} total - Value. @returns {*} Result. */
+
+    /**
+     * Returns the segmented percentage.
+     * This helper centralizes read access for callers.
+     * @param {number} collected - Numeric value used by this routine.
+     * @param {number} total - Numeric value used by this routine.
+     * @returns {number} Returns the computed numeric value.
+     */
     getSegmentedPercentage(collected, total) {
         if (!total || total <= 0 || collected <= 0) {
             return 0;

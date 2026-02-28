@@ -1,16 +1,14 @@
 /**
- * Salsa bottle entity used as collectible and throwable projectile.
- * @extends MoveableObject
+ * @fileoverview
+ * Defines `ThrowableObject`, a salsa bottle entity that can be collected and thrown as a projectile.
  */
 class ThrowableObject extends MoveableObject {
-
     IMAGE_ROTATION = [
         './img/6_salsa_bottle/bottle_rotation/1_bottle_rotation.png',
         './img/6_salsa_bottle/bottle_rotation/2_bottle_rotation.png',
         './img/6_salsa_bottle/bottle_rotation/3_bottle_rotation.png',
         './img/6_salsa_bottle/bottle_rotation/4_bottle_rotation.png'
     ];
-
     IMAGE_SPLASH = [
         './img/6_salsa_bottle/bottle_rotation/bottle_splash/1_bottle_splash.png',
         './img/6_salsa_bottle/bottle_rotation/bottle_splash/2_bottle_splash.png',
@@ -19,22 +17,21 @@ class ThrowableObject extends MoveableObject {
         './img/6_salsa_bottle/bottle_rotation/bottle_splash/5_bottle_splash.png',
         './img/6_salsa_bottle/bottle_rotation/bottle_splash/6_bottle_splash.png'
     ];
-
     IMAGE_SALSA_GROUND = [
         './img/6_salsa_bottle/1_salsa_bottle_on_ground.png',
         './img/6_salsa_bottle/2_salsa_bottle_on_ground.png'
     ];
-
     groundAnimationInterval;
     gravityInterval;
     rotationInterval;
     groundY = 360;
     throwDirection = 1;
-
     /**
-     * @param {number} x
-     * @param {number} y
-     * @param {{isCollectible?: boolean, direction?: number}} [options={}]
+     * Initializes a new methods instance and sets up default runtime state.
+     * The constructor prepares dependencies used by class behavior.
+     * @param {number} x - Numeric value used by this routine.
+     * @param {number} y - Numeric value used by this routine.
+     * @param {object} options - Optional settings that customize this operation.
      */
     constructor(x, y, options = {}) {
         super();
@@ -42,14 +39,11 @@ class ThrowableObject extends MoveableObject {
         this.loadImages(this.IMAGE_ROTATION);
         this.loadImages(this.IMAGE_SPLASH);
         this.loadImages(this.IMAGE_SALSA_GROUND);
-
         this.height = 100;
         this.width = 100;
-
         const hasCoordinates = typeof x === 'number' && typeof y === 'number';
         const isCollectible = options.isCollectible ?? !hasCoordinates;
         this.throwDirection = options.direction ?? 1;
-
         if (isCollectible) {
             this.spawnCollectible(
                 hasCoordinates ? x : 200 + Math.random() * 500,
@@ -62,7 +56,12 @@ class ThrowableObject extends MoveableObject {
         }
     }
 
-    /** Runs `spawnCollectible`. @param {*} x - Value. @param {*} y - Value. */
+    /**
+     * Executes the spawn collectible routine.
+     * The logic is centralized here for maintainability.
+     * @param {number} x - Numeric value used by this routine.
+     * @param {number} y - Numeric value used by this routine.
+     */
     spawnCollectible(x, y) {
         this.x = x;
         this.y = y;
@@ -71,7 +70,10 @@ class ThrowableObject extends MoveableObject {
         this.startGroundAnimation();
     }
 
-    /** Runs `startGroundAnimation`. */
+    /**
+     * Starts ground animation.
+     * The operation is isolated here to keep behavior predictable.
+     */
     startGroundAnimation() {
         this.stopGroundAnimation();
         this.groundAnimationInterval = setInterval(() => {
@@ -79,7 +81,10 @@ class ThrowableObject extends MoveableObject {
         }, 400);
     }
 
-    /** Runs `stopGroundAnimation`. */
+    /**
+     * Stops ground animation.
+     * The operation is isolated here to keep behavior predictable.
+     */
     stopGroundAnimation() {
         if (this.groundAnimationInterval) {
             clearInterval(this.groundAnimationInterval);
@@ -88,10 +93,10 @@ class ThrowableObject extends MoveableObject {
     }
 
     /**
-     * Launches the bottle as a projectile from the given coordinates.
-     * @param {number} x
-     * @param {number} y
-     * @returns {void}
+     * Executes the throw routine.
+     * The logic is centralized here for maintainability.
+     * @param {number} x - Numeric value used by this routine.
+     * @param {number} y - Numeric value used by this routine.
      */
     throw(x, y) {
         this.stopGroundAnimation();
@@ -103,9 +108,12 @@ class ThrowableObject extends MoveableObject {
         this.otherDirection = this.throwDirection === -1;
         this.applyGravity();
         this.startRotation();
-    }  
+    }
 
-    /** Runs `startRotation`. */
+    /**
+     * Starts rotation.
+     * The operation is isolated here to keep behavior predictable.
+     */
     startRotation() {
         this.stopRotation();
         this.rotationInterval = setInterval(() => {
@@ -114,20 +122,25 @@ class ThrowableObject extends MoveableObject {
         }, 25);
     }
 
-    /** Runs `stopRotation`. */
+    /**
+     * Stops rotation.
+     * The operation is isolated here to keep behavior predictable.
+     */
     stopRotation() {
         if (this.rotationInterval) {
             clearInterval(this.rotationInterval);
             this.rotationInterval = null;
         }
     }
-    
-    /** Runs `applyGravity`. */
+
+    /**
+     * Applies gravity.
+     * The operation is isolated here to keep behavior predictable.
+     */
     applyGravity() {
         this.stopGravity();
         this.gravityInterval = setInterval(() => {
             const isAboveGround = this.y < this.groundY || this.speedY > 0;
-
             if (isAboveGround) {
                 this.y -= this.speedY;
                 this.speedY -= this.acceleration;
@@ -141,7 +154,10 @@ class ThrowableObject extends MoveableObject {
         }, 1000 / 25);
     }
 
-    /** Runs `stopGravity`. */
+    /**
+     * Stops gravity.
+     * The operation is isolated here to keep behavior predictable.
+     */
     stopGravity() {
         if (this.gravityInterval) {
             clearInterval(this.gravityInterval);
@@ -150,8 +166,8 @@ class ThrowableObject extends MoveableObject {
     }
 
     /**
-     * Plays the splash animation once after impact.
-     * @returns {void}
+     * Plays splash.
+     * The operation is isolated here to keep behavior predictable.
      */
     playSplash() {
         let frameIndex = 0;
@@ -159,14 +175,18 @@ class ThrowableObject extends MoveableObject {
         const splashInterval = setInterval(() => {
             this.img = this.imageCache[this.IMAGE_SPLASH[frameIndex]];
             frameIndex++;
-
             if (frameIndex >= this.IMAGE_SPLASH.length) {
                 clearInterval(splashInterval);
             }
         }, frameDelay);
     }
 
-    /** Checks `isColliding`. @param {*} mo - Value. @returns {*} Result. */
+    /**
+     * Evaluates the colliding condition.
+     * Returns whether the current runtime state satisfies that condition.
+     * @param {object} mo - Object argument used by this routine.
+     * @returns {boolean} Returns `true` when the condition is satisfied; otherwise `false`.
+     */
     isColliding(mo) {
         const thisX = this.getHitboxX();
         const thisY = this.getHitboxY();
@@ -176,7 +196,6 @@ class ThrowableObject extends MoveableObject {
         const moY = mo.getHitboxY?.() ?? mo.y;
         const moWidth = mo.getHitboxWidth?.() ?? mo.width;
         const moHeight = mo.getHitboxHeight?.() ?? mo.height;
-
         return thisX + thisWidth > moX
             && thisX < moX + moWidth
             && thisY + thisHeight > moY

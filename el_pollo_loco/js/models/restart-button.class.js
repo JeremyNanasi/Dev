@@ -1,8 +1,17 @@
+/**
+ * @fileoverview
+ * Restart button controller that manages the restart UI element, bindings, and restart flow coordination.
+ *
+ * Exposed as a window-backed singleton class to avoid duplicate controller definitions.
+ */
 window.EPL = window.EPL || {};
 window.EPL.Controllers = window.EPL.Controllers || {};
-
 window.__epl_restart_button_controller_class = window.__epl_restart_button_controller_class || class RestartButtonController {
-  /** Initialize restart-button controller dependencies. @param {*=} deps */
+  /**
+   * Initializes a new methods instance and sets up default runtime state.
+   * The constructor prepares dependencies used by class behavior.
+   * @param {object} deps - Object argument used by this routine.
+   */
   constructor(deps) {
     this.deps = deps || {};
     this.button = this.shell = this.canvas = this.overlay = null;
@@ -16,35 +25,56 @@ window.__epl_restart_button_controller_class = window.__epl_restart_button_contr
     this.bindHandlers();
   }
 
-  /** Return watcher interval in milliseconds. @returns {number} */
+  /**
+   * Returns the watch interval.
+   * This helper centralizes read access for callers.
+   * @returns {number} Returns the computed numeric value.
+   */
   getWatchInterval() {
     return 250;
   }
 
-  /** Return the minimum vertical ratio for button placement. @returns {number} */
+  /**
+   * Returns the min ratio.
+   * This helper centralizes read access for callers.
+   * @returns {number} Returns the computed numeric value.
+   */
   getMinRatio() {
     return 0.64;
   }
 
-  /** Return the vertical button gap in pixels. @returns {number} */
+  /**
+   * Returns the button gap.
+   * This helper centralizes read access for callers.
+   * @returns {number} Returns the computed numeric value.
+   */
   getButtonGap() {
     return 12;
   }
 
-  /** Initialize RAF helper functions. */
+  /**
+   * Initializes timers.
+   * It is part of the module startup flow.
+   */
   initTimers() {
     this.raf = window.requestAnimationFrame ? window.requestAnimationFrame.bind(window) : (cb) => window.setTimeout(() => cb(Date.now()), 16);
     this.rafCancel = window.cancelAnimationFrame ? window.cancelAnimationFrame.bind(window) : window.clearTimeout;
   }
 
-  /** Bind reusable event handler references. */
+  /**
+   * Binds handlers.
+   * The operation is isolated here to keep behavior predictable.
+   */
   bindHandlers() {
     this.onResizeBound = this.onResize.bind(this);
     this.onClickBound = this.handleClick.bind(this);
     this.watchTickBound = this.watchTick.bind(this);
   }
 
-  /** Initialize controller once. */
+  /**
+   * Initializes routine.
+   * It is part of the module startup flow.
+   */
   init() {
     if (this.initialized) return;
     this.initialized = true;
@@ -54,7 +84,10 @@ window.__epl_restart_button_controller_class = window.__epl_restart_button_contr
     this.startWatcher();
   }
 
-  /** Resolve required DOM elements. */
+  /**
+   * Resolves elements.
+   * The operation is isolated here to keep behavior predictable.
+   */
   resolveElements() {
     this.shell = document.getElementById('fullscreen-target');
     this.canvas = document.getElementById('canvas');
@@ -65,12 +98,19 @@ window.__epl_restart_button_controller_class = window.__epl_restart_button_contr
     this.mobileToggle = document.getElementById('mobile-controls-toggle');
   }
 
-  /** Return the preferred button container. @returns {HTMLElement|null} */
+  /**
+   * Returns the container.
+   * This helper centralizes read access for callers.
+   * @returns {unknown} Returns the value produced by this routine.
+   */
   getContainer() {
     return this.overlay || this.shell;
   }
 
-  /** Ensure the restart button exists and is attached. */
+  /**
+   * Ensures button is available before continuing.
+   * The operation is isolated here to keep behavior predictable.
+   */
   ensureButton() {
     let btn;
     let container;
@@ -84,7 +124,11 @@ window.__epl_restart_button_controller_class = window.__epl_restart_button_contr
     this.button.hidden = true;
   }
 
-  /** Create the restart button element. @returns {HTMLButtonElement} */
+  /**
+   * Creates button.
+   * The result is consumed by downstream game logic.
+   * @returns {unknown} Returns the value produced by this routine.
+   */
   createButton() {
     let btn = document.createElement('button');
     btn.id = 'restart-button';
@@ -94,34 +138,53 @@ window.__epl_restart_button_controller_class = window.__epl_restart_button_contr
     return btn;
   }
 
-  /** Bind resize and fullscreen listeners. */
+  /**
+   * Binds events.
+   * The operation is isolated here to keep behavior predictable.
+   */
   bindEvents() {
     window.addEventListener('resize', this.onResizeBound);
     window.addEventListener('orientationchange', this.onResizeBound);
     document.addEventListener('fullscreenchange', this.onResizeBound);
   }
 
-  /** Start the end-state watcher loop. */
+  /**
+   * Starts watcher.
+   * The operation is isolated here to keep behavior predictable.
+   */
   startWatcher() {
     if (this.watchId) return;
     this.watchId = this.trackInterval(this.watchTickBound, this.getWatchInterval());
     this.watchTick();
   }
 
-  /** Track an interval id for later cleanup. @param {Function} fn @param {number} ms @returns {number} */
+  /**
+   * Executes the track interval routine.
+   * The logic is centralized here for maintainability.
+   * @param {Function} fn - Callback function executed by this helper.
+   * @param {unknown} ms - Input value used by this routine.
+   * @returns {unknown} Returns the value produced by this routine.
+   */
   trackInterval(fn, ms) {
     let id = window.setInterval(fn, ms);
     this.intervalIds.add(id);
     return id;
   }
 
-  /** Update restart button visibility from game end state. */
+  /**
+   * Executes the watch tick routine.
+   * The logic is centralized here for maintainability.
+   */
   watchTick() {
     let ended = this.getEndState();
     if (ended !== this.visible) this.setVisible(ended);
   }
 
-  /** Return whether the current world is in an end state. @returns {boolean} */
+  /**
+   * Returns the end state.
+   * This helper centralizes read access for callers.
+   * @returns {boolean} Returns `true` when the condition is satisfied; otherwise `false`.
+   */
   getEndState() {
     let w = this.getWorld();
     let c = w && w.character;
@@ -132,7 +195,11 @@ window.__epl_restart_button_controller_class = window.__epl_restart_button_contr
     return Boolean(w && w.isBossDefeated && w.isBossDefeated());
   }
 
-  /** Toggle button visibility and schedule placement. @param {boolean} show */
+  /**
+   * Sets the visible.
+   * This keeps persistent and in-memory state aligned.
+   * @param {boolean} show - Boolean flag controlling this branch.
+   */
   setVisible(show) {
     if (!this.button) return;
     if (this.visible === show) return;
@@ -141,7 +208,10 @@ window.__epl_restart_button_controller_class = window.__epl_restart_button_contr
     if (show) this.schedulePosition();
   }
 
-  /** Queue a position update on the next animation frame. */
+  /**
+   * Schedules position.
+   * The operation is isolated here to keep behavior predictable.
+   */
   schedulePosition() {
     if (!this.visible || this.rafId) return;
     this.rafId = this.raf(() => {
@@ -150,12 +220,18 @@ window.__epl_restart_button_controller_class = window.__epl_restart_button_contr
     });
   }
 
-  /** Handle resize and orientation updates. */
+  /**
+   * Handles resize.
+   * It applies side effects required by this branch.
+   */
   onResize() {
     if (this.visible) this.schedulePosition();
   }
 
-  /** Recompute and apply button position. */
+  /**
+   * Executes the position routine.
+   * The logic is centralized here for maintainability.
+   */
   position() {
     let bounds;
     let top;
@@ -166,7 +242,11 @@ window.__epl_restart_button_controller_class = window.__epl_restart_button_contr
     this.button.style.top = top + 'px';
   }
 
-  /** Calculate positioning bounds for restart button placement. @returns {*|null} */
+  /**
+   * Returns the bounds.
+   * This helper centralizes read access for callers.
+   * @returns {object|null} Returns the value computed for the active runtime branch.
+   */
   getBounds() {
     let root = this.shell;
     let container = this.getContainer();
@@ -191,21 +271,38 @@ window.__epl_restart_button_controller_class = window.__epl_restart_button_contr
     topMin = this.getTopMin(localCanvasTop, canvasHeight, gap, root, containerTop);
     topMax = this.getTopMax(localCanvasTop, canvasHeight, btnHeight, gap, blockerTop);
     return { canvasTop: localCanvasTop, canvasHeight, btnHeight, gap, topMin, topMax, blockerTop };
-  }
+  } /////////////////////////////viel zu groß und definition von einzelnen klassen muss umgebaut werden ///////////////
 
-  /** Return current shell scale relative to offset height. @param {DOMRect} shellRect @returns {number} */
+  /**
+   * Returns the scale.
+   * This helper centralizes read access for callers.
+   * @param {object} shellRect - Object argument used by this routine.
+   * @returns {number} Returns the computed numeric value.
+   */
   getScale(shellRect) {
     let raw = this.shell.offsetHeight || shellRect.height || 1;
     let scale = shellRect.height / raw;
     return scale || 1;
   }
 
-  /** Convert viewport Y to local shell Y. @param {number} value @param {number} shellTop @param {number} scale @returns {number} */
+  /**
+   * Executes the to local y routine.
+   * The logic is centralized here for maintainability.
+   * @param {number} value - Numeric value used by this routine.
+   * @param {number} shellTop - Numeric value used by this routine.
+   * @param {number} scale - Numeric value used by this routine.
+   * @returns {number} Returns the computed numeric value.
+   */
   toLocalY(value, shellTop, scale) {
     return (value - shellTop) / scale;
   }
 
-  /** Return a usable element rect or null. @param {Element|null} el @returns {DOMRect|null} */
+  /**
+   * Returns the rect.
+   * This helper centralizes read access for callers.
+   * @param {object} el - Object argument used by this routine.
+   * @returns {unknown|null} Returns the value computed for the active runtime branch.
+   */
   getRect(el) {
     let rect;
     if (!el) return null;
@@ -214,7 +311,13 @@ window.__epl_restart_button_controller_class = window.__epl_restart_button_contr
     return rect;
   }
 
-  /** Return element top offset relative to root. @param {HTMLElement|null} el @param {HTMLElement|null} root @returns {number|null} */
+  /**
+   * Returns the offset top.
+   * This helper centralizes read access for callers.
+   * @param {unknown} el - Input value used by this routine.
+   * @param {unknown} root - Input value used by this routine.
+   * @returns {unknown|null} Returns the value computed for the active runtime branch.
+   */
   getOffsetTop(el, root) {
     let top = 0;
     let node = el;
@@ -227,21 +330,41 @@ window.__epl_restart_button_controller_class = window.__epl_restart_button_contr
     return top;
   }
 
-  /** Return element top relative to container. @param {HTMLElement|null} el @param {HTMLElement} root @param {number} containerTop @returns {number} */
+  /**
+   * Returns the top.
+   * This helper centralizes read access for callers.
+   * @param {unknown} el - Input value used by this routine.
+   * @param {unknown} root - Input value used by this routine.
+   * @param {number} containerTop - Numeric value used by this routine.
+   * @returns {unknown} Returns the value produced by this routine.
+   */
   getTop(el, root, containerTop) {
     let top = this.getOffsetTop(el, root);
     if (top === null) return Infinity;
     return top - containerTop;
   }
 
-  /** Return element bottom relative to container. @param {HTMLElement|null} el @param {HTMLElement} root @param {number} containerTop @returns {number} */
+  /**
+   * Returns the bottom.
+   * This helper centralizes read access for callers.
+   * @param {object} el - Object argument used by this routine.
+   * @param {unknown} root - Input value used by this routine.
+   * @param {number} containerTop - Numeric value used by this routine.
+   * @returns {number} Returns the computed numeric value.
+   */
   getBottom(el, root, containerTop) {
     let top = this.getOffsetTop(el, root);
     if (top === null) return 0;
     return top - containerTop + (el.offsetHeight || 0);
   }
 
-  /** Return blocker top relative to container. @param {HTMLElement} root @param {number} containerTop @returns {number|null} */
+  /**
+   * Returns the blocker top.
+   * This helper centralizes read access for callers.
+   * @param {unknown} root - Input value used by this routine.
+   * @param {number} containerTop - Numeric value used by this routine.
+   * @returns {unknown|null} Returns the value computed for the active runtime branch.
+   */
   getBlockerTop(root, containerTop) {
     let blocker = this.bottomControls || this.mobileToggle;
     let top = this.getOffsetTop(blocker, root);
@@ -249,34 +372,67 @@ window.__epl_restart_button_controller_class = window.__epl_restart_button_contr
     return top - containerTop;
   }
 
-  /** Return minimum allowed top for the button. @param {number} canvasTop @param {number} canvasHeight @param {number} gap @param {HTMLElement} root @param {number} containerTop @returns {number} */
+  /**
+   * Returns the top min.
+   * This helper centralizes read access for callers.
+   * @param {HTMLCanvasElement} canvasTop - Input value used by this routine.
+   * @param {HTMLCanvasElement} canvasHeight - Input value used by this routine.
+   * @param {number} gap - Numeric value used by this routine.
+   * @param {unknown} root - Input value used by this routine.
+   * @param {unknown} containerTop - Input value used by this routine.
+   * @returns {number} Returns the computed numeric value.
+   */
   getTopMin(canvasTop, canvasHeight, gap, root, containerTop) {
     let base = canvasTop + canvasHeight * this.getMinRatio();
     let topRightBottom = this.getBottom(this.topRight, root, containerTop);
     return Math.max(base, topRightBottom + gap);
   }
 
-  /** Return maximum allowed top for the button. @param {number} canvasTop @param {number} canvasHeight @param {number} btnHeight @param {number} gap @param {number|null} blockerTop @returns {number} */
+  /**
+   * Returns the top max.
+   * This helper centralizes read access for callers.
+   * @param {HTMLCanvasElement} canvasTop - Input value used by this routine.
+   * @param {HTMLCanvasElement} canvasHeight - Input value used by this routine.
+   * @param {number} btnHeight - Numeric value used by this routine.
+   * @param {number} gap - Numeric value used by this routine.
+   * @param {number} blockerTop - Numeric value used by this routine.
+   * @returns {number} Returns the computed numeric value.
+   */
   getTopMax(canvasTop, canvasHeight, btnHeight, gap, blockerTop) {
     if (blockerTop !== null && blockerTop !== undefined) return blockerTop - btnHeight - gap;
     return canvasTop + canvasHeight - btnHeight - gap;
   }
 
-  /** Compute clamped button top from bounds. @param {*} bounds @returns {number} */
+  /**
+   * Computes top.
+   * The operation is isolated here to keep behavior predictable.
+   * @param {object} bounds - Bounds object used to clamp or validate coordinates.
+   * @returns {unknown} Returns the value produced by this routine.
+   */
   computeTop(bounds) {
     let target = bounds.blockerTop === null || bounds.blockerTop === undefined ? bounds.topMax : bounds.blockerTop - bounds.btnHeight - bounds.gap;
     let max = Math.max(bounds.topMin, bounds.topMax);
     return this.clamp(target, bounds.topMin, max);
   }
 
-  /** Clamp a number to the given range. @param {number} value @param {number} min @param {number} max @returns {number} */
+  /**
+   * Executes the clamp routine.
+   * The logic is centralized here for maintainability.
+   * @param {unknown} value - Input value used by this routine.
+   * @param {number} min - Numeric value used by this routine.
+   * @param {number} max - Numeric value used by this routine.
+   * @returns {unknown} Returns the value produced by this routine.
+   */
   clamp(value, min, max) {
     if (value < min) return min;
     if (value > max) return max;
     return value;
   }
 
-  /** Handle restart button clicks. */
+  /**
+   * Handles click.
+   * It applies side effects required by this branch.
+   */
   handleClick() {
     if (this.restarting) return;
     this.restarting = true;
@@ -284,7 +440,10 @@ window.__epl_restart_button_controller_class = window.__epl_restart_button_contr
     this.restarting = false;
   }
 
-  /** Run a soft in-place game restart flow. */
+  /**
+   * Executes the soft restart routine.
+   * The logic is centralized here for maintainability.
+   */
   softRestart() {
     this.stopLoops();
     this.resetService.stopEnemySfxSafe();
@@ -295,7 +454,10 @@ window.__epl_restart_button_controller_class = window.__epl_restart_button_contr
     this.setVisible(false);
   }
 
-  /** Stop all tracked intervals and RAF callbacks. */
+  /**
+   * Stops loops.
+   * The operation is isolated here to keep behavior predictable.
+   */
   stopLoops() {
     this.intervalIds.forEach((id) => window.clearInterval(id));
     this.intervalIds.clear();
@@ -303,20 +465,30 @@ window.__epl_restart_button_controller_class = window.__epl_restart_button_contr
     this.watchId = 0;
   }
 
-  /** Cancel any pending position RAF callback. */
+  /**
+   * Executes the clear raf routine.
+   * The logic is centralized here for maintainability.
+   */
   clearRaf() {
     if (!this.rafId) return;
     this.rafCancel(this.rafId);
     this.rafId = 0;
   }
 
-  /** Return the active world instance. @returns {*} */
+  /**
+   * Returns the world.
+   * This helper centralizes read access for callers.
+   * @returns {unknown} Returns the value produced by this routine.
+   */
   getWorld() {
     return this.resetService.getWorld();
   }
 };
 
-/** Boot and register the global restart button controller instance. */
+/**
+ * Executes the __epl_boot_restart_button routine.
+ * The logic is centralized here for maintainability.
+ */
 window.__epl_boot_restart_button = window.__epl_boot_restart_button || function() {
   let root = window.EPL || {};
   root.Controllers = root.Controllers || {};

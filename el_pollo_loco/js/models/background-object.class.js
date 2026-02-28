@@ -1,17 +1,15 @@
 /**
  * Parallax background sprite anchored at a fixed world position.
- * @extends MoveableObject
+@extends MoveableObject
  */
 class BackgroundObject extends MoveableObject {
-
     width = 480;
     height = 750;
-    
-
     /**
-     * @param {string} imagePath
-     * @param {number} x
-     */
+ * Creates a new instance.
+ * @param {string} imagePath - Input value.
+ * @param {number} x - X coordinate/dimension value.
+ */
     constructor(imagePath, x) {
         super().loadImage(imagePath);
         this.x = x;

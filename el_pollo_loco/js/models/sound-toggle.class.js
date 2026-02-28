@@ -1,9 +1,18 @@
+/**
+ * @fileoverview
+ * Enemy SFX and sound toggle integration, including loop management and per-entity sound safety helpers.
+ *
+ * Encapsulates SFX state using weak references to avoid leaking entity instances.
+ */
 (function () {
   window.EPL = window.EPL || {};
   window.EPL.Controllers = window.EPL.Controllers || {};
-
   class EnemySfxManager {
-    /** Creates a new instance. */
+
+    /**
+     * Initializes a new methods instance and sets up default runtime state.
+     * The constructor prepares dependencies used by class behavior.
+     */
     constructor() {
       this.stateMap = new WeakMap();
       this.orientationBlocked = false;
@@ -15,7 +24,6 @@
         endbossAlert: './img/effect-sound/angry-chicken.mp4',
         damage: './img/effect-sound/damage.mp3'
       };
-
       this.loopPools = this.createLoopPools();
       this.RANGE = 1200;
       this.INIT_MIN = 400;
@@ -25,7 +33,12 @@
       this.bindOrientationEvents();
     }
 
-    /** Updates `update` state. @param {*} world - Value. @returns {*} Result. */
+    /**
+     * Updates routine.
+     * This synchronizes runtime state with current inputs.
+     * @param {World} world - World instance that provides level, character, and runtime access.
+     * @returns {unknown} Returns the value produced by this routine.
+     */
     update(world) {
       if (!world?.level?.enemies || !world?.character) return;
       this.lastWorld = world;
@@ -36,11 +49,18 @@
       }
     }
 
-    /** Checks `isEnabled`. @returns {*} Result. */
+    /**
+     * Evaluates the enabled condition.
+     * Returns whether the current runtime state satisfies that condition.
+     * @returns {boolean} Returns `true` when the condition is satisfied; otherwise `false`.
+     */
     isEnabled() {
       return window.EPL?.Sound?.isEnabled?.() === true && !this.orientationBlocked;
     }
-    /** Runs `bindOrientationEvents`. */
+    /**
+     * Binds orientation events.
+     * The operation is isolated here to keep behavior predictable.
+     */
     bindOrientationEvents() {
       const self = this;
       window.addEventListener('epl:orientation-blocked', function(e) {
@@ -48,14 +68,24 @@
       });
     }
 
-    /** Sets `setOrientationBlocked` state. @param {*} blocked - Value. @returns {*} Result. */
+    /**
+     * Sets the orientation blocked.
+     * This keeps persistent and in-memory state aligned.
+     * @param {boolean} blocked - Boolean flag controlling this branch.
+     */
     setOrientationBlocked(blocked) {
       this.orientationBlocked = blocked;
       if (!blocked) return;
       if (this.lastWorld?.level?.enemies) this.stopAll(this.lastWorld.level.enemies);
     }
 
-    /** Runs `processEnemy`. @param {*} character - Value. @param {*} enemy - Value. @returns {*} Result. */
+    /**
+     * Executes the process enemy routine.
+     * The logic is centralized here for maintainability.
+     * @param {Character} character - Character instance involved in this operation.
+     * @param {unknown} enemy - Enemy instance being processed by this routine.
+     * @returns {unknown} Returns the value produced by this routine.
+     */
     processEnemy(character, enemy) {
       const type = this.getType(enemy);
       if (!type) return;
@@ -65,7 +95,12 @@
       this.handleLoop(character, enemy, st, type);
     }
 
-    /** Gets `getType` data. @param {*} enemy - Value. @returns {*} Result. */
+    /**
+     * Returns the type.
+     * This helper centralizes read access for callers.
+     * @param {object} enemy - Enemy instance being processed by this routine.
+     * @returns {string} Returns the resulting string value.
+     */
     getType(enemy) {
       if (enemy?.constructor?.name === 'smallchicken') return 'small';
       if (enemy?.constructor?.name === 'Chicken') return 'chicken';
@@ -73,7 +108,12 @@
       return null;
     }
 
-    /** Gets `getState` data. @param {*} enemy - Value. @returns {*} Result. */
+    /**
+     * Returns the state.
+     * This helper centralizes read access for callers.
+     * @param {unknown} enemy - Enemy instance being processed by this routine.
+     * @returns {unknown} Returns the value produced by this routine.
+     */
     getState(enemy) {
       if (!this.stateMap.has(enemy)) {
         this.stateMap.set(enemy, {
@@ -94,7 +134,12 @@
       return this.stateMap.get(enemy);
     }
 
-    /** Checks `isDead`. @param {*} enemy - Value. @returns {*} Result. */
+    /**
+     * Evaluates the dead condition.
+     * Returns whether the current runtime state satisfies that condition.
+     * @param {object} enemy - Enemy instance being processed by this routine.
+     * @returns {boolean} Returns `true` when the condition is satisfied; otherwise `false`.
+     */
     isDead(enemy) {
       if (typeof enemy?.isDead === 'function' && enemy.isDead()) return true;
       if (enemy?.isDeadState === true) return true;
@@ -102,7 +147,12 @@
       return false;
     }
 
-    /** Handles `handleDeath`. @param {*} enemy - Value. @param {*} st - Value. @returns {*} Result. */
+    /**
+     * Handles death.
+     * It applies side effects required by this branch.
+     * @param {unknown} enemy - Enemy instance being processed by this routine.
+     * @param {object} st - Mutable state object tracked for the current entity.
+     */
     handleDeath(enemy, st) {
       if (st.blocked) return;
       st.deathLocked = true;
@@ -112,7 +162,11 @@
       if (!st.deathPlayed) this.playDeathOnce(st);
     }
 
-    /** Runs `playDeathOnce`. @param {*} st - Value. @returns {*} Result. */
+    /**
+     * Plays death once.
+     * The operation is isolated here to keep behavior predictable.
+     * @param {object} st - Mutable state object tracked for the current entity.
+     */
     playDeathOnce(st) {
       if (!this.isEnabled()) return;
       st.deathPlayed = true;
@@ -122,7 +176,12 @@
       a.play().catch(() => {});
     }
 
-    /** Handles `handleAlert`. @param {*} enemy - Value. @param {*} st - Value. @returns {*} Result. */
+    /**
+     * Handles alert.
+     * It applies side effects required by this branch.
+     * @param {object} enemy - Enemy instance being processed by this routine.
+     * @param {object} st - Mutable state object tracked for the current entity.
+     */
     handleAlert(enemy, st) {
       if (enemy?.constructor?.name !== 'Endboss') return;
       if (st.damageActive || st.deathLocked) return;
@@ -131,7 +190,11 @@
       st.wasAlerting = alerting;
     }
 
-    /** Runs `playAlert`. @param {*} st - Value. @returns {*} Result. */
+    /**
+     * Plays alert.
+     * The operation is isolated here to keep behavior predictable.
+     * @param {object} st - Mutable state object tracked for the current entity.
+     */
     playAlert(st) {
       if (!this.isEnabled()) return;
       if (st.blocked) return;
@@ -142,7 +205,11 @@
       a.play().catch(() => {});
     }
 
-    /** Runs `onEndbossAlertStart`. @param {*} endboss - Value. @returns {*} Result. */
+    /**
+     * Handles endboss alert start.
+     * It applies side effects required by this branch.
+     * @param {Endboss} endboss - Input value used by this routine.
+     */
     onEndbossAlertStart(endboss) {
       if (!this.isEnabled()) return;
       const st = this.getState(endboss);
@@ -154,7 +221,11 @@
       a.play().catch(() => {});
     }
 
-    /** Runs `onEndbossHurtStart`. @param {*} endboss - Value. @returns {*} Result. */
+    /**
+     * Handles endboss hurt start.
+     * It applies side effects required by this branch.
+     * @param {Endboss} endboss - Input value used by this routine.
+     */
     onEndbossHurtStart(endboss) {
       if (!this.isEnabled()) return;
       const st = this.getState(endboss);
@@ -163,7 +234,12 @@
       this.startDamage(endboss, st);
     }
 
-    /** Handles `handleHurt`. @param {*} enemy - Value. @param {*} st - Value. @returns {*} Result. */
+    /**
+     * Handles hurt.
+     * It applies side effects required by this branch.
+     * @param {object} enemy - Enemy instance being processed by this routine.
+     * @param {object} st - Mutable state object tracked for the current entity.
+     */
     handleHurt(enemy, st) {
       if (enemy?.constructor?.name !== 'Endboss') return;
       const hurting = enemy?.isHurting === true;
@@ -171,7 +247,15 @@
       st.wasHurting = hurting;
     }
 
-    /** Handles `handleLoop`. @param {*} character - Value. @param {*} enemy - Value. @param {*} st - Value. @param {*} type - Value. @returns {*} Result. */
+    /**
+     * Handles loop.
+     * It applies side effects required by this branch.
+     * @param {Character} character - Character instance involved in this operation.
+     * @param {object} enemy - Enemy instance being processed by this routine.
+     * @param {object} st - Mutable state object tracked for the current entity.
+     * @param {string} type - Type identifier selecting the processing branch.
+     * @returns {unknown} Returns the value produced by this routine.
+     */
     handleLoop(character, enemy, st, type) {
       if (st.blocked) return;
       this.handleHurt(enemy, st);
@@ -181,14 +265,26 @@
       if (!inRange && st.inRange) return this.exitRange(st);
     }
 
-    /** Checks `isInRange`. @param {*} character - Value. @param {*} enemy - Value. @returns {*} Result. */
+    /**
+     * Evaluates the in range condition.
+     * Returns whether the current runtime state satisfies that condition.
+     * @param {Character} character - Character instance involved in this operation.
+     * @param {object} enemy - Enemy instance being processed by this routine.
+     * @returns {number} Returns the computed numeric value.
+     */
     isInRange(character, enemy) {
       const cx = character?.x ?? 0;
       const ex = enemy?.x ?? 0;
       return Math.abs(cx - ex) <= this.RANGE;
     }
 
-    /** Runs `enterRange`. @param {*} enemy - Value. @param {*} st - Value. @param {*} type - Value. */
+    /**
+     * Handles entering range.
+     * The operation is isolated here to keep behavior predictable.
+     * @param {unknown} enemy - Enemy instance being processed by this routine.
+     * @param {object} st - Mutable state object tracked for the current entity.
+     * @param {string} type - Type identifier selecting the processing branch.
+     */
     enterRange(enemy, st, type) {
       st.inRange = true;
       this.clearTimer(st);
@@ -196,13 +292,24 @@
       this.schedule(enemy, st, type, this.rand(this.INIT_MIN, this.INIT_MAX));
     }
 
-    /** Runs `exitRange`. @param {*} st - Value. */
+    /**
+     * Handles leaving range.
+     * The operation is isolated here to keep behavior predictable.
+     * @param {object} st - Mutable state object tracked for the current entity.
+     */
     exitRange(st) {
       st.inRange = false;
       this.stopEnemy(st);
     }
 
-    /** Runs `schedule`. @param {*} enemy - Value. @param {*} st - Value. @param {*} type - Value. @param {*} delay - Value. @returns {*} Result. */
+    /**
+     * Schedules routine.
+     * The operation is isolated here to keep behavior predictable.
+     * @param {object} enemy - Enemy instance being processed by this routine.
+     * @param {object} st - Mutable state object tracked for the current entity.
+     * @param {string} type - Type identifier selecting the processing branch.
+     * @param {number} delay - Delay value in milliseconds.
+     */
     schedule(enemy, st, type, delay) {
       st.timeoutId = setTimeout(() => {
         if (!this.isEnabled()) return;
@@ -215,13 +322,22 @@
       }, delay);
     }
 
-    /** Runs `loopSrc`. @param {*} type - Value. @returns {*} Result. */
+    /**
+     * Executes the loop src routine.
+     * The logic is centralized here for maintainability.
+     * @param {string} type - Type identifier selecting the processing branch.
+     * @returns {string} Returns the resulting string value.
+     */
     loopSrc(type) {
       if (type === 'small') return this.SOUND_PATHS.smallLoop;
       return this.SOUND_PATHS.chickenLoop;
     }
 
-    /** Creates `createLoopPools` data. @returns {*} Result. */
+    /**
+     * Creates loop pools.
+     * The result is consumed by downstream game logic.
+     * @returns {object} Returns an object containing computed state values.
+     */
     createLoopPools() {
       return {
         chicken: this.buildPool(this.SOUND_PATHS.chickenLoop, 2),
@@ -229,14 +345,25 @@
       };
     }
 
-    /** Creates `buildPool` data. @param {*} src - Value. @param {*} size - Value. @returns {*} Result. */
+    /**
+     * Creates pool.
+     * The result is consumed by downstream game logic.
+     * @param {string} src - String value used by this routine.
+     * @param {unknown} size - Input value used by this routine.
+     * @returns {unknown} Returns the value produced by this routine.
+     */
     buildPool(src, size) {
       const pool = [];
       for (let i = 0; i < size; i++) pool.push(this.prepareLoopAudio((window.EPL && window.EPL.Sound && window.EPL.Sound.createSfx) ? window.EPL.Sound.createSfx(src) : new Audio(src)));
       return pool;
     }
 
-    /** Runs `prepareLoopAudio`. @param {*} a - Value. @returns {*} Result. */
+    /**
+     * Executes the prepare loop audio routine.
+     * The logic is centralized here for maintainability.
+     * @param {object} a - Object argument used by this routine.
+     * @returns {unknown} Returns the value produced by this routine.
+     */
     prepareLoopAudio(a) {
       a.addEventListener('ended', () => {
         if (a._owner?.currentAudio === a) a._owner.currentAudio = null;
@@ -245,35 +372,64 @@
       return a;
     }
 
-    /** Checks `isLimitedType`. @param {*} type - Value. @returns {*} Result. */
+    /**
+     * Evaluates the limited type condition.
+     * Returns whether the current runtime state satisfies that condition.
+     * @param {string} type - Type identifier selecting the processing branch.
+     * @returns {boolean} Returns `true` when the condition is satisfied; otherwise `false`.
+     */
     isLimitedType(type) {
       return type === 'small' || type === 'chicken';
     }
 
-    /** Gets `getLoopPool` data. @param {*} type - Value. @returns {*} Result. */
+    /**
+     * Returns the loop pool.
+     * This helper centralizes read access for callers.
+     * @param {string} type - Type identifier selecting the processing branch.
+     * @returns {unknown} Returns the value produced by this routine.
+     */
     getLoopPool(type) {
       return type === 'small' ? this.loopPools.small : this.loopPools.chicken;
     }
 
-    /** Checks `isAudioPlaying`. @param {*} a - Value. @returns {*} Result. */
+    /**
+     * Evaluates the audio playing condition.
+     * Returns whether the current runtime state satisfies that condition.
+     * @param {object} a - Object argument used by this routine.
+     * @returns {boolean} Returns `true` when the condition is satisfied; otherwise `false`.
+     */
     isAudioPlaying(a) {
       return a && !a.paused && !a.ended;
     }
 
-    /** Runs `countActiveInPool`. @param {*} pool - Value. @returns {*} Result. */
+    /**
+     * Executes the count active in pool routine.
+     * The logic is centralized here for maintainability.
+     * @param {Array<unknown>} pool - Array argument consumed by this routine.
+     * @returns {number} Returns the computed numeric value.
+     */
     countActiveInPool(pool) {
       let count = 0;
       for (let i = 0; i < pool.length; i++) if (this.isAudioPlaying(pool[i])) count++;
       return count;
     }
 
-    /** Runs `countActiveLoops`. @returns {*} Result. */
+    /**
+     * Executes the count active loops routine.
+     * The logic is centralized here for maintainability.
+     * @returns {number} Returns the computed numeric value.
+     */
     countActiveLoops() {
       return this.countActiveInPool(this.loopPools.chicken)
         + this.countActiveInPool(this.loopPools.small);
     }
 
-    /** Runs `acquireLoopAudio`. @param {*} type - Value. @returns {*} Result. */
+    /**
+     * Executes the acquire loop audio routine.
+     * The logic is centralized here for maintainability.
+     * @param {string} type - Type identifier selecting the processing branch.
+     * @returns {unknown|null} Returns the value computed for the active runtime branch.
+     */
     acquireLoopAudio(type) {
       if (this.countActiveLoops() >= 3) return null;
       const pool = this.getLoopPool(type);
@@ -281,7 +437,12 @@
       return null;
     }
 
-    /** Runs `startPooledAudio`. @param {*} st - Value. @param {*} a - Value. */
+    /**
+     * Starts pooled audio.
+     * The operation is isolated here to keep behavior predictable.
+     * @param {object} st - Mutable state object tracked for the current entity.
+     * @param {object} a - Object argument used by this routine.
+     */
     startPooledAudio(st, a) {
       a.currentTime = 0;
       a.volume = 0.2;
@@ -290,7 +451,12 @@
       a.play().catch(() => {});
     }
 
-    /** Runs `playUncappedLoop`. @param {*} st - Value. @param {*} src - Value. */
+    /**
+     * Plays uncapped loop.
+     * The operation is isolated here to keep behavior predictable.
+     * @param {object} st - Mutable state object tracked for the current entity.
+     * @param {string} src - String value used by this routine.
+     */
     playUncappedLoop(st, src) {
       this.stopCurrentAudio(st);
       const a = (window.EPL && window.EPL.Sound && window.EPL.Sound.createSfx) ? window.EPL.Sound.createSfx(src) : new Audio(src);
@@ -299,7 +465,13 @@
       a.play().catch(() => {});
     }
 
-    /** Runs `playLoopOnce`. @param {*} st - Value. @param {*} type - Value. @returns {*} Result. */
+    /**
+     * Plays loop once.
+     * The operation is isolated here to keep behavior predictable.
+     * @param {object} st - Mutable state object tracked for the current entity.
+     * @param {string} type - Type identifier selecting the processing branch.
+     * @returns {unknown} Returns the value produced by this routine.
+     */
     playLoopOnce(st, type) {
       const src = this.loopSrc(type);
       if (!this.isLimitedType(type)) return this.playUncappedLoop(st, src);
@@ -309,19 +481,31 @@
       this.startPooledAudio(st, a);
     }
 
-    /** Runs `stopAll`. @param {*} enemies - Value. */
+    /**
+     * Stops all.
+     * The operation is isolated here to keep behavior predictable.
+     * @param {Array<unknown>} enemies - Collection processed by this routine.
+     */
     stopAll(enemies) {
       for (let i = 0; i < enemies.length; i++) this.stopOne(enemies[i]);
     }
 
-    /** Runs `stopOne`. @param {*} enemy - Value. @returns {*} Result. */
+    /**
+     * Stops one.
+     * The operation is isolated here to keep behavior predictable.
+     * @param {unknown} enemy - Enemy instance being processed by this routine.
+     */
     stopOne(enemy) {
       const st = this.stateMap.get(enemy);
       if (!st) return;
       this.stopEnemy(st);
     }
 
-    /** Runs `stopEnemy`. @param {*} st - Value. */
+    /**
+     * Stops enemy.
+     * The operation is isolated here to keep behavior predictable.
+     * @param {object} st - Mutable state object tracked for the current entity.
+     */
     stopEnemy(st) {
       this.clearTimer(st);
       this.stopCurrentAudio(st);
@@ -329,14 +513,22 @@
       st.inRange = false;
     }
 
-    /** Runs `clearTimer`. @param {*} st - Value. @returns {*} Result. */
+    /**
+     * Executes the clear timer routine.
+     * The logic is centralized here for maintainability.
+     * @param {object} st - Mutable state object tracked for the current entity.
+     */
     clearTimer(st) {
       if (!st.timeoutId) return;
       clearTimeout(st.timeoutId);
       st.timeoutId = null;
     }
 
-    /** Runs `stopCurrentAudio`. @param {*} st - Value. @returns {*} Result. */
+    /**
+     * Stops current audio.
+     * The operation is isolated here to keep behavior predictable.
+     * @param {object} st - Mutable state object tracked for the current entity.
+     */
     stopCurrentAudio(st) {
       const a = st.currentAudio;
       if (!a) return;
@@ -344,13 +536,19 @@
         st.currentAudio = null;
         return;
       }
+
       a.pause();
       a.currentTime = 0;
       a._owner = null;
       st.currentAudio = null;
     }
 
-    /** Runs `startDamage`. @param {*} endboss - Value. @param {*} st - Value. @returns {*} Result. */
+    /**
+     * Starts damage.
+     * The operation is isolated here to keep behavior predictable.
+     * @param {Endboss} endboss - Input value used by this routine.
+     * @param {object} st - Mutable state object tracked for the current entity.
+     */
     startDamage(endboss, st) {
       if (!this.isEnabled() || this.isDead(endboss) || st.blocked || st.deathLocked) return;
       st.damageActive = true;
@@ -367,7 +565,11 @@
       st.damageTimeoutId = setTimeout(function () { self.stopDamage(st); }, 800);
     }
 
-    /** Runs `stopDamage`. @param {*} st - Value. */
+    /**
+     * Stops damage.
+     * The operation is isolated here to keep behavior predictable.
+     * @param {object} st - Mutable state object tracked for the current entity.
+     */
     stopDamage(st) {
       if (st.damageTimeoutId) {
         clearTimeout(st.damageTimeoutId);
@@ -381,52 +583,17 @@
       st.damageActive = false;
     }
 
-    /** Runs `rand`. @param {*} min - Value. @param {*} max - Value. @returns {*} Result. */
+    /**
+     * Generates routine.
+     * The result is randomized within the configured range.
+     * @param {number} min - Numeric value used by this routine.
+     * @param {number} max - Numeric value used by this routine.
+     * @returns {number} Returns the computed numeric value.
+     */
     rand(min, max) {
       return Math.floor(Math.random() * (max - min + 1)) + min;
     }
   }
-  
-  /** Runs `SoundToggleController`. @param {*} deps - Value. */
-  function SoundToggleController(deps) {
-    this.deps = deps;
-    this.button = null;
-    this.icon = null;
-  }
-
-  /** Initialize sound toggle elements and UI state. */
-  SoundToggleController.prototype.init = function () {
-    this.button = document.getElementById('mute-toggle');
-    this.icon = document.getElementById('mute-icon');
-    if (!this.button || !this.icon) return;
-    this.attachListener();
-    this.updateIcon(this.deps.soundManager.isEnabled());
-  };
-
-  /** Attach click listener for sound toggling. */
-  SoundToggleController.prototype.attachListener = function () {
-    const self = this;
-    this.button.addEventListener('click', function () {
-      const next = self.deps.soundManager.toggle();
-      self.updateIcon(next);
-    });
-  };
-
-  /** Update sound toggle icon and pressed state. @param {boolean} enabled */
-  SoundToggleController.prototype.updateIcon = function (enabled) {
-    if (this.icon) {
-      this.icon.src = enabled ? './img/mobile/sound.png' : './img/mobile/mute.png';
-      this.icon.alt = enabled ? 'Sound an' : 'Sound aus';
-    }
-    if (this.button) {
-      this.button.setAttribute('aria-pressed', enabled ? 'false' : 'true');
-    }
-  };
-
-  if (!window.EPL.Controllers.SoundToggle) {
-    window.EPL.Controllers.SoundToggle = SoundToggleController;
-  }
-
   if (!window.EPL.EnemySfx) {
     window.EPL.EnemySfx = new EnemySfxManager();
   }

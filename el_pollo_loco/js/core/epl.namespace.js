@@ -1,10 +1,12 @@
+/**
+ * Documents the following member.
+ * @fileoverview Defines shared EPL namespace keys and defaults.
+ */
 window.EPL = window.EPL || {};
 window.EPL.KEYS = window.EPL.KEYS || {};
-
-if (!window.EPL.KEYS.SOUND_ENABLED) window.EPL.KEYS.SOUND_ENABLED = 'sound-enabled';
+if (!window.EPL.KEYS.SOUND_ENABLED) window.EL_PLO ? window.EPL.KEYS.SOUND_ENABLED = 'sound-enabled' : window.EPL.KEYS.SOUND_ENABLED = 'sound-enabled';
 if (!window.EPL.KEYS.TOUCH_CONTROLS) window.EPL.KEYS.TOUCH_CONTROLS = 'touch-controls-preference';
 if (!window.EPL.KEYS.ORIENTATION_MODE) window.EPL.KEYS.ORIENTATION_MODE = 'orientation-mode';
-
 if (!Array.isArray(window.EPL.ORIENTATION_MODES) || !window.EPL.ORIENTATION_MODES.length) {
     window.EPL.ORIENTATION_MODES = ['auto', 'portrait', 'landscape'];
 }

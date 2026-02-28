@@ -1,6 +1,6 @@
 /**
- * Small chicken variant with separate sprite set and loop sound id.
- * @extends MoveableObject
+ * @fileoverview
+ * Defines `smallchicken`, a smaller enemy variant with its own sprite set and SFX behavior.
  */
 class smallchicken extends MoveableObject {
     height = 50;
@@ -12,40 +12,37 @@ class smallchicken extends MoveableObject {
     hitboxWidth = 50;
     hitboxHeight = 45;
     proximitySoundActive = false;
-
     IMAGES_CHICKEN_SMALL_WALKING = [
         './img/3_enemies_chicken/chicken_small/1_walk/1_w.png',
         './img/3_enemies_chicken/chicken_small/1_walk/2_w.png',
         './img/3_enemies_chicken/chicken_small/1_walk/3_w.png'
     ];
-
     IMAGES_CHICKE_SMALL_DEAD = [
         './img/3_enemies_chicken/chicken_small/2_dead/dead.png',
     ];
 
     /**
-     * @param {{isSmall?: boolean}} [options]
+     * Initializes a new methods instance and sets up default runtime state.
+     * The constructor prepares dependencies used by class behavior.
+     * @param {unknown} param1 - Input value used by this routine.
      */
     constructor({ isSmall = false } = {}) {
         super().loadImage(isSmall ? this.IMAGES_CHICKEN_SMALL_WALKING[0] : this.IMAGES_WALKING[0]);
         this.isSmall = isSmall;
         this.walkingImages = isSmall ? this.IMAGES_CHICKEN_SMALL_WALKING : this.IMAGES_WALKING;
         this.deadImages = isSmall ? this.IMAGES_CHICKE_SMALL_DEAD : this.IMAGES_CHICKE_NORMAL_DEAD;
-
         this.loadImages(this.walkingImages);
         this.loadImages(this.deadImages);
-
         this.x = 500 + Math.random() * 1500;
         this.speed = 0.15 + Math.random() * 0.5;
         this.loopSound = this.getLoopSoundElement();
-
         this.animate();
         this.startProximitySoundCheck();
     }
 
     /**
-     * Starts movement and sprite frame loops.
-     * @returns {void}
+     * Executes the animate routine.
+     * The logic is centralized here for maintainability.
      */
     animate() {
         setInterval(() => {
@@ -54,7 +51,6 @@ class smallchicken extends MoveableObject {
             }
             this.moveLeft();
         }, 1000 / 60);
-
         setInterval(() => {
             if (this.isDead()) {
                 this.playAnimation(this.deadImages);
@@ -65,9 +61,9 @@ class smallchicken extends MoveableObject {
     }
 
     /**
-     * Applies damage and enters dead state when energy is depleted.
-     * @param {number} [amount=5]
-     * @returns {void}
+     * Executes the take damage routine.
+     * The logic is centralized here for maintainability.
+     * @param {unknown} amount - Input value used by this routine.
      */
     takeDamage(amount = 5) {
         if (this.isDead()) {
@@ -79,7 +75,10 @@ class smallchicken extends MoveableObject {
         }
     }
 
-    /** Runs `die`. */
+    /**
+     * Executes the die routine.
+     * The logic is centralized here for maintainability.
+     */
     die() {
         this.energy = 0;
         this.speed = 0;
@@ -87,12 +86,18 @@ class smallchicken extends MoveableObject {
         this.playAnimation(this.deadImages);
     }
 
-    /** Runs `startProximitySoundCheck`. */
+    /**
+     * Starts proximity sound check.
+     * The operation is isolated here to keep behavior predictable.
+     */
     startProximitySoundCheck() {
         setInterval(() => this.updateProximitySound(), 1000 / 10);
     }
 
-    /** Updates `updateProximitySound` state. @returns {*} Result. */
+    /**
+     * Updates proximity sound.
+     * This synchronizes runtime state with current inputs.
+     */
     updateProximitySound() {
         if (this.isDead()) {
             this.stopLoopSound();
@@ -109,7 +114,10 @@ class smallchicken extends MoveableObject {
         else this.stopLoopSound();
     }
 
-    /** Runs `startLoopSound`. @returns {*} Result. */
+    /**
+     * Starts loop sound.
+     * The operation is isolated here to keep behavior predictable.
+     */
     startLoopSound() {
         if (this.proximitySoundActive || !this.canPlayLoopSound()) return;
         this.loopSound.loop = true;
@@ -117,26 +125,41 @@ class smallchicken extends MoveableObject {
         this.proximitySoundActive = true;
     }
 
-    /** Runs `stopLoopSound`. @returns {*} Result. */
+    /**
+     * Stops loop sound.
+     * The operation is isolated here to keep behavior predictable.
+     */
     stopLoopSound() {
         if (!this.proximitySoundActive || !this.loopSound) return;
         this.loopSound.pause();
         this.proximitySoundActive = false;
     }
 
-    /** Checks `canPlayLoopSound`. @returns {*} Result. */
+    /**
+     * Evaluates the play loop sound condition.
+     * Returns whether the current runtime state satisfies that condition.
+     * @returns {boolean} Returns `true` when the condition is satisfied; otherwise `false`.
+     */
     canPlayLoopSound() {
         if (!this.loopSound) return false;
         return this.isSoundEnabled();
     }
-    
-    /** Checks `isSoundEnabled`. @returns {*} Result. */
+
+    /**
+     * Evaluates the sound enabled condition.
+     * Returns whether the current runtime state satisfies that condition.
+     * @returns {boolean} Returns `true` when the condition is satisfied; otherwise `false`.
+     */
     isSoundEnabled() {
         const key = typeof SOUND_ENABLED_KEY === 'string' ? SOUND_ENABLED_KEY : 'sound-enabled';
         return localStorage.getItem(key) !== 'false';
     }
 
-    /** Gets `getLoopSoundElement` data. @returns {*} Result. */
+    /**
+     * Returns the loop sound element.
+     * This helper centralizes read access for callers.
+     * @returns {unknown} Returns the value produced by this routine.
+     */
     getLoopSoundElement() {
         return document.getElementById('smallchicken-loop-sound');
     }

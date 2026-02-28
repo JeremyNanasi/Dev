@@ -12,22 +12,23 @@ class DrawableObject {
 
     /**
      * Loads a single sprite image into `img`.
-     * @param {string} path
-     * @returns {void}
+     * @param {string} path - Resource path or URL.
      */
     loadImage(path) {
         this.img = new Image();
         this.img.src = path;
     }
-    /** Runs `drawFrame`. */
+
+    /**
+     * Runs `drawFrame`.
+     */
     drawFrame() {
         return;
     }
 
     /**
      * Draws the current image onto the given canvas context.
-     * @param {CanvasRenderingContext2D} ctx
-     * @returns {void}
+     * @param {CanvasRenderingContext2D} ctx - Canvas 2D rendering context.
      */
     draw(ctx) {
         if (!this.img) {
@@ -37,9 +38,8 @@ class DrawableObject {
     }
 
     /**
-     * Preloads multiple sprite images into `imageCache`.
-     * @param {string[]} arr
-     * @returns {void}
+     * Loads multiple images into the internal cache for later animation rendering.
+     * @param {string[]} arr - List of image paths to preload.
      */
     loadImages(arr) {
         arr.forEach((path) => {

@@ -1,3 +1,9 @@
+/**
+ * @fileoverview
+ * End overlay UI utilities for game-over and win states, including fullscreen hints and overlay DOM lifecycle management.
+ *
+ * Keeps internal UI state on a shared window-backed singleton to avoid duplicate bindings.
+ */
 {
 let root = window.EPL || (window.EPL = {});
 let ui = root.UI || (root.UI = {});
@@ -11,7 +17,11 @@ let state = window.__epl_end_overlay_state || (window.__epl_end_overlay_state = 
     bound: false
 });
 
-/** Initialize end-overlay dependencies and listeners. @param {{getCanvas?:Function,getTarget?:Function}=} deps */
+/**
+ * Initializes routine.
+ * It is part of the module startup flow.
+ * @param {object} deps - Object argument used by this routine.
+ */
 function eplEndOverlayInit(deps) {
     deps = deps || {};
     state.getCanvas = typeof deps.getCanvas === 'function' ? deps.getCanvas : function() { return null; };
@@ -23,13 +33,20 @@ function eplEndOverlayInit(deps) {
     if (!state.bound) { state.bound = true; document.addEventListener('fullscreenchange', eplEndOverlayOnFullscreenChange); }
 }
 
-/** Ensure animation styles exist in the document head. */
+/**
+ * Ensures styles is available before continuing.
+ * The operation is isolated here to keep behavior predictable.
+ */
 function eplEndOverlayEnsureStyles() {
     if (document.getElementById('game-over-animations')) return;
     document.head.appendChild(eplEndOverlayCreateStyle());
 }
 
-/** Create the style node for end-overlay animations. @returns {HTMLStyleElement} */
+/**
+ * Creates style.
+ * The result is consumed by downstream game logic.
+ * @returns {unknown} Returns the value produced by this routine.
+ */
 function eplEndOverlayCreateStyle() {
     let style = document.createElement('style');
     style.id = 'game-over-animations';
@@ -37,7 +54,10 @@ function eplEndOverlayCreateStyle() {
     return style;
 }
 
-/** Reset overlay hint state and remove active hint elements. */
+/**
+ * Resets routine.
+ * The operation is isolated here to keep behavior predictable.
+ */
 function eplEndOverlayReset() {
     eplEndOverlayRemoveFsHint();
     eplEndOverlayRemoveInlineHint();
@@ -45,13 +65,20 @@ function eplEndOverlayReset() {
     state.active = false;
 }
 
-/** Activate hint rendering with the latest hint text. @param {string=} hintText */
+/**
+ * Executes the epl end overlay activate routine.
+ * The logic is centralized here for maintainability.
+ * @param {unknown} hintText - Input value used by this routine.
+ */
 function eplEndOverlayActivate(hintText) {
     state.active = true;
     state.lastHintText = hintText || state.lastHintText;
 }
 
-/** Sync hint placement with fullscreen and overlay state. */
+/**
+ * Synchronizes routine.
+ * The operation is isolated here to keep behavior predictable.
+ */
 function eplEndOverlaySync() {
     if (!state.active) { eplEndOverlayRemoveFsHint(); eplEndOverlayRemoveInlineHint(); return; }
     if (document.fullscreenElement) { eplEndOverlayRemoveInlineHint(); eplEndOverlayShowFsHint(state.lastHintText); return; }
@@ -59,12 +86,19 @@ function eplEndOverlaySync() {
     eplEndOverlayShowInlineHint(state.lastHintText);
 }
 
-/** Recompute hints after fullscreen changes. */
+/**
+ * Handles fullscreen change.
+ * It applies side effects required by this branch.
+ */
 function eplEndOverlayOnFullscreenChange() {
     eplEndOverlaySync();
 }
 
-/** Show the fullscreen hint with the provided text. @param {string=} text */
+/**
+ * Shows fs hint.
+ * The operation is isolated here to keep behavior predictable.
+ * @param {string} text - String value used by this routine.
+ */
 function eplEndOverlayShowFsHint(text) {
     state.lastHintText = text || state.lastHintText;
     if (!document.fullscreenElement || !state.lastHintText) return;
@@ -73,7 +107,10 @@ function eplEndOverlayShowFsHint(text) {
     eplEndOverlayAppendFsHint();
 }
 
-/** Create the fullscreen hint element when missing. */
+/**
+ * Ensures fs hint is available before continuing.
+ * The operation is isolated here to keep behavior predictable.
+ */
 function eplEndOverlayEnsureFsHint() {
     if (state.fsHintEl) return;
     state.fsHintEl = document.createElement('div');
@@ -82,7 +119,10 @@ function eplEndOverlayEnsureFsHint() {
     eplEndOverlayApplyBaseStyles(state.fsHintEl);
 }
 
-/** Append the fullscreen hint to the active fullscreen host. */
+/**
+ * Executes the epl end overlay append fs hint routine.
+ * The logic is centralized here for maintainability.
+ */
 function eplEndOverlayAppendFsHint() {
     let canvas = state.getCanvas();
     let host = document.fullscreenElement === canvas ? state.getTarget() : document.fullscreenElement;
@@ -92,13 +132,20 @@ function eplEndOverlayAppendFsHint() {
     target.appendChild(state.fsHintEl);
 }
 
-/** Remove the fullscreen hint element from the DOM. */
+/**
+ * Executes the epl end overlay remove fs hint routine.
+ * The logic is centralized here for maintainability.
+ */
 function eplEndOverlayRemoveFsHint() {
     if (!state.fsHintEl || !state.fsHintEl.parentNode) return;
     state.fsHintEl.parentNode.removeChild(state.fsHintEl);
 }
 
-/** Show the inline hint outside fullscreen mode. @param {string=} text */
+/**
+ * Shows inline hint.
+ * The operation is isolated here to keep behavior predictable.
+ * @param {string} text - String value used by this routine.
+ */
 function eplEndOverlayShowInlineHint(text) {
     state.lastHintText = text || state.lastHintText;
     if (document.fullscreenElement || !state.lastHintText) return;
@@ -107,7 +154,10 @@ function eplEndOverlayShowInlineHint(text) {
     eplEndOverlayAppendInlineHint();
 }
 
-/** Create the inline hint element when missing. */
+/**
+ * Ensures inline hint is available before continuing.
+ * The operation is isolated here to keep behavior predictable.
+ */
 function eplEndOverlayEnsureInlineHint() {
     if (state.inlineHintEl) return;
     state.inlineHintEl = document.createElement('div');
@@ -116,7 +166,10 @@ function eplEndOverlayEnsureInlineHint() {
     eplEndOverlayApplyBaseStyles(state.inlineHintEl);
 }
 
-/** Append the inline hint near the game container. */
+/**
+ * Executes the epl end overlay append inline hint routine.
+ * The logic is centralized here for maintainability.
+ */
 function eplEndOverlayAppendInlineHint() {
     let canvas = state.getCanvas();
     let host = state.getTarget() || (canvas ? canvas.parentNode : null);
@@ -128,13 +181,20 @@ function eplEndOverlayAppendInlineHint() {
     parent.style.textAlign = 'center';
 }
 
-/** Remove the inline hint element from the DOM. */
+/**
+ * Executes the epl end overlay remove inline hint routine.
+ * The logic is centralized here for maintainability.
+ */
 function eplEndOverlayRemoveInlineHint() {
     if (!state.inlineHintEl || !state.inlineHintEl.parentNode) return;
     state.inlineHintEl.parentNode.removeChild(state.inlineHintEl);
 }
 
-/** Apply shared visual styles to a hint element. @param {HTMLElement} el */
+/**
+ * Applies base styles.
+ * The operation is isolated here to keep behavior predictable.
+ * @param {object} el - Object argument used by this routine.
+ */
 function eplEndOverlayApplyBaseStyles(el) {
     Object.assign(el.style, {
         padding: '10px 14px', borderRadius: '10px', background: 'rgba(0,0,0,0.55)', color: '#fff',
@@ -142,11 +202,14 @@ function eplEndOverlayApplyBaseStyles(el) {
     });
 }
 
-/** Return inline CSS for game-over animations. @returns {string} */
+/**
+ * Returns the style text.
+ * This helper centralizes read access for callers.
+ * @returns {string} Returns the resulting string value.
+ */
 function eplEndOverlayGetStyleText() {
     return '@keyframes gameOverPop { 0% { transform: scale(0); opacity: 0; } 100% { transform: scale(1); opacity: 1; } } @keyframes gameOverPulse { 0% { transform: scale(1); } 100% { transform: scale(0.9); } }';
 }
-
 if (!ui.EndOverlay) {
     ui.EndOverlay = {
         init: eplEndOverlayInit,

@@ -1,9 +1,13 @@
 /**
- * Player-controlled character with movement, jump, and idle animations.
+ * Player-controlled character entity with movement, jump, and idle animations.
+ *
+ * Handles input-driven movement, gravity-based jumping, landing transitions,
+ * and sprite-frame switching for walking, jumping, idle, hurt, and death states.
+ *
  * @extends MoveableObject
- * @property {number} idleThresholdMs
- * @property {number} longIdleThresholdMs
- * @property {World} world
+ * @property {number} idleThresholdMs - Time until the normal idle animation starts after the last movement.
+ * @property {number} longIdleThresholdMs - Time until the long-idle animation starts after the last movement.
+ * @property {World} world - Active world reference injected by the world instance.
  */
 class Character extends MoveableObject {
 
@@ -19,7 +23,6 @@ class Character extends MoveableObject {
     hitboxOffsetY = 80;
     hitboxWidth = 100;
     hitboxHeight = 120;
-
 
     IMAGES_WALKING = [
         './img/2_character_pepe/2_walk/W-21.png',
@@ -96,28 +99,40 @@ class Character extends MoveableObject {
     lastIdleFrameTime = 0;
     lastMovementTime = Date.now();
     world;
-    /** Creates a new instance. */
+
+    /**
+     * Creates the character instance, loads sprites, enables gravity, and starts the animation loop.
+     */
     constructor() {
         super().loadImage('./img/2_character_pepe/2_walk/W-21.png');
         this.loadCharacterImages();
         this.applyGravity();
         this.animate();
     }
-    /** Updates `updateJumpAnimationPhased` state. */
+
+    /**
+     * Updates jump animation state for the current tick (frames, landing transition, and air-state).
+     */
     updateJumpAnimationPhased() {
         const now = Date.now();
         this.updateJumpFrame(now);
         this.handleLandingTransition();
         this.updateAirState();
     }
-    /** Runs `onLanding`. */
+
+    /**
+     * Resets the character sprite shortly after a landing to the first walking frame.
+     */
     onLanding() {
         setTimeout(() => {
             this.currentImage = 0;
             this.img = this.imageCache[this.IMAGES_WALKING[0]];
-        }, 150); 
+        }, 150);
     }
-    /** Runs `animate`. */
+
+    /**
+     * Starts the main animation loop (roughly 60 FPS) that updates movement and animation frames.
+     */
     animate() {
         setInterval(() => {
             const now = Date.now();
@@ -126,8 +141,7 @@ class Character extends MoveableObject {
     }
 
     /**
-     * Initiates a jump if the character is on the ground.
-     * @returns {void}
+     * Initiates a jump if the character is currently on the ground.
      */
     jump() {
         if (!this.isAboveGround()) {
@@ -138,9 +152,8 @@ class Character extends MoveableObject {
     }
 
     /**
-     * Records the last input time for idle tracking.
-     * @param {number} timestamp
-     * @returns {void}
+     * Records the last movement timestamp for idle tracking and idle frame timing.
+     * @param {number} timestamp - Current timestamp in milliseconds.
      */
     registerMovement(timestamp) {
         this.lastMovementTime = timestamp;
@@ -148,9 +161,9 @@ class Character extends MoveableObject {
     }
 
     /**
-     * Updates idle animation state based on elapsed time.
-     * @param {number} now
-     * @returns {boolean}
+     * Checks whether the character should play idle animations, based on time since last movement.
+     * @param {number} now - Current timestamp in milliseconds.
+     * @returns {boolean} True if idle frames are being played; otherwise false.
      */
     playIdleAnimation(now) {
         const idleDuration = now - this.lastMovementTime;
@@ -160,7 +173,10 @@ class Character extends MoveableObject {
         }
         return this.playIdleFrames(now, idleDuration);
     }
-    /** Runs `loadCharacterImages`. */
+
+    /**
+     * Preloads all sprite images used by the character for movement and state animations.
+     */
     loadCharacterImages() {
         this.loadImages(this.IMAGES_WALKING);
         this.loadImages(this.IMAGES_JUMP_START);
@@ -171,7 +187,11 @@ class Character extends MoveableObject {
         this.loadImages(this.IMAGES_DEAD);
         this.loadImages(this.IMAGES_HURT);
     }
-    /** Updates `updateJumpFrame` state. @param {*} now - Value. */
+
+    /**
+     * Advances the jump animation frame when the jump frame timer allows it.
+     * @param {number} now - Current timestamp in milliseconds.
+     */
     updateJumpFrame(now) {
         if (now - this.lastFrameTime.jumping < this.frameTimers.jumping) {
             return;
@@ -179,7 +199,11 @@ class Character extends MoveableObject {
         this.lastFrameTime.jumping = now;
         this.playAnimation(this.getJumpFrames());
     }
-    /** Gets `getJumpFrames` data. @returns {*} Result. */
+
+    /**
+     * Selects the correct jump sprite frame set based on the current vertical speed.
+     * @returns {string[]} The sprite paths for the current jump phase.
+     */
     getJumpFrames() {
         if (this.speedY > 20) {
             return this.IMAGES_JUMP_START;
@@ -189,20 +213,30 @@ class Character extends MoveableObject {
         }
         return this.IMAGES_JUMP_LANDING;
     }
-    /** Handles `handleLandingTransition`. */
+
+    /**
+     * Detects a landing transition (air -> ground) and triggers landing handling once.
+     */
     handleLandingTransition() {
         if (!this.isAboveGround() && this.wasInAir) {
             this.wasInAir = false;
             this.onLanding();
         }
     }
-    /** Updates `updateAirState` state. */
+
+    /**
+     * Updates the internal air-state flag while the character is above ground.
+     */
     updateAirState() {
         if (this.isAboveGround()) {
             this.wasInAir = true;
         }
     }
-    /** Handles `handleAnimationFrame`. @param {*} now - Value. */
+
+    /**
+     * Runs a single animation tick: handles death, movement input, camera follow, and state animations.
+     * @param {number} now - Current timestamp in milliseconds.
+     */
     handleAnimationFrame(now) {
         if (this.isDead()) {
             this.handleDeadAnimation(now);
@@ -215,20 +249,32 @@ class Character extends MoveableObject {
         this.world.camera_x = -this.x + 100;
         this.handleStateAnimations(now);
     }
-    /** Handles `handleDeadAnimation`. @param {*} now - Value. */
+
+    /**
+     * Updates the death animation frames using the configured dead frame timer.
+     * @param {number} now - Current timestamp in milliseconds.
+     */
     handleDeadAnimation(now) {
         if (now - this.lastFrameTime.dead > this.frameTimers.dead) {
             this.lastFrameTime.dead = now;
             this.playAnimationDead(this.IMAGES_DEAD);
         }
     }
-    /** Handles `handleMovementInput`. @param {*} now - Value. */
+
+    /**
+     * Applies keyboard input to movement and jumping, and updates idle tracking on movement.
+     * @param {number} now - Current timestamp in milliseconds.
+     */
     handleMovementInput(now) {
         if (this.world.keyboard.RIGHT && this.x < this.world.level.level_end_x) { this.moveRight(); this.otherDirection = false; this.registerMovement(now); }
         if (this.world.keyboard.LEFT && this.x > 0) { this.moveLeft(); this.otherDirection = true; this.registerMovement(now); }
         if (this.world.keyboard.UP && !this.isAboveGround()) { this.jump(); this.registerMovement(now); }
     }
-    /** Handles `handleStateAnimations`. @param {*} now - Value. */
+
+    /**
+     * Selects and runs the correct state animation (hurt, jump, or ground/idle).
+     * @param {number} now - Current timestamp in milliseconds.
+     */
     handleStateAnimations(now) {
         if (this.isHurt()) {
             this.handleHurtAnimation(now);
@@ -240,14 +286,22 @@ class Character extends MoveableObject {
         }
         this.handleGroundAnimation(now);
     }
-    /** Handles `handleHurtAnimation`. @param {*} now - Value. */
+
+    /**
+     * Updates the hurt animation frames using the configured hurt frame timer.
+     * @param {number} now - Current timestamp in milliseconds.
+     */
     handleHurtAnimation(now) {
         if (now - this.lastFrameTime.hurt > this.frameTimers.hurt) {
             this.lastFrameTime.hurt = now;
             this.playAnimation(this.IMAGES_HURT);
         }
     }
-    /** Handles `handleGroundAnimation`. @param {*} now - Value. */
+
+    /**
+     * Handles ground animation selection: walking, idle frames, or a landing frame when not idle yet.
+     * @param {number} now - Current timestamp in milliseconds.
+     */
     handleGroundAnimation(now) {
         if (this.world.keyboard.RIGHT || this.world.keyboard.LEFT) {
             this.handleWalkingAnimation(now);
@@ -257,19 +311,32 @@ class Character extends MoveableObject {
             this.showLandingFrame();
         }
     }
-    /** Handles `handleWalkingAnimation`. @param {*} now - Value. */
+
+    /**
+     * Updates the walking animation frames using the configured walking frame timer.
+     * @param {number} now - Current timestamp in milliseconds.
+     */
     handleWalkingAnimation(now) {
         if (now - this.lastFrameTime.walking > this.frameTimers.walking) {
             this.lastFrameTime.walking = now;
             this.playAnimation(this.IMAGES_WALKING);
         }
     }
-    /** Runs `showLandingFrame`. */
+
+    /**
+     * Displays the last landing-frame sprite while the character is standing still on the ground.
+     */
     showLandingFrame() {
         this.currentImage = this.IMAGES_JUMP_LANDING.length - 1;
         this.img = this.imageCache[this.IMAGES_JUMP_LANDING[this.currentImage]];
     }
-    /** Runs `playIdleFrames`. @param {*} now - Value. @param {*} idleDuration - Value. @returns {*} Result. */
+
+    /**
+     * Plays idle or long-idle frames based on the idle duration and updates the current sprite frame.
+     * @param {number} now - Current timestamp in milliseconds.
+     * @param {number} idleDuration - Time since the last movement in milliseconds.
+     * @returns {boolean} True if an idle frame was selected; otherwise false.
+     */
     playIdleFrames(now, idleDuration) {
         const { frames, offsetMs } = this.getIdleFrameData(idleDuration);
         if (now - this.lastIdleFrameTime >= this.idleFrameDelayMs) {
@@ -279,7 +346,12 @@ class Character extends MoveableObject {
         }
         return true;
     }
-    /** Gets `getIdleFrameData` data. @param {*} idleDuration - Value. @returns {*} Result. */
+
+    /**
+     * Computes the frame list and time offset used for idle and long-idle animation playback.
+     * @param {number} idleDuration - Time since the last movement in milliseconds.
+     * @returns {{frames: string[], offsetMs: number}} The selected frame list and time offset within that list.
+     */
     getIdleFrameData(idleDuration) {
         const isLongIdle = idleDuration >= this.longIdleThresholdMs;
         const frames = isLongIdle ? this.IMAGES_LONG_IDLE : this.IMAGES_IDLE;
@@ -288,9 +360,8 @@ class Character extends MoveableObject {
     }
 
     /**
-     * Applies damage and triggers the game-over overlay when depleted.
-     * @param {number} amount
-     * @returns {void}
+     * Applies damage and triggers the game-over overlay when the character's energy is depleted.
+     * @param {number} amount - Damage amount applied to the character.
      */
     takeDamage(amount = 5) {
         super.takeDamage(amount);

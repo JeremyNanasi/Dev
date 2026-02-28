@@ -1,4 +1,10 @@
 /**
+ * @fileoverview
+ * Defines `Cloud`, an ambient background entity that slowly moves left and wraps around
+ * to create a continuous sky-layer effect during gameplay.
+ */
+
+/**
  * Ambient cloud layer element that loops across the sky.
  * @extends MoveableObject
  */
@@ -8,7 +14,7 @@ class Cloud extends MoveableObject {
     height = 250;
 
     /**
-     * Initializes cloud sprite, random position, and motion loop.
+     * Initializes the cloud sprite, randomizes its initial position/speed, and starts the motion loop.
      */
     constructor() {
         super();
@@ -20,12 +26,11 @@ class Cloud extends MoveableObject {
     }
 
     /**
-     * Continuously moves the cloud and wraps it when off-screen.
+     * Moves the cloud left continuously and wraps it back to the right side when it leaves the screen.
      */
     animate() {
         setInterval(() => {
             this.moveLeft();
-
             if (this.x + this.width < 0) {
                 this.x = 800 + Math.random() * 300;
             }

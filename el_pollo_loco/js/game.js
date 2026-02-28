@@ -1,4 +1,11 @@
-﻿let canvas;
+﻿/**
+ * @fileoverview
+ * Main game entrypoint that wires the canvas, creates the world, initializes controllers and UI, and starts the game flow.
+ *
+ * Responsible for bootstrapping runtime dependencies and coordinating start/restart behavior.
+ */
+
+let canvas;
 let world;
 let keyboard = new Keyboard();
 let fullscreenTarget;
@@ -8,7 +15,6 @@ let gameOverOverlay;
 let controlsLocked = false;
 let endOverlayShown = false;
 let endOverlayElement;
-
 const controllers = {
     keyboard: null,
     fullscreen: null,
@@ -16,8 +22,10 @@ const controllers = {
     touch: null,
     soundToggle: null
 };
-
-/** Initializes `init`. */
+/**
+ * Initializes routine.
+ * It is part of the module startup flow.
+ */
 function init() {
     canvas = document.getElementById('canvas');
     initControllers();
@@ -31,7 +39,10 @@ function init() {
     initPostWorldUI();
 }
 
-/** Initializes `initEndOverlayUi`. @returns {*} Result. */
+/**
+ * Initializes end overlay UI.
+ * It is part of the module startup flow.
+ */
 function initEndOverlayUi() {
     window.EPL.UI.EndOverlay.init({
         getCanvas: function() { return canvas; },
@@ -39,13 +50,19 @@ function initEndOverlayUi() {
     });
 }
 
-/** Initializes `initPreWorldUI`. */
+/**
+ * Initializes pre world UI.
+ * It is part of the module startup flow.
+ */
 function initPreWorldUI() {
     controllers.touch.updateMobileTabletState();
     controllers.touch.setupMediaQuery();
 }
 
-/** Initializes `initPostWorldUI`. */
+/**
+ * Initializes post world UI.
+ * It is part of the module startup flow.
+ */
 function initPostWorldUI() {
     controllers.touch.initOnce();
     controllers.soundToggle.init();
@@ -56,7 +73,10 @@ function initPostWorldUI() {
     initSoundOnGesture();
 }
 
-/** Initializes `initControllers`. */
+/**
+ * Initializes controllers.
+ * It is part of the module startup flow.
+ */
 function initControllers() {
     initKeyboardController();
     initFullscreenController();
@@ -65,7 +85,10 @@ function initControllers() {
     initSoundToggleController();
 }
 
-/** Initializes `initKeyboardController`. @returns {*} Result. */
+/**
+ * Initializes keyboard controller.
+ * It is part of the module startup flow.
+ */
 function initKeyboardController() {
     controllers.keyboard = new window.EPL.Controllers.KeyboardInput({
         getKeyboard: function() { return keyboard; },
@@ -76,7 +99,10 @@ function initKeyboardController() {
     });
 }
 
-/** Initializes `initFullscreenController`. @returns {*} Result. */
+/**
+ * Initializes fullscreen controller.
+ * It is part of the module startup flow.
+ */
 function initFullscreenController() {
     controllers.fullscreen = new window.EPL.Controllers.Fullscreen({
         getCanvas: function() { return canvas; },
@@ -87,7 +113,10 @@ function initFullscreenController() {
     });
 }
 
-/** Initializes `initOrientationController`. @returns {*} Result. */
+/**
+ * Initializes orientation controller.
+ * It is part of the module startup flow.
+ */
 function initOrientationController() {
     controllers.orientation = new window.EPL.Controllers.Orientation({
         getCanvas: function() { return canvas; },
@@ -100,7 +129,10 @@ function initOrientationController() {
     });
 }
 
-/** Initializes `initTouchController`. @returns {*} Result. */
+/**
+ * Initializes touch controller.
+ * It is part of the module startup flow.
+ */
 function initTouchController() {
     controllers.touch = new window.EPL.Controllers.Touch({
         getKeyboard: function() { return keyboard; },
@@ -108,26 +140,43 @@ function initTouchController() {
     });
 }
 
-/** Initializes `initSoundToggleController`. */
+/**
+ * Initializes sound toggle controller.
+ * It is part of the module startup flow.
+ */
 function initSoundToggleController() {
     controllers.soundToggle = new window.EPL.Controllers.SoundToggle({
         soundManager: window.EPL.Sound
     });
 }
 
-/** Gets `getCanvasWidth` data. @returns {*} Result. */
+/**
+ * Returns the canvas width.
+ * This helper centralizes read access for callers.
+ * @returns {number} Returns the computed numeric value.
+ */
 function getCanvasWidth() {
     return window.EPL && window.EPL.DEFAULT_CANVAS_WIDTH ? window.EPL.DEFAULT_CANVAS_WIDTH : 720;
 }
 
-/** Gets `getCanvasHeight` data. @returns {*} Result. */
+/**
+ * Returns the canvas height.
+ * This helper centralizes read access for callers.
+ * @returns {number} Returns the computed numeric value.
+ */
 function getCanvasHeight() {
     return window.EPL && window.EPL.DEFAULT_CANVAS_HEIGHT ? window.EPL.DEFAULT_CANVAS_HEIGHT : 480;
 }
 
-/** Initializes `initSoundOnGesture`. */
+/**
+ * Initializes sound on gesture.
+ * It is part of the module startup flow.
+ */
 function initSoundOnGesture() {
-    /** Handles `handler`. */
+    /**
+     * Executes the handler routine.
+     * The logic is centralized here for maintainability.
+     */
     let handler = function() {
         if (window.EPL && window.EPL.Sound) window.EPL.Sound.tryPlayOnGesture();
         document.removeEventListener('click', handler);
@@ -137,11 +186,18 @@ function initSoundOnGesture() {
     document.addEventListener('keydown', handler);
 }
 
+/**
+ * Shows win overlay.
+ * The operation is isolated here to keep behavior predictable.
+ */
 window.showWinOverlay = function() {
     showEndOverlay({ hint: ' Enter  zurück zum Menü' });
 };
 
-/** Runs `startGame`. @returns {*} Result. */
+/**
+ * Starts game.
+ * The operation is isolated here to keep behavior predictable.
+ */
 function startGame() {
     if (gameStarted) return;
     gameStarted = true;
@@ -149,13 +205,20 @@ function startGame() {
     init();
 }
 
-/** Checks `shouldStartGame`. @returns {*} Result. */
+/**
+ * Evaluates the start game condition.
+ * Returns whether the current runtime state satisfies that condition.
+ * @returns {boolean} Returns `true` when the condition is satisfied; otherwise `false`.
+ */
 function shouldStartGame() {
     let params = new URLSearchParams(window.location.search);
     return params.get('start') === '1';
 }
 
-/** Runs `redirectToMenu`. */
+/**
+ * Executes the redirect to menu routine.
+ * The logic is centralized here for maintainability.
+ */
 function redirectToMenu() {
     window.location.replace('menu.html');
 }
@@ -171,7 +234,10 @@ document.addEventListener('DOMContentLoaded', function() {
     controllers.keyboard.attach();
 });
 
-/** Sets `setupFullscreenToggle` state. @returns {*} Result. */
+/**
+ * Initializes fullscreen toggle.
+ * It is part of the module startup flow.
+ */
 function setupFullscreenToggle() {
     controllers.fullscreen = new window.EPL.Controllers.Fullscreen({
         getCanvas: function() { return canvas; },
@@ -183,13 +249,19 @@ function setupFullscreenToggle() {
     controllers.fullscreen.initToggle();
 }
 
-/** Handles `handleFullscreenChange`. */
+/**
+ * Handles fullscreen change.
+ * It applies side effects required by this branch.
+ */
 function handleFullscreenChange() {
     updateLayout();
     window.EPL.UI.EndOverlay.onFullscreenChange();
 }
 
-/** Runs `resizeCanvas`. @returns {*} Result. */
+/**
+ * Executes the resize canvas routine.
+ * The logic is centralized here for maintainability.
+ */
 function resizeCanvas() {
     if (!canvas) return;
     canvas.width = getCanvasWidth();
@@ -201,10 +273,17 @@ window.addEventListener('resize', function() { if (controllers.touch) controller
 window.addEventListener('orientationchange', updateLayout);
 window.addEventListener('orientationchange', function() { if (controllers.touch) controllers.touch.updateMobileTabletState(); });
 window.addEventListener('resize', function() { if (controllers.touch) controllers.touch.updateMobileTabletState(); });
-/** Runs `startGameOverWatcher`. */
+
+/**
+ * Starts game over watcher.
+ * The operation is isolated here to keep behavior predictable.
+ */
 function startGameOverWatcher() {
     resetGameOverState();
-    /** Runs `loop`. */
+    /**
+     * Executes the loop routine.
+     * The logic is centralized here for maintainability.
+     */
     let loop = function() {
         let status = getGameOverStatus();
         handleGameOverStatus(status);
@@ -213,7 +292,10 @@ function startGameOverWatcher() {
     requestAnimationFrame(loop);
 }
 
-/** Runs `resetGameOverState`. */
+/**
+ * Resets game over state.
+ * The operation is isolated here to keep behavior predictable.
+ */
 function resetGameOverState() {
     if (endOverlayElement) endOverlayElement.remove();
     window.EPL.UI.EndOverlay.reset();
@@ -225,7 +307,11 @@ function resetGameOverState() {
     resetKeyboard();
 }
 
-/** Gets `getGameOverStatus` data. @returns {*} Result. */
+/**
+ * Returns the game over status.
+ * This helper centralizes read access for callers.
+ * @returns {string} Returns the resulting string value.
+ */
 function getGameOverStatus() {
     if (world?.character?.isDead?.()) return 'dead';
     let boss = getBoss();
@@ -233,30 +319,49 @@ function getGameOverStatus() {
     return null;
 }
 
-/** Gets `getBoss` data. @returns {*} Result. */
+/**
+ * Returns the boss.
+ * This helper centralizes read access for callers.
+ * @returns {unknown} Returns the value produced by this routine.
+ */
 function getBoss() {
     return world?.level?.enemies?.find(function(e) { return e instanceof Endboss; });
 }
 
-/** Checks `isBossDefeatedCheck`. @param {*} boss - Value. @returns {*} Result. */
+/**
+ * Evaluates the boss defeated check condition.
+ * Returns whether the current runtime state satisfies that condition.
+ * @param {object} boss - Object argument used by this routine.
+ * @returns {boolean} Returns `true` when the condition is satisfied; otherwise `false`.
+ */
 function isBossDefeatedCheck(boss) {
     return boss && (boss.isDeadState || boss.energy <= 0);
 }
 
-/** Handles `handleGameOverStatus`. @param {*} status - Value. @returns {*} Result. */
+/**
+ * Handles game over status.
+ * It applies side effects required by this branch.
+ * @param {string} status - String value used by this routine.
+ */
 function handleGameOverStatus(status) {
     if (status === 'dead') { handlePlayerDead(); return; }
     if (status === 'bossDefeated') handleBossDefeated();
 }
 
-/** Handles `handlePlayerDead`. @returns {*} Result. */
+/**
+ * Handles player dead.
+ * It applies side effects required by this branch.
+ */
 function handlePlayerDead() {
     if (endOverlayShown) return;
     triggerGameOverOverlay();
     controlsLocked = true;
 }
 
-/** Handles `handleBossDefeated`. @returns {*} Result. */
+/**
+ * Handles boss defeated.
+ * It applies side effects required by this branch.
+ */
 function handleBossDefeated() {
     if (endOverlayShown) return;
     showEndOverlay(getBossDefeatedOverlayConfig());
@@ -264,7 +369,11 @@ function handleBossDefeated() {
     endOverlayShown = true;
 }
 
-/** Gets `getBossDefeatedOverlayConfig` data. @returns {*} Result. */
+/**
+ * Returns the boss defeated overlay config.
+ * This helper centralizes read access for callers.
+ * @returns {object} Returns an object containing computed state values.
+ */
 function getBossDefeatedOverlayConfig() {
     return {
         imgSrc: './img/You won, you lost/You Win A.png',
@@ -278,7 +387,10 @@ function getBossDefeatedOverlayConfig() {
     };
 }
 
-/** Runs `triggerGameOverOverlay`. @returns {*} Result. */
+/**
+ * Executes the trigger game over overlay routine.
+ * The logic is centralized here for maintainability.
+ */
 function triggerGameOverOverlay() {
     if (endOverlayShown || gameOverOverlay) return;
     showEndOverlay({
@@ -290,7 +402,11 @@ function triggerGameOverOverlay() {
     endOverlayShown = true;
 }
 
-/** Runs `showEndOverlay`. @param {*} config - Value. */
+/**
+ * Shows end overlay.
+ * The operation is isolated here to keep behavior predictable.
+ * @param {object} config - Configuration object that defines thresholds and behavior.
+ */
 function showEndOverlay(config) {
     config = config || {};
     window.EPL.UI.EndOverlay.activate(config.hint);
@@ -302,90 +418,148 @@ function showEndOverlay(config) {
     window.EPL.UI.EndOverlay.sync();
 }
 
-/** Runs `resetKeyboard`. */
+/**
+ * Resets keyboard.
+ * The operation is isolated here to keep behavior predictable.
+ */
 function resetKeyboard() {
     if (controllers.keyboard) controllers.keyboard.reset();
 }
 
 window.showGameOverOverlay = triggerGameOverOverlay;
-/** Checks `shouldIgnoreInput`. @returns {*} Result. */
+
+/**
+ * Evaluates the ignore input condition.
+ * Returns whether the current runtime state satisfies that condition.
+ * @returns {boolean} Returns `true` when the condition is satisfied; otherwise `false`.
+ */
 function shouldIgnoreInput() {
     return isBossDefeated() || controlsLocked;
 }
 
-/** Checks `isBossDefeated`. @returns {*} Result. */
+/**
+ * Evaluates the boss defeated condition.
+ * Returns whether the current runtime state satisfies that condition.
+ * @returns {boolean} Returns `true` when the condition is satisfied; otherwise `false`.
+ */
 function isBossDefeated() {
     return world?.isBossDefeated?.();
 }
 
-/** Runs `navigateToMenu`. */
+/**
+ * Executes the navigate to menu routine.
+ * The logic is centralized here for maintainability.
+ */
 function navigateToMenu() {
     window.location.href = 'menu.html';
 }
 
-/** Updates `updateLayout` state. @param {*} forcedMode - Value. */
+/**
+ * Updates layout.
+ * This synchronizes runtime state with current inputs.
+ * @param {unknown} forcedMode - Input value used by this routine.
+ */
 function updateLayout(forcedMode) {
     if (controllers.orientation) controllers.orientation.applyLayout(forcedMode);
 }
 
-/** Sets `setupTouchControls` state. */
+/**
+ * Initializes touch controls.
+ * It is part of the module startup flow.
+ */
 function setupTouchControls() {
     if (controllers.touch) controllers.touch.initOnce();
 }
 
-/** Sets `setupMobileControlsToggle` state. */
+/**
+ * Initializes mobile controls toggle.
+ * It is part of the module startup flow.
+ */
 function setupMobileControlsToggle() {
     if (controllers.touch) controllers.touch.setupMobileToggle();
 }
 
-/** Sets `setupTouchControlsMediaQuery` state. */
+/**
+ * Initializes touch controls media query.
+ * It is part of the module startup flow.
+ */
 function setupTouchControlsMediaQuery() {
     if (controllers.touch) controllers.touch.setupMediaQuery();
 }
 
-/** Updates `updateTouchControlsVisibility` state. */
+/**
+ * Updates touch controls visibility.
+ * This synchronizes runtime state with current inputs.
+ */
 function updateTouchControlsVisibility() {
     if (controllers.touch) controllers.touch.updateVisibility();
 }
 
-/** Updates `updateTouchControlsUI` state. */
+/**
+ * Updates touch controls UI.
+ * This synchronizes runtime state with current inputs.
+ */
 function updateTouchControlsUI() {
     if (controllers.touch) controllers.touch.updateUI();
 }
 
-/** Sets `setupMobileTabletDetection` state. */
+/**
+ * Initializes mobile tablet detection.
+ * It is part of the module startup flow.
+ */
 function setupMobileTabletDetection() {
     if (controllers.touch) controllers.touch.updateMobileTabletState();
 }
 
-/** Updates `updateMobileTabletState` state. @returns {*} Result. */
+/**
+ * Updates mobile tablet state.
+ * This synchronizes runtime state with current inputs.
+ * @returns {boolean} Returns `true` when the condition is satisfied; otherwise `false`.
+ */
 function updateMobileTabletState() {
     if (controllers.touch) return controllers.touch.updateMobileTabletState();
     return false;
 }
 
-/** Sets `setupSoundToggleGame` state. */
+/**
+ * Initializes sound toggle game.
+ * It is part of the module startup flow.
+ */
 function setupSoundToggleGame() {
     if (controllers.soundToggle) controllers.soundToggle.init();
 }
 
-/** Sets `setupOrientationToggle` state. */
+/**
+ * Initializes orientation toggle.
+ * It is part of the module startup flow.
+ */
 function setupOrientationToggle() {
     if (controllers.orientation) controllers.orientation.initToggle();
 }
 
-/** Runs `applyStoredOrientation`. */
+/**
+ * Applies stored orientation.
+ * The operation is isolated here to keep behavior predictable.
+ */
 function applyStoredOrientation() {
     if (controllers.orientation) controllers.orientation.applyStored();
 }
 
-/** Runs `ensureFullscreenTarget`. @param {*} canvasEl - Value. @returns {*} Result. */
+/**
+ * Ensures fullscreen target is available before continuing.
+ * The operation is isolated here to keep behavior predictable.
+ * @param {HTMLCanvasElement} canvasEl - Canvas element used for rendering or layout operations.
+ * @returns {unknown|null} Returns the value computed for the active runtime branch.
+ */
 function ensureFullscreenTarget(canvasEl) {
     if (controllers.fullscreen) return controllers.fullscreen.ensureTarget(canvasEl);
     return null;
 }
 
-/** Runs `applyFullscreenContainScale`. */
+/**
+ * Applies fullscreen contain scale.
+ * The operation is isolated here to keep behavior predictable.
+ */
 function applyFullscreenContainScale() {
     if (controllers.fullscreen) controllers.fullscreen.applyContainBaseStyles();
 }

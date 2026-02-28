@@ -8,13 +8,14 @@ class Level {
     salsa;
     backgroundObjects;
     level_end_x = 2500;
-
+    
     /**
-     * @param {Array} [enemies=[]]
-     * @param {Array} [clouds=[]]
-     * @param {Array} [icons=[]]
-     * @param {Array} [salsa=[]]
-     * @param {Array} [backgroundObjects=[]]
+     * Creates a new instance.
+     * @param {Array} [enemies=[]] - Enemy instances contained in the level.
+     * @param {Array} [clouds=[]] - Cloud layer objects for background ambience.
+     * @param {Array} [icons=[]] - Collectible icons/coins placed in the level.
+     * @param {Array} [salsa=[]] - Collectible throwable objects (bottles) in the level.
+     * @param {Array} [backgroundObjects=[]] - Background layer objects for parallax rendering.
      */
     constructor(enemies = [], clouds = [], icons = [], salsa = [], backgroundObjects = []) {
         this.enemies = enemies;

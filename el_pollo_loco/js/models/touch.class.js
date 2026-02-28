@@ -1,8 +1,17 @@
+/**
+ * @fileoverview
+ * Touch controller that maps touch UI interactions to the shared `Keyboard` input state for mobile gameplay.
+ *
+ * Exposed under `window.EPL.Controllers.Touch`.
+ */
 window.EPL = window.EPL || {};
 window.EPL.Controllers = window.EPL.Controllers || {};
-
 window.EPL.Controllers.Touch = window.EPL.Controllers.Touch || class TouchController {
-    /** Initialize touch controller dependencies. @param {{getKeyboard:Function,shouldIgnoreInput:Function}} deps */
+    /**
+     * Initializes a new methods instance and sets up default runtime state.
+     * The constructor prepares dependencies used by class behavior.
+     * @param {object} deps - Object argument used by this routine.
+     */
     constructor(deps) {
         this.deps = deps;
         this.initialized = false;
@@ -12,17 +21,28 @@ window.EPL.Controllers.Touch = window.EPL.Controllers.Touch || class TouchContro
         this.mousePressedKeys = new Set();
     }
 
-    /** Return the storage key for touch-control preference. @returns {string} */
+    /**
+     * Returns the storage key.
+     * This helper centralizes read access for callers.
+     * @returns {string} Returns the resulting string value.
+     */
     getStorageKey() {
         return window.EPL && window.EPL.KEYS && window.EPL.KEYS.TOUCH_CONTROLS ? window.EPL.KEYS.TOUCH_CONTROLS : 'touch-controls-preference';
     }
 
-    /** Return the mobile breakpoint width. @returns {number} */
+    /**
+     * Returns the breakpoint.
+     * This helper centralizes read access for callers.
+     * @returns {number} Returns the computed numeric value.
+     */
     getBreakpoint() {
         return window.EPL && typeof window.EPL.BREAKPOINT_MOBILE === 'number' ? window.EPL.BREAKPOINT_MOBILE : 899;
     }
 
-    /** Initialize touch buttons and mouse release hook once. */
+    /**
+     * Initializes once.
+     * It is part of the module startup flow.
+     */
     initOnce() {
         let buttons;
         if (this.initialized) return;
@@ -33,7 +53,11 @@ window.EPL.Controllers.Touch = window.EPL.Controllers.Touch || class TouchContro
         this.initialized = true;
     }
 
-    /** Bind handlers for all touch control buttons. @param {HTMLElement[]} buttons */
+    /**
+     * Binds buttons.
+     * The operation is isolated here to keep behavior predictable.
+     * @param {Array<unknown>} buttons - Array argument consumed by this routine.
+     */
     bindButtons(buttons) {
         let self = this;
         buttons.forEach(function(btn) {
@@ -44,12 +68,26 @@ window.EPL.Controllers.Touch = window.EPL.Controllers.Touch || class TouchContro
         });
     }
 
-    /** Attach pointer listeners for one control button. @param {HTMLElement} btn @param {string} key */
+    /**
+     * Attaches button listeners.
+     * The operation is isolated here to keep behavior predictable.
+     * @param {object} btn - Object argument used by this routine.
+     * @param {unknown} key - Input value used by this routine.
+     */
     attachButtonListeners(btn, key) {
         let self = this;
-        /** Handle press-start events for this button binding. @param {Event} e @param {string} src */
+        /**
+         * Handles start.
+         * It applies side effects required by this branch.
+         * @param {Event} e - Input value used by this routine.
+         * @param {string} src - String value used by this routine.
+         */
         let onStart = function(e, src) { self.handlePressStart(e, src, btn, key); };
-        /** Handle press-end events for this button binding. @param {Event} e */
+        /**
+         * Handles end.
+         * It applies side effects required by this branch.
+         * @param {Event} e - Input value used by this routine.
+         */
         let onEnd = function(e) { self.handlePressEnd(e, btn, key); };
         btn.addEventListener('touchstart', function(e) { onStart(e, 'touch'); }, { passive: false });
         btn.addEventListener('touchend', onEnd, { passive: false });
@@ -59,7 +97,14 @@ window.EPL.Controllers.Touch = window.EPL.Controllers.Touch || class TouchContro
         btn.addEventListener('mouseleave', onEnd);
     }
 
-    /** Apply key-down state for button press start. @param {Event} e @param {string} src @param {HTMLElement} btn @param {string} key */
+    /**
+     * Handles press start.
+     * It applies side effects required by this branch.
+     * @param {Event} e - Input value used by this routine.
+     * @param {string} src - String value used by this routine.
+     * @param {object} btn - Object argument used by this routine.
+     * @param {unknown} key - Input value used by this routine.
+     */
     handlePressStart(e, src, btn, key) {
         let kb = this.deps.getKeyboard();
         let keys;
@@ -71,7 +116,13 @@ window.EPL.Controllers.Touch = window.EPL.Controllers.Touch || class TouchContro
         if (src === 'mouse') this.mousePressedKeys.add(key);
     }
 
-    /** Apply key-up state for button press end. @param {Event} e @param {HTMLElement} btn @param {string} key */
+    /**
+     * Handles press end.
+     * It applies side effects required by this branch.
+     * @param {Event} e - Input value used by this routine.
+     * @param {object} btn - Object argument used by this routine.
+     * @param {unknown} key - Input value used by this routine.
+     */
     handlePressEnd(e, btn, key) {
         let kb = this.deps.getKeyboard();
         let keys = this.getKeysForButton(key);
@@ -84,13 +135,21 @@ window.EPL.Controllers.Touch = window.EPL.Controllers.Touch || class TouchContro
         this.mousePressedKeys.delete(key);
     }
 
-    /** Return keyboard keys mapped to a touch button key. @param {string} key @returns {string[]} */
+    /**
+     * Returns the keys for button.
+     * This helper centralizes read access for callers.
+     * @param {string} key - String value used by this routine.
+     * @returns {Array<unknown>} Returns the assembled array for downstream processing.
+     */
     getKeysForButton(key) {
         if (key === 'SPACE' || key === 'UP') return ['SPACE', 'UP'];
         return [key];
     }
 
-    /** Bind global mouseup to release active mouse-pressed keys. */
+    /**
+     * Binds global mouse up.
+     * The operation is isolated here to keep behavior predictable.
+     */
     bindGlobalMouseUp() {
         let self = this;
         window.addEventListener('mouseup', function(e) {
@@ -100,7 +159,10 @@ window.EPL.Controllers.Touch = window.EPL.Controllers.Touch || class TouchContro
         });
     }
 
-    /** Release all keys currently held by mouse interaction. */
+    /**
+     * Executes the release all mouse keys routine.
+     * The logic is centralized here for maintainability.
+     */
     releaseAllMouseKeys() {
         let self = this;
         let kb = this.deps.getKeyboard();
@@ -114,7 +176,10 @@ window.EPL.Controllers.Touch = window.EPL.Controllers.Touch || class TouchContro
         this.mousePressedKeys.clear();
     }
 
-    /** Set up viewport media-query listener for controls visibility. */
+    /**
+     * Initializes media query.
+     * It is part of the module startup flow.
+     */
     setupMediaQuery() {
         let self = this;
         if (!window.matchMedia) return;
@@ -123,7 +188,10 @@ window.EPL.Controllers.Touch = window.EPL.Controllers.Touch || class TouchContro
         else if (this.mql.addListener) this.mql.addListener(function() { self.updateVisibility(); });
     }
 
-    /** Set up the mobile controls toggle button listener. */
+    /**
+     * Initializes mobile toggle.
+     * It is part of the module startup flow.
+     */
     setupMobileToggle() {
         let self = this;
         let toggle = document.getElementById('mobile-controls-toggle');
@@ -135,7 +203,10 @@ window.EPL.Controllers.Touch = window.EPL.Controllers.Touch || class TouchContro
         });
     }
 
-    /** Recompute controls visibility from storage and device state. */
+    /**
+     * Updates visibility.
+     * This synchronizes runtime state with current inputs.
+     */
     updateVisibility() {
         let stored = localStorage.getItem(this.getStorageKey());
         let isTouch = document.body.classList.contains('is-mobile-tablet');
@@ -143,14 +214,23 @@ window.EPL.Controllers.Touch = window.EPL.Controllers.Touch || class TouchContro
         this.updateUI();
     }
 
-    /** Resolve controls visibility from preference and device state. @param {string|null} stored @param {boolean} isTouch @returns {boolean} */
+    /**
+     * Resolves visibility.
+     * The operation is isolated here to keep behavior predictable.
+     * @param {string} stored - String value used by this routine.
+     * @param {boolean} isTouch - Boolean flag controlling this branch.
+     * @returns {boolean} Returns `true` when the condition is satisfied; otherwise `false`.
+     */
     resolveVisibility(stored, isTouch) {
         if (stored === 'on') return true;
         if (stored === 'off') return false;
         return Boolean(isTouch);
     }
 
-    /** Update controls and related toggle UI classes. */
+    /**
+     * Updates UI.
+     * This synchronizes runtime state with current inputs.
+     */
     updateUI() {
         let controls = document.getElementById('touch-controls');
         let toggle = document.getElementById('mobile-controls-toggle');
@@ -162,12 +242,21 @@ window.EPL.Controllers.Touch = window.EPL.Controllers.Touch || class TouchContro
         this.updateOrientationToggle(show);
     }
 
-    /** Update toggle button text for current visibility. @param {HTMLElement|null} toggle @param {boolean} show */
+    /**
+     * Updates toggle text.
+     * This synchronizes runtime state with current inputs.
+     * @param {object} toggle - Object argument used by this routine.
+     * @param {boolean} show - Boolean flag controlling this branch.
+     */
     updateToggleText(toggle, show) {
         if (toggle) toggle.textContent = show ? 'Mobile-Steuerung aus' : 'Mobile-Steuerung an';
     }
 
-    /** Update orientation toggle visibility based on touch controls state. @param {boolean} show */
+    /**
+     * Updates orientation toggle.
+     * This synchronizes runtime state with current inputs.
+     * @param {boolean} show - Boolean flag controlling this branch.
+     */
     updateOrientationToggle(show) {
         let btn = document.getElementById('orientation-toggle');
         let withinBp = this.mql ? this.mql.matches : window.innerWidth <= this.getBreakpoint();
@@ -175,7 +264,11 @@ window.EPL.Controllers.Touch = window.EPL.Controllers.Touch || class TouchContro
         btn.style.display = (show || withinBp) ? 'inline-flex' : 'none';
     }
 
-    /** Detect whether device characteristics match mobile/tablet. @returns {boolean} */
+    /**
+     * Executes the detect mobile tablet routine.
+     * The logic is centralized here for maintainability.
+     * @returns {unknown} Returns the value produced by this routine.
+     */
     detectMobileTablet() {
         let touch = navigator.maxTouchPoints > 0;
         let coarse = window.matchMedia && window.matchMedia('(pointer: coarse)').matches;
@@ -183,7 +276,11 @@ window.EPL.Controllers.Touch = window.EPL.Controllers.Touch || class TouchContro
         return touch && (coarse || noHover);
     }
 
-    /** Update and return mobile/tablet body class state. @returns {boolean} */
+    /**
+     * Updates mobile tablet state.
+     * This synchronizes runtime state with current inputs.
+     * @returns {unknown} Returns the value produced by this routine.
+     */
     updateMobileTabletState() {
         let detected = this.detectMobileTablet();
         document.body.classList.toggle('is-mobile-tablet', detected);
