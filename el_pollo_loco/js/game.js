@@ -17,6 +17,7 @@ const controllers = {
     touch: null,
     soundToggle: null
 };
+
 /** Initializes routine. It is part of the module startup flow. */
 function init() {
     canvas = document.getElementById('canvas');

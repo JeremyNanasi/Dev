@@ -22,6 +22,7 @@ class World {
     gameOverStartTime = null;
     winStartTime = null;
     endAudioStopped = false;
+    
     /** Initializes a new methods instance and sets up default runtime state. The constructor prepares dependencies used by class behavior. */
     constructor(canvas, keyboard) {
         this.setupCanvas(canvas, keyboard);

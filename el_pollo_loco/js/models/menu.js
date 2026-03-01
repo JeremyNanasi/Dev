@@ -12,6 +12,7 @@ let state = window.__epl_menu_state || (window.__epl_menu_state = {
     gestureBound: false,
     startBound: false
 });
+
 /**
  * Returns the sound api.
  * This helper centralizes read access for callers.
