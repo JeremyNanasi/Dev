@@ -1,13 +1,6 @@
-/**
- * @fileoverview
- * Defines `WorldCollision`, handling collision detection, stomp/contact rules, and pickup logic for world entities.
- */
+/** Defines `WorldCollision`, handling collision detection, stomp/contact rules, and pickup logic for world entities. */
 class WorldCollision {
-    /**
-     * Initializes a new methods instance and sets up default runtime state.
-     * The constructor prepares dependencies used by class behavior.
-     * @param {World} world - World instance that provides level, character, and runtime access.
-     */
+    /** Initializes a new methods instance and sets up default runtime state. The constructor prepares dependencies used by class behavior. */
     constructor(world) {
         this.world = world;
         this._dbgLastAt = {};
@@ -17,10 +10,7 @@ class WorldCollision {
         if (typeof window !== 'undefined') { (window.EPL = window.EPL || {}).dumpCollisionData = () => globalThis.__EPL_LAST_COLLISION__?.dumpCollisionMetrics?.() ?? null; }
     }
 
-    /**
-     * Executes the check collisions routine.
-     * The logic is centralized here for maintainability.
-     */
+    /** Executes the check collisions routine. The logic is centralized here for maintainability. */
     checkCollisions() {
         this.handleEnemyCollisions();
         this.handleIconCollisions();
@@ -28,10 +18,7 @@ class WorldCollision {
         this.handleThrowableCollisions();
     }
 
-    /**
-     * Handles enemy collisions.
-     * It applies side effects required by this branch.
-     */
+    /** Handles enemy collisions. It applies side effects required by this branch. */
     handleEnemyCollisions() {
         const collisionConfig = this.getCollisionConfig();
         this.world.level.enemies.forEach((enemy) => {
@@ -45,22 +32,13 @@ class WorldCollision {
         });
     }
 
-    /**
-     * Evaluates the skip enemy condition.
-     * Returns whether the current runtime state satisfies that condition.
-     * @param {object} enemy - Enemy instance being processed by this routine.
-     * @returns {boolean} Returns `true` when the condition is satisfied; otherwise `false`.
-     */
+    /** Evaluates the skip enemy condition. Returns whether the current runtime state satisfies that condition. */
     shouldSkipEnemy(enemy) {
         return enemy instanceof Endboss
             || (typeof enemy.isDead === 'function' && enemy.isDead());
     }
 
-    /**
-     * Applies stomp damage.
-     * The operation is isolated here to keep behavior predictable.
-     * @param {object} enemy - Enemy instance being processed by this routine.
-     */
+    /** Applies stomp damage. The operation is isolated here to keep behavior predictable. */
     applyStompDamage(enemy) {
         if (typeof enemy.die === 'function') {
             enemy.die();
@@ -75,28 +53,17 @@ class WorldCollision {
         enemy.isDeadState = true;
     }
 
-    /**
-     * Handles icon collisions.
-     * It applies side effects required by this branch.
-     */
+    /** Handles icon collisions. It applies side effects required by this branch. */
     handleIconCollisions() {
         this.collectCollidingItems(this.world.level.icons, (index) => this.collectIcon(index), true);
     }
 
-    /**
-     * Handles salsa collisions.
-     * It applies side effects required by this branch.
-     */
+    /** Handles salsa collisions. It applies side effects required by this branch. */
     handleSalsaCollisions() {
         this.collectCollidingItems(this.world.level.salsa, (index) => this.collectSalsa(index), true);
     }
 
-    /**
-     * Collects colliding items.
-     * The operation is isolated here to keep behavior predictable.
-     * @param {Array<unknown>} items - Collection processed by this routine.
-     * @param {Function} collectFn - Callback function executed by this helper.
-     */
+    /** Collects colliding items. The operation is isolated here to keep behavior predictable. */
     collectCollidingItems(items, collectFn) {
         for (let i = items.length - 1; i >= 0; i--) {
             if (this.isCharacterColliding(items[i])) {
@@ -105,12 +72,7 @@ class WorldCollision {
         }
     }
 
-    /**
-     * Evaluates the character colliding condition.
-     * Returns whether the current runtime state satisfies that condition.
-     * @param {unknown} object - Input value used by this routine.
-     * @returns {boolean} Returns `true` when the condition is satisfied; otherwise `false`.
-     */
+    /** Evaluates the character colliding condition. Returns whether the current runtime state satisfies that condition. */
     isCharacterColliding(object) {
         if (this.isCollectibleObject(object)) {
             const characterPickupBox = this.getPickupBoxForCharacter();
@@ -122,12 +84,7 @@ class WorldCollision {
         return this.isCollidingBoxes(characterBox, objectBox);
     }
 
-    /**
-     * Evaluates the collectible object condition.
-     * Returns whether the current runtime state satisfies that condition.
-     * @param {object} object - Object argument used by this routine.
-     * @returns {boolean} Returns `true` when the condition is satisfied; otherwise `false`.
-     */
+    /** Evaluates the collectible object condition. Returns whether the current runtime state satisfies that condition. */
     isCollectibleObject(object) {
         if (object?.isCollectible === true || object?.collectible === true || object?.type === 'collectible') {
             return true;
@@ -138,21 +95,12 @@ class WorldCollision {
         return object instanceof ThrowableObject && this.world.level?.salsa?.includes(object);
     }
 
-    /**
-     * Returns the pickup box for character.
-     * This helper centralizes read access for callers.
-     * @returns {unknown} Returns the value produced by this routine.
-     */
+    /** Returns the pickup box for character. This helper centralizes read access for callers. */
     getPickupBoxForCharacter() {
         return this.getCollisionBox(this.world.character);
     }
 
-    /**
-     * Returns the pickup box for object.
-     * This helper centralizes read access for callers.
-     * @param {unknown} object - Input value used by this routine.
-     * @returns {object} Returns an object containing computed state values.
-     */
+    /** Returns the pickup box for object. This helper centralizes read access for callers. */
     getPickupBoxForObject(object) {
         const inset = 2;
         const objectBox = this.getCollisionBox(object);
@@ -163,21 +111,12 @@ class WorldCollision {
         return { x, y, width, height, left: x, right: x + width, top: y, bottom: y + height };
     }
 
-    /**
-     * Evaluates the pickup colliding condition.
-     * Returns whether the current runtime state satisfies that condition.
-     * @param {unknown} characterPickupBox - Input value used by this routine.
-     * @param {unknown} objectPickupBox - Input value used by this routine.
-     * @returns {boolean} Returns `true` when the condition is satisfied; otherwise `false`.
-     */
+    /** Evaluates the pickup colliding condition. Returns whether the current runtime state satisfies that condition. */
     isPickupColliding(characterPickupBox, objectPickupBox) {
         return this.isCollidingBoxes(characterPickupBox, objectPickupBox);
     }
 
-    /**
-     * Handles throwable collisions.
-     * It applies side effects required by this branch.
-     */
+    /** Handles throwable collisions. It applies side effects required by this branch. */
     handleThrowableCollisions() {
         for (let i = this.world.throwableObject.length - 1; i >= 0; i--) {
             if (this.isBottleHittingEnemy(this.world.throwableObject[i])) {
@@ -186,12 +125,7 @@ class WorldCollision {
         }
     }
 
-    /**
-     * Evaluates the bottle hitting enemy condition.
-     * Returns whether the current runtime state satisfies that condition.
-     * @param {object} bottle - Object argument used by this routine.
-     * @returns {boolean} Returns `true` when the condition is satisfied; otherwise `false`.
-     */
+    /** Evaluates the bottle hitting enemy condition. Returns whether the current runtime state satisfies that condition. */
     isBottleHittingEnemy(bottle) {
         for (let j = 0; j < this.world.level.enemies.length; j++) {
             const enemy = this.world.level.enemies[j];
@@ -203,11 +137,7 @@ class WorldCollision {
         return false;
     }
 
-    /**
-     * Applies bottle hit.
-     * The operation is isolated here to keep behavior predictable.
-     * @param {object} enemy - Enemy instance being processed by this routine.
-     */
+    /** Applies bottle hit. The operation is isolated here to keep behavior predictable. */
     applyBottleHit(enemy) {
         enemy.takeDamage(10);
         if (enemy instanceof Endboss) {
@@ -215,11 +145,7 @@ class WorldCollision {
         }
     }
 
-    /**
-     * Updates boss after hit.
-     * This synchronizes runtime state with current inputs.
-     * @param {object} enemy - Enemy instance being processed by this routine.
-     */
+    /** Updates boss after hit. This synchronizes runtime state with current inputs. */
     updateBossAfterHit(enemy) {
         enemy.updateHealthBar?.();
         if (enemy.energy <= 0 && typeof enemy.playDeathAnimation === 'function') {
@@ -229,22 +155,14 @@ class WorldCollision {
         enemy.playHurtAnimation?.();
     }
 
-    /**
-     * Collects icon.
-     * The operation is isolated here to keep behavior predictable.
-     * @param {number} index - Zero-based index of the target element.
-     */
+    /** Collects icon. The operation is isolated here to keep behavior predictable. */
     collectIcon(index) {
         this.world.level.icons.splice(index, 1);
         this.world.updateCoinCounter();
         this.world.updateStatusBars();
     }
 
-    /**
-     * Collects salsa.
-     * The operation is isolated here to keep behavior predictable.
-     * @param {number} index - Zero-based index of the target element.
-     */
+    /** Collects salsa. The operation is isolated here to keep behavior predictable. */
     collectSalsa(index) {
         const [bottle] = this.world.level.salsa.splice(index, 1);
         if (bottle && typeof bottle.stopGroundAnimation === 'function') {
@@ -254,13 +172,7 @@ class WorldCollision {
         this.world.refreshSalsaHud();
     }
 
-    /**
-     * Logs contact for diagnostics.
-     * This helper supports runtime debugging visibility.
-     * @param {object} config - Configuration object that defines thresholds and behavior.
-     * @param {string} tag - Short tag that categorizes the diagnostic event.
-     * @param {object} payload - Structured payload emitted for debugging output.
-     */
+    /** Logs contact for diagnostics. This helper supports runtime debugging visibility. */
     dbgContact(config, tag, payload) {
         if (!config?.debugContact) { return; }
         const now = Date.now();
@@ -270,11 +182,7 @@ class WorldCollision {
         try { console.log(JSON.stringify({ tag, ...payload })); } catch (_) { }
     }
 
-    /**
-     * Returns the collision config.
-     * This helper centralizes read access for callers.
-     * @returns {object} Returns an object containing computed state values.
-     */
+    /** Returns the collision config. This helper centralizes read access for callers. */
     getCollisionConfig() {
         return {
             stompVerticalTolerance: 30,
@@ -296,36 +204,17 @@ class WorldCollision {
         };
     }
 
-    /**
-     * Returns the damage snapshot.
-     * This helper centralizes read access for callers.
-     * @param {Character} character - Character instance involved in this operation.
-     * @returns {object} Returns an object containing computed state values.
-     */
+    /** Returns the damage snapshot. This helper centralizes read access for callers. */
     getDamageSnapshot(character) {
         return { energy: character.energy, lastHit: character.lastHit, cooldownOrHurtState: typeof character.isHurt === 'function' ? character.isHurt() : undefined };
     }
 
-    /**
-     * Logs damage apply for diagnostics.
-     * This helper supports runtime debugging visibility.
-     * @param {object} config - Configuration object that defines thresholds and behavior.
-     * @param {string} tag - Short tag that categorizes the diagnostic event.
-     * @param {object} enemy - Enemy instance being processed by this routine.
-     * @param {string} reason - String value used by this routine.
-     * @param {object} before - Object argument used by this routine.
-     * @param {object} after - Object argument used by this routine.
-     */
+    /** Logs damage apply for diagnostics. This helper supports runtime debugging visibility. */
     logDamageApply(config, tag, enemy, reason, before, after) {
         this.dbgContact(config, tag, { enemyType: enemy.constructor?.name ?? 'unknown', reason, energyBefore: before.energy, energyAfter: after.energy, lastHitBefore: before.lastHit, lastHitAfter: after.lastHit, cooldownOrHurtState: after.cooldownOrHurtState });
     }
 
-    /**
-     * Applies character contact damage.
-     * The operation is isolated here to keep behavior predictable.
-     * @param {object} enemy - Enemy instance being processed by this routine.
-     * @param {object} config - Configuration object that defines thresholds and behavior.
-     */
+    /** Applies character contact damage. The operation is isolated here to keep behavior predictable. */
     applyCharacterContactDamage(enemy, config) {
         const character = this.world.character;
         const reason = this._lastContactEnemy === enemy ? this._lastContactReason : 'other';
@@ -338,12 +227,7 @@ class WorldCollision {
         this.world.statusBar.setPercentage((character.energy / 600) * 100);
     }
 
-    /**
-     * Returns the collision box.
-     * This helper centralizes read access for callers.
-     * @param {unknown} object - Input value used by this routine.
-     * @param {number} offset - Numeric value used by this routine.
-     */
+    /** Returns the collision box. This helper centralizes read access for callers. */
     getCollisionBox(object, offset = {}) {
         const baseX = object.getHitboxX?.() ?? object.x ?? 0;
         const baseY = object.getHitboxY?.() ?? object.y ?? 0;
@@ -356,13 +240,7 @@ class WorldCollision {
         return { x, y, width, height, left: x, right: x + width, top: y, bottom: y + height };
     }
 
-    /**
-     * Evaluates the colliding boxes condition.
-     * Returns whether the current runtime state satisfies that condition.
-     * @param {object} aBox - Object argument used by this routine.
-     * @param {object} bBox - Object argument used by this routine.
-     * @returns {boolean} Returns `true` when the condition is satisfied; otherwise `false`.
-     */
+    /** Evaluates the colliding boxes condition. Returns whether the current runtime state satisfies that condition. */
     isCollidingBoxes(aBox, bBox) {
         return aBox.right > bBox.left
             && aBox.left < bBox.right
@@ -370,88 +248,45 @@ class WorldCollision {
             && aBox.top < bBox.bottom;
     }
 
-    /**
-     * Returns the overlap.
-     * This helper centralizes read access for callers.
-     * @param {object} aBox - Object argument used by this routine.
-     * @param {object} bBox - Object argument used by this routine.
-     * @returns {object} Returns an object containing computed state values.
-     */
+    /** Returns the overlap. This helper centralizes read access for callers. */
     getOverlap(aBox, bBox) {
         const overlapX = Math.min(aBox.right, bBox.right) - Math.max(aBox.left, bBox.left);
         const overlapY = Math.min(aBox.bottom, bBox.bottom) - Math.max(aBox.top, bBox.top);
         return { x: Math.max(0, overlapX), y: Math.max(0, overlapY) };
     }
 
-    /**
-     * Returns the vertical overlap only.
-     * This helper centralizes read access for callers.
-     * @param {object} aBox - Object argument used by this routine.
-     * @param {object} bBox - Object argument used by this routine.
-     * @returns {number} Returns the computed numeric value.
-     */
+    /** Returns the vertical overlap only. This helper centralizes read access for callers. */
     getVerticalOverlapOnly(aBox, bBox) {
         const top = Math.max(aBox.top, bBox.top);
         const bottom = Math.min(aBox.bottom, bBox.bottom);
         return Math.max(0, bottom - top);
     }
 
-    /**
-     * Returns the collision pair.
-     * This helper centralizes read access for callers.
-     * @param {Character} character - Character instance involved in this operation.
-     * @param {unknown} enemy - Enemy instance being processed by this routine.
-     * @returns {object} Returns an object containing computed state values.
-     */
+    /** Returns the collision pair. This helper centralizes read access for callers. */
     getCollisionPair(character, enemy) {
         const characterBox = this.getCollisionBox(character);
         const enemyBox = this.getCollisionBox(enemy);
         return { characterBox, enemyBox };
     }
 
-    /**
-     * Evaluates the falling condition.
-     * Returns whether the current runtime state satisfies that condition.
-     * @param {Character} character - Character instance involved in this operation.
-     * @returns {boolean} Returns `true` when the condition is satisfied; otherwise `false`.
-     */
+    /** Evaluates the falling condition. Returns whether the current runtime state satisfies that condition. */
     isFalling(character) {
         return character.speedY < 0;
     }
 
-    /**
-     * Returns the stomp min overlap.
-     * This helper centralizes read access for callers.
-     * @param {object} enemyBox - Object argument used by this routine.
-     * @param {object} config - Configuration object that defines thresholds and behavior.
-     * @returns {number} Returns the computed numeric value.
-     */
+    /** Returns the stomp min overlap. This helper centralizes read access for callers. */
     getStompMinOverlap(enemyBox, config) {
         return Math.min(config.stompMinOverlapX, enemyBox.width * config.stompMinOverlapXRatio);
     }
 
-    /**
-     * Evaluates the within stomp center condition.
-     * Returns whether the current runtime state satisfies that condition.
-     * @param {number} characterBox - Numeric value used by this routine.
-     * @param {object} enemyBox - Object argument used by this routine.
-     * @param {object} config - Configuration object that defines thresholds and behavior.
-     * @returns {boolean} Returns `true` when the condition is satisfied; otherwise `false`.
-     */
+    /** Evaluates the within stomp center condition. Returns whether the current runtime state satisfies that condition. */
     isWithinStompCenter(characterBox, enemyBox, config) {
         const characterCenterX = characterBox.left + characterBox.width / 2;
         return characterCenterX >= enemyBox.left - config.stompCenterMargin
             && characterCenterX <= enemyBox.right + config.stompCenterMargin;
     }
 
-    /**
-     * Evaluates the stomping condition.
-     * Returns whether the current runtime state satisfies that condition.
-     * @param {Character} character - Character instance involved in this operation.
-     * @param {unknown} enemy - Enemy instance being processed by this routine.
-     * @param {object} config - Configuration object that defines thresholds and behavior.
-     * @returns {boolean} Returns `true` when the condition is satisfied; otherwise `false`.
-     */
+    /** Evaluates the stomping condition. Returns whether the current runtime state satisfies that condition. */
     isStomping(character, enemy, config) {
         const { characterBox, enemyBox } = this.getCollisionPair(character, enemy);
         if (!this.isCollidingBoxes(characterBox, enemyBox)) { return false; }
@@ -463,11 +298,7 @@ class WorldCollision {
         return this.isWithinStompCenter(characterBox, enemyBox, config);
     }
 
-    /**
-     * Returns the contact tuning.
-     * This helper centralizes read access for callers.
-     * @returns {unknown} Returns the value produced by this routine.
-     */
+    /** Returns the contact tuning. This helper centralizes read access for callers. */
     getContactTuning() {
         const defaults = {
             contactMaxGapX: 2,
@@ -481,27 +312,13 @@ class WorldCollision {
         return Object.assign({}, defaults, globalThis.__EPL_CONTACT_TUNING__ ?? {});
     }
 
-    /**
-     * Returns the visual contact box.
-     * This helper centralizes read access for callers.
-     * @param {unknown} entity - Input value used by this routine.
-     * @param {number} insetL - Numeric value used by this routine.
-     * @param {number} insetR - Numeric value used by this routine.
-     * @returns {object} Returns an object containing computed state values.
-     */
+    /** Returns the visual contact box. This helper centralizes read access for callers. */
     getVisualContactBox(entity, insetL, insetR) {
         const b = this.getCollisionBox(entity);
         return { left: b.left + insetL, right: b.right - insetR, top: b.top, bottom: b.bottom };
     }
 
-    /**
-     * Resolves contact boxes.
-     * The operation is isolated here to keep behavior predictable.
-     * @param {Character} character - Character instance involved in this operation.
-     * @param {unknown} enemy - Enemy instance being processed by this routine.
-     * @param {object} tuning - Object argument used by this routine.
-     * @returns {object} Returns an object containing computed state values.
-     */
+    /** Resolves contact boxes. The operation is isolated here to keep behavior predictable. */
     resolveContactBoxes(character, enemy, tuning) {
         const isSmall = enemy instanceof smallchicken;
         const isCk = typeof Chicken !== 'undefined' && enemy instanceof Chicken;
@@ -512,27 +329,13 @@ class WorldCollision {
         return { charBox, enemyBox: this.getVisualContactBox(enemy, eL, eR) };
     }
 
-    /**
-     * Evaluates the contact touch x condition.
-     * Returns whether the current runtime state satisfies that condition.
-     * @param {object} charBox - Object argument used by this routine.
-     * @param {object} enemyBox - Object argument used by this routine.
-     * @param {number} gapX - Numeric value used by this routine.
-     * @returns {boolean} Returns `true` when the condition is satisfied; otherwise `false`.
-     */
+    /** Evaluates the contact touch x condition. Returns whether the current runtime state satisfies that condition. */
     isContactTouchX(charBox, enemyBox, gapX) {
         if (enemyBox.left >= charBox.left) return enemyBox.left <= charBox.right + gapX;
         return enemyBox.right >= charBox.left - gapX;
     }
 
-    /**
-     * Evaluates the contact damage hit condition.
-     * Returns whether the current runtime state satisfies that condition.
-     * @param {Character} character - Character instance involved in this operation.
-     * @param {unknown} enemy - Enemy instance being processed by this routine.
-     * @param {unknown} tuning - Input value used by this routine.
-     * @returns {boolean} Returns `true` when the condition is satisfied; otherwise `false`.
-     */
+    /** Evaluates the contact damage hit condition. Returns whether the current runtime state satisfies that condition. */
     isContactDamageHit(character, enemy, tuning) {
         const t = tuning ?? this.getContactTuning();
         const config = this.getCollisionConfig();
@@ -545,17 +348,7 @@ class WorldCollision {
         return this.applyRearOverride(character, enemy, charBox, enemyBox, overlapY, t);
     }
 
-    /**
-     * Applies rear override.
-     * The operation is isolated here to keep behavior predictable.
-     * @param {Character} character - Character instance involved in this operation.
-     * @param {unknown} enemy - Enemy instance being processed by this routine.
-     * @param {number} charBox - Numeric value used by this routine.
-     * @param {number} enemyBox - Numeric value used by this routine.
-     * @param {unknown} overlapY - Input value used by this routine.
-     * @param {object} t - Object argument used by this routine.
-     * @returns {boolean} Returns `true` when the condition is satisfied; otherwise `false`.
-     */
+    /** Applies rear override. The operation is isolated here to keep behavior predictable. */
     applyRearOverride(character, enemy, charBox, enemyBox, overlapY, t) {
         const isCk = typeof Chicken !== 'undefined' && enemy instanceof Chicken;
         const isSm = enemy instanceof smallchicken;
@@ -569,11 +362,7 @@ class WorldCollision {
         return overlapY >= rMinY && this.isContactTouchX(rBox, enemyBox, rGap);
     }
 
-    /**
-     * Logs collision metrics for diagnostics.
-     * This helper supports runtime debugging visibility.
-     * @returns {object} Returns an object containing computed state values.
-     */
+    /** Logs collision metrics for diagnostics. This helper supports runtime debugging visibility. */
     dumpCollisionMetrics() {
         const char = this.world?.character;
         return {
@@ -585,14 +374,7 @@ class WorldCollision {
         };
     }
 
-    /**
-     * Evaluates the side hit condition.
-     * Returns whether the current runtime state satisfies that condition.
-     * @param {Character} character - Character instance involved in this operation.
-     * @param {unknown} enemy - Enemy instance being processed by this routine.
-     * @param {object} config - Configuration object that defines thresholds and behavior.
-     * @returns {boolean} Returns `true` when the condition is satisfied; otherwise `false`.
-     */
+    /** Evaluates the side hit condition. Returns whether the current runtime state satisfies that condition. */
     isSideHit(character, enemy, config) {
         const tuning = this.getContactTuning();
         const result = this.isContactDamageHit(character, enemy, tuning);

@@ -1,18 +1,10 @@
-/**
- * @fileoverview
- * Enemy SFX and sound toggle integration, including loop management and per-entity sound safety helpers.
- *
- * Encapsulates SFX state using weak references to avoid leaking entity instances.
- */
+/** Enemy SFX and sound toggle integration, including loop management and per-entity sound safety helpers. Encapsulates SFX state using weak references to avoid leaking entity instances. */
 (function () {
   window.EPL = window.EPL || {};
   window.EPL.Controllers = window.EPL.Controllers || {};
   class EnemySfxManager {
 
-    /**
-     * Initializes a new methods instance and sets up default runtime state.
-     * The constructor prepares dependencies used by class behavior.
-     */
+    /** Initializes a new methods instance and sets up default runtime state. The constructor prepares dependencies used by class behavior. */
     constructor() {
       this.stateMap = new WeakMap();
       this.orientationBlocked = false;
@@ -33,12 +25,7 @@
       this.bindOrientationEvents();
     }
 
-    /**
-     * Updates routine.
-     * This synchronizes runtime state with current inputs.
-     * @param {World} world - World instance that provides level, character, and runtime access.
-     * @returns {unknown} Returns the value produced by this routine.
-     */
+    /** Updates routine. This synchronizes runtime state with current inputs. */
     update(world) {
       if (!world?.level?.enemies || !world?.character) return;
       this.lastWorld = world;
@@ -49,18 +36,11 @@
       }
     }
 
-    /**
-     * Evaluates the enabled condition.
-     * Returns whether the current runtime state satisfies that condition.
-     * @returns {boolean} Returns `true` when the condition is satisfied; otherwise `false`.
-     */
+    /** Evaluates the enabled condition. Returns whether the current runtime state satisfies that condition. */
     isEnabled() {
       return window.EPL?.Sound?.isEnabled?.() === true && !this.orientationBlocked;
     }
-    /**
-     * Binds orientation events.
-     * The operation is isolated here to keep behavior predictable.
-     */
+    /** Binds orientation events. The operation is isolated here to keep behavior predictable. */
     bindOrientationEvents() {
       const self = this;
       window.addEventListener('epl:orientation-blocked', function(e) {
@@ -68,24 +48,14 @@
       });
     }
 
-    /**
-     * Sets the orientation blocked.
-     * This keeps persistent and in-memory state aligned.
-     * @param {boolean} blocked - Boolean flag controlling this branch.
-     */
+    /** Sets the orientation blocked. This keeps persistent and in-memory state aligned. */
     setOrientationBlocked(blocked) {
       this.orientationBlocked = blocked;
       if (!blocked) return;
       if (this.lastWorld?.level?.enemies) this.stopAll(this.lastWorld.level.enemies);
     }
 
-    /**
-     * Executes the process enemy routine.
-     * The logic is centralized here for maintainability.
-     * @param {Character} character - Character instance involved in this operation.
-     * @param {unknown} enemy - Enemy instance being processed by this routine.
-     * @returns {unknown} Returns the value produced by this routine.
-     */
+    /** Executes the process enemy routine. The logic is centralized here for maintainability. */
     processEnemy(character, enemy) {
       const type = this.getType(enemy);
       if (!type) return;
@@ -95,12 +65,7 @@
       this.handleLoop(character, enemy, st, type);
     }
 
-    /**
-     * Returns the type.
-     * This helper centralizes read access for callers.
-     * @param {object} enemy - Enemy instance being processed by this routine.
-     * @returns {string} Returns the resulting string value.
-     */
+    /** Returns the type. This helper centralizes read access for callers. */
     getType(enemy) {
       if (enemy?.constructor?.name === 'smallchicken') return 'small';
       if (enemy?.constructor?.name === 'Chicken') return 'chicken';
@@ -108,12 +73,7 @@
       return null;
     }
 
-    /**
-     * Returns the state.
-     * This helper centralizes read access for callers.
-     * @param {unknown} enemy - Enemy instance being processed by this routine.
-     * @returns {unknown} Returns the value produced by this routine.
-     */
+    /** Returns the state. This helper centralizes read access for callers. */
     getState(enemy) {
       if (!this.stateMap.has(enemy)) {
         this.stateMap.set(enemy, {
@@ -134,12 +94,7 @@
       return this.stateMap.get(enemy);
     }
 
-    /**
-     * Evaluates the dead condition.
-     * Returns whether the current runtime state satisfies that condition.
-     * @param {object} enemy - Enemy instance being processed by this routine.
-     * @returns {boolean} Returns `true` when the condition is satisfied; otherwise `false`.
-     */
+    /** Evaluates the dead condition. Returns whether the current runtime state satisfies that condition. */
     isDead(enemy) {
       if (typeof enemy?.isDead === 'function' && enemy.isDead()) return true;
       if (enemy?.isDeadState === true) return true;
@@ -147,12 +102,7 @@
       return false;
     }
 
-    /**
-     * Handles death.
-     * It applies side effects required by this branch.
-     * @param {unknown} enemy - Enemy instance being processed by this routine.
-     * @param {object} st - Mutable state object tracked for the current entity.
-     */
+    /** Handles death. It applies side effects required by this branch. */
     handleDeath(enemy, st) {
       if (st.blocked) return;
       st.deathLocked = true;
@@ -162,11 +112,7 @@
       if (!st.deathPlayed) this.playDeathOnce(st);
     }
 
-    /**
-     * Plays death once.
-     * The operation is isolated here to keep behavior predictable.
-     * @param {object} st - Mutable state object tracked for the current entity.
-     */
+    /** Plays death once. The operation is isolated here to keep behavior predictable. */
     playDeathOnce(st) {
       if (!this.isEnabled()) return;
       st.deathPlayed = true;
@@ -176,12 +122,7 @@
       a.play().catch(() => {});
     }
 
-    /**
-     * Handles alert.
-     * It applies side effects required by this branch.
-     * @param {object} enemy - Enemy instance being processed by this routine.
-     * @param {object} st - Mutable state object tracked for the current entity.
-     */
+    /** Handles alert. It applies side effects required by this branch. */
     handleAlert(enemy, st) {
       if (enemy?.constructor?.name !== 'Endboss') return;
       if (st.damageActive || st.deathLocked) return;
@@ -190,11 +131,7 @@
       st.wasAlerting = alerting;
     }
 
-    /**
-     * Plays alert.
-     * The operation is isolated here to keep behavior predictable.
-     * @param {object} st - Mutable state object tracked for the current entity.
-     */
+    /** Plays alert. The operation is isolated here to keep behavior predictable. */
     playAlert(st) {
       if (!this.isEnabled()) return;
       if (st.blocked) return;
@@ -205,11 +142,7 @@
       a.play().catch(() => {});
     }
 
-    /**
-     * Handles endboss alert start.
-     * It applies side effects required by this branch.
-     * @param {Endboss} endboss - Input value used by this routine.
-     */
+    /** Handles endboss alert start. It applies side effects required by this branch. */
     onEndbossAlertStart(endboss) {
       if (!this.isEnabled()) return;
       const st = this.getState(endboss);
@@ -221,11 +154,7 @@
       a.play().catch(() => {});
     }
 
-    /**
-     * Handles endboss hurt start.
-     * It applies side effects required by this branch.
-     * @param {Endboss} endboss - Input value used by this routine.
-     */
+    /** Handles endboss hurt start. It applies side effects required by this branch. */
     onEndbossHurtStart(endboss) {
       if (!this.isEnabled()) return;
       const st = this.getState(endboss);
@@ -234,12 +163,7 @@
       this.startDamage(endboss, st);
     }
 
-    /**
-     * Handles hurt.
-     * It applies side effects required by this branch.
-     * @param {object} enemy - Enemy instance being processed by this routine.
-     * @param {object} st - Mutable state object tracked for the current entity.
-     */
+    /** Handles hurt. It applies side effects required by this branch. */
     handleHurt(enemy, st) {
       if (enemy?.constructor?.name !== 'Endboss') return;
       const hurting = enemy?.isHurting === true;
@@ -247,15 +171,7 @@
       st.wasHurting = hurting;
     }
 
-    /**
-     * Handles loop.
-     * It applies side effects required by this branch.
-     * @param {Character} character - Character instance involved in this operation.
-     * @param {object} enemy - Enemy instance being processed by this routine.
-     * @param {object} st - Mutable state object tracked for the current entity.
-     * @param {string} type - Type identifier selecting the processing branch.
-     * @returns {unknown} Returns the value produced by this routine.
-     */
+    /** Handles loop. It applies side effects required by this branch. */
     handleLoop(character, enemy, st, type) {
       if (st.blocked) return;
       this.handleHurt(enemy, st);
@@ -265,26 +181,14 @@
       if (!inRange && st.inRange) return this.exitRange(st);
     }
 
-    /**
-     * Evaluates the in range condition.
-     * Returns whether the current runtime state satisfies that condition.
-     * @param {Character} character - Character instance involved in this operation.
-     * @param {object} enemy - Enemy instance being processed by this routine.
-     * @returns {number} Returns the computed numeric value.
-     */
+    /** Evaluates the in range condition. Returns whether the current runtime state satisfies that condition. */
     isInRange(character, enemy) {
       const cx = character?.x ?? 0;
       const ex = enemy?.x ?? 0;
       return Math.abs(cx - ex) <= this.RANGE;
     }
 
-    /**
-     * Handles entering range.
-     * The operation is isolated here to keep behavior predictable.
-     * @param {unknown} enemy - Enemy instance being processed by this routine.
-     * @param {object} st - Mutable state object tracked for the current entity.
-     * @param {string} type - Type identifier selecting the processing branch.
-     */
+    /** Handles entering range. The operation is isolated here to keep behavior predictable. */
     enterRange(enemy, st, type) {
       st.inRange = true;
       this.clearTimer(st);
@@ -292,24 +196,13 @@
       this.schedule(enemy, st, type, this.rand(this.INIT_MIN, this.INIT_MAX));
     }
 
-    /**
-     * Handles leaving range.
-     * The operation is isolated here to keep behavior predictable.
-     * @param {object} st - Mutable state object tracked for the current entity.
-     */
+    /** Handles leaving range. The operation is isolated here to keep behavior predictable. */
     exitRange(st) {
       st.inRange = false;
       this.stopEnemy(st);
     }
 
-    /**
-     * Schedules routine.
-     * The operation is isolated here to keep behavior predictable.
-     * @param {object} enemy - Enemy instance being processed by this routine.
-     * @param {object} st - Mutable state object tracked for the current entity.
-     * @param {string} type - Type identifier selecting the processing branch.
-     * @param {number} delay - Delay value in milliseconds.
-     */
+    /** Schedules routine. The operation is isolated here to keep behavior predictable. */
     schedule(enemy, st, type, delay) {
       st.timeoutId = setTimeout(() => {
         if (!this.isEnabled()) return;
@@ -322,22 +215,13 @@
       }, delay);
     }
 
-    /**
-     * Executes the loop src routine.
-     * The logic is centralized here for maintainability.
-     * @param {string} type - Type identifier selecting the processing branch.
-     * @returns {string} Returns the resulting string value.
-     */
+    /** Executes the loop src routine. The logic is centralized here for maintainability. */
     loopSrc(type) {
       if (type === 'small') return this.SOUND_PATHS.smallLoop;
       return this.SOUND_PATHS.chickenLoop;
     }
 
-    /**
-     * Creates loop pools.
-     * The result is consumed by downstream game logic.
-     * @returns {object} Returns an object containing computed state values.
-     */
+    /** Creates loop pools. The result is consumed by downstream game logic. */
     createLoopPools() {
       return {
         chicken: this.buildPool(this.SOUND_PATHS.chickenLoop, 2),
@@ -345,25 +229,14 @@
       };
     }
 
-    /**
-     * Creates pool.
-     * The result is consumed by downstream game logic.
-     * @param {string} src - String value used by this routine.
-     * @param {unknown} size - Input value used by this routine.
-     * @returns {unknown} Returns the value produced by this routine.
-     */
+    /** Creates pool. The result is consumed by downstream game logic. */
     buildPool(src, size) {
       const pool = [];
       for (let i = 0; i < size; i++) pool.push(this.prepareLoopAudio((window.EPL && window.EPL.Sound && window.EPL.Sound.createSfx) ? window.EPL.Sound.createSfx(src) : new Audio(src)));
       return pool;
     }
 
-    /**
-     * Executes the prepare loop audio routine.
-     * The logic is centralized here for maintainability.
-     * @param {object} a - Object argument used by this routine.
-     * @returns {unknown} Returns the value produced by this routine.
-     */
+    /** Executes the prepare loop audio routine. The logic is centralized here for maintainability. */
     prepareLoopAudio(a) {
       a.addEventListener('ended', () => {
         if (a._owner?.currentAudio === a) a._owner.currentAudio = null;
@@ -372,64 +245,35 @@
       return a;
     }
 
-    /**
-     * Evaluates the limited type condition.
-     * Returns whether the current runtime state satisfies that condition.
-     * @param {string} type - Type identifier selecting the processing branch.
-     * @returns {boolean} Returns `true` when the condition is satisfied; otherwise `false`.
-     */
+    /** Evaluates the limited type condition. Returns whether the current runtime state satisfies that condition. */
     isLimitedType(type) {
       return type === 'small' || type === 'chicken';
     }
 
-    /**
-     * Returns the loop pool.
-     * This helper centralizes read access for callers.
-     * @param {string} type - Type identifier selecting the processing branch.
-     * @returns {unknown} Returns the value produced by this routine.
-     */
+    /** Returns the loop pool. This helper centralizes read access for callers. */
     getLoopPool(type) {
       return type === 'small' ? this.loopPools.small : this.loopPools.chicken;
     }
 
-    /**
-     * Evaluates the audio playing condition.
-     * Returns whether the current runtime state satisfies that condition.
-     * @param {object} a - Object argument used by this routine.
-     * @returns {boolean} Returns `true` when the condition is satisfied; otherwise `false`.
-     */
+    /** Evaluates the audio playing condition. Returns whether the current runtime state satisfies that condition. */
     isAudioPlaying(a) {
       return a && !a.paused && !a.ended;
     }
 
-    /**
-     * Executes the count active in pool routine.
-     * The logic is centralized here for maintainability.
-     * @param {Array<unknown>} pool - Array argument consumed by this routine.
-     * @returns {number} Returns the computed numeric value.
-     */
+    /** Executes the count active in pool routine. The logic is centralized here for maintainability. */
     countActiveInPool(pool) {
       let count = 0;
       for (let i = 0; i < pool.length; i++) if (this.isAudioPlaying(pool[i])) count++;
       return count;
     }
 
-    /**
-     * Executes the count active loops routine.
-     * The logic is centralized here for maintainability.
-     * @returns {number} Returns the computed numeric value.
-     */
+    /** Executes the count active loops routine. The logic is centralized here for maintainability. */
     countActiveLoops() {
       return this.countActiveInPool(this.loopPools.chicken)
         + this.countActiveInPool(this.loopPools.small);
     }
 
-    /**
-     * Executes the acquire loop audio routine.
-     * The logic is centralized here for maintainability.
-     * @param {string} type - Type identifier selecting the processing branch.
-     * @returns {unknown|null} Returns the value computed for the active runtime branch.
-     */
+    /** Executes the acquire loop audio routine. The logic is centralized here for maintainability. */
     acquireLoopAudio(type) {
       if (this.countActiveLoops() >= 3) return null;
       const pool = this.getLoopPool(type);
@@ -437,12 +281,7 @@
       return null;
     }
 
-    /**
-     * Starts pooled audio.
-     * The operation is isolated here to keep behavior predictable.
-     * @param {object} st - Mutable state object tracked for the current entity.
-     * @param {object} a - Object argument used by this routine.
-     */
+    /** Starts pooled audio. The operation is isolated here to keep behavior predictable. */
     startPooledAudio(st, a) {
       a.currentTime = 0;
       a.volume = 0.2;
@@ -451,12 +290,7 @@
       a.play().catch(() => {});
     }
 
-    /**
-     * Plays uncapped loop.
-     * The operation is isolated here to keep behavior predictable.
-     * @param {object} st - Mutable state object tracked for the current entity.
-     * @param {string} src - String value used by this routine.
-     */
+    /** Plays uncapped loop. The operation is isolated here to keep behavior predictable. */
     playUncappedLoop(st, src) {
       this.stopCurrentAudio(st);
       const a = (window.EPL && window.EPL.Sound && window.EPL.Sound.createSfx) ? window.EPL.Sound.createSfx(src) : new Audio(src);
@@ -465,13 +299,7 @@
       a.play().catch(() => {});
     }
 
-    /**
-     * Plays loop once.
-     * The operation is isolated here to keep behavior predictable.
-     * @param {object} st - Mutable state object tracked for the current entity.
-     * @param {string} type - Type identifier selecting the processing branch.
-     * @returns {unknown} Returns the value produced by this routine.
-     */
+    /** Plays loop once. The operation is isolated here to keep behavior predictable. */
     playLoopOnce(st, type) {
       const src = this.loopSrc(type);
       if (!this.isLimitedType(type)) return this.playUncappedLoop(st, src);
@@ -481,31 +309,19 @@
       this.startPooledAudio(st, a);
     }
 
-    /**
-     * Stops all.
-     * The operation is isolated here to keep behavior predictable.
-     * @param {Array<unknown>} enemies - Collection processed by this routine.
-     */
+    /** Stops all. The operation is isolated here to keep behavior predictable. */
     stopAll(enemies) {
       for (let i = 0; i < enemies.length; i++) this.stopOne(enemies[i]);
     }
 
-    /**
-     * Stops one.
-     * The operation is isolated here to keep behavior predictable.
-     * @param {unknown} enemy - Enemy instance being processed by this routine.
-     */
+    /** Stops one. The operation is isolated here to keep behavior predictable. */
     stopOne(enemy) {
       const st = this.stateMap.get(enemy);
       if (!st) return;
       this.stopEnemy(st);
     }
 
-    /**
-     * Stops enemy.
-     * The operation is isolated here to keep behavior predictable.
-     * @param {object} st - Mutable state object tracked for the current entity.
-     */
+    /** Stops enemy. The operation is isolated here to keep behavior predictable. */
     stopEnemy(st) {
       this.clearTimer(st);
       this.stopCurrentAudio(st);
@@ -513,22 +329,14 @@
       st.inRange = false;
     }
 
-    /**
-     * Executes the clear timer routine.
-     * The logic is centralized here for maintainability.
-     * @param {object} st - Mutable state object tracked for the current entity.
-     */
+    /** Executes the clear timer routine. The logic is centralized here for maintainability. */
     clearTimer(st) {
       if (!st.timeoutId) return;
       clearTimeout(st.timeoutId);
       st.timeoutId = null;
     }
 
-    /**
-     * Stops current audio.
-     * The operation is isolated here to keep behavior predictable.
-     * @param {object} st - Mutable state object tracked for the current entity.
-     */
+    /** Stops current audio. The operation is isolated here to keep behavior predictable. */
     stopCurrentAudio(st) {
       const a = st.currentAudio;
       if (!a) return;
@@ -543,12 +351,7 @@
       st.currentAudio = null;
     }
 
-    /**
-     * Starts damage.
-     * The operation is isolated here to keep behavior predictable.
-     * @param {Endboss} endboss - Input value used by this routine.
-     * @param {object} st - Mutable state object tracked for the current entity.
-     */
+    /** Starts damage. The operation is isolated here to keep behavior predictable. */
     startDamage(endboss, st) {
       if (!this.isEnabled() || this.isDead(endboss) || st.blocked || st.deathLocked) return;
       st.damageActive = true;
@@ -565,11 +368,7 @@
       st.damageTimeoutId = setTimeout(function () { self.stopDamage(st); }, 800);
     }
 
-    /**
-     * Stops damage.
-     * The operation is isolated here to keep behavior predictable.
-     * @param {object} st - Mutable state object tracked for the current entity.
-     */
+    /** Stops damage. The operation is isolated here to keep behavior predictable. */
     stopDamage(st) {
       if (st.damageTimeoutId) {
         clearTimeout(st.damageTimeoutId);
@@ -583,13 +382,7 @@
       st.damageActive = false;
     }
 
-    /**
-     * Generates routine.
-     * The result is randomized within the configured range.
-     * @param {number} min - Numeric value used by this routine.
-     * @param {number} max - Numeric value used by this routine.
-     * @returns {number} Returns the computed numeric value.
-     */
+    /** Generates routine. The result is randomized within the configured range. */
     rand(min, max) {
       return Math.floor(Math.random() * (max - min + 1)) + min;
     }

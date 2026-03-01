@@ -1,14 +1,4 @@
-/**
- * @fileoverview
- * Defines `Endboss`, the boss enemy entity with alert/attack/death behaviors and logic integration.
- *
- * Endboss enemy with alert, attack, and death behaviors.
- * @extends MoveableObject
- * @property {World} world
- * @property {number} energy
- * @property {boolean} isDeadState
- * @property {EndbossLogic} logic
- */
+/** Defines `Endboss`, the boss enemy entity with alert/attack/death behaviors and logic integration. Endboss enemy with alert, attack, and death behaviors. */
 class Endboss extends MoveableObject {
     height = 400;
     width = 385;
@@ -77,10 +67,7 @@ class Endboss extends MoveableObject {
         './img/4_enemie_boss_chicken/5_dead/G26.png'
     ];
 
-    /**
-     * Initializes a new methods instance and sets up default runtime state.
-     * The constructor prepares dependencies used by class behavior.
-     */
+    /** Initializes a new methods instance and sets up default runtime state. The constructor prepares dependencies used by class behavior. */
     constructor() {
         super().loadImage(this.IMAGES_ENDBOSS_WALKING[0]);
         this.loadImages(this.IMAGES_ENDBOSS_WALKING);
@@ -95,19 +82,12 @@ class Endboss extends MoveableObject {
         this.startWalkingAnimation();
         this.animate();
     }
-
-    /**
-     * Executes the animate routine.
-     * The logic is centralized here for maintainability.
-     */
+    /** Executes the animate routine. The logic is centralized here for maintainability. */
     animate() {
         this.logic.startLogicLoop();
     }
 
-    /**
-     * Starts walking animation.
-     * The operation is isolated here to keep behavior predictable.
-     */
+    /** Starts walking animation. The operation is isolated here to keep behavior predictable. */
     startWalkingAnimation() {
         if (this.walkInterval) return;
         this.currentImage = 0;
@@ -117,10 +97,7 @@ class Endboss extends MoveableObject {
         }, frameDelay);
     }
 
-    /**
-     * Stops walking animation.
-     * The operation is isolated here to keep behavior predictable.
-     */
+    /** Stops walking animation. The operation is isolated here to keep behavior predictable. */
     stopWalkingAnimation() {
         if (!this.walkInterval) return;
         clearInterval(this.walkInterval);
@@ -128,10 +105,7 @@ class Endboss extends MoveableObject {
         this.walkFrameIndex = 0;
     }
 
-    /**
-     * Handles entering dormant mode.
-     * The operation is isolated here to keep behavior predictable.
-     */
+    /** Handles entering dormant mode. The operation is isolated here to keep behavior predictable. */
     enterDormantMode() {
         this.stopWalkingAnimation();
         this.clearAlertInterval();
@@ -140,39 +114,27 @@ class Endboss extends MoveableObject {
         this.img = this.imageCache[this.IMAGES_ENDBOSS_WALKING[0]];
     }
 
-    /**
-     * Handles leaving dormant mode.
-     * The operation is isolated here to keep behavior predictable.
-     */
+    /** Handles leaving dormant mode. The operation is isolated here to keep behavior predictable. */
     exitDormantMode() {
         this.stopWalkingAnimation();
         this.clearAlertInterval();
         this.clearAttackInterval();
     }
 
-    /**
-     * Shows wake telegraph frame.
-     * The operation is isolated here to keep behavior predictable.
-     */
+    /** Shows wake telegraph frame. The operation is isolated here to keep behavior predictable. */
     showWakeTelegraphFrame() {
         this.clearAlertInterval();
         this.currentImage = 0;
         this.img = this.imageCache[this.ALERT_ENBOSS[0]];
     }
 
-    /**
-     * Sets the alert frame.
-     * This keeps persistent and in-memory state aligned.
-     */
+    /** Sets the alert frame. This keeps persistent and in-memory state aligned. */
     setAlertFrame() {
         this.currentImage = 0;
         this.img = this.imageCache[this.ALERT_ENBOSS[0]];
     }
 
-    /**
-     * Starts alert animation.
-     * The operation is isolated here to keep behavior predictable.
-     */
+    /** Starts alert animation. The operation is isolated here to keep behavior predictable. */
     startAlertAnimation() {
         if (this.shouldSkipAlert()) return;
         this.clearAlertInterval();
@@ -181,28 +143,18 @@ class Endboss extends MoveableObject {
         this.playAlertSound();
     }
 
-    /**
-     * Evaluates the skip alert condition.
-     * Returns whether the current runtime state satisfies that condition.
-     * @returns {boolean} Returns `true` when the condition is satisfied; otherwise `false`.
-     */
+    /** Evaluates the skip alert condition. Returns whether the current runtime state satisfies that condition. */
     shouldSkipAlert() {
         return this.isDeadState || this.energy <= 0;
     }
 
-    /**
-     * Plays alert sound.
-     * The operation is isolated here to keep behavior predictable.
-     */
+    /** Plays alert sound. The operation is isolated here to keep behavior predictable. */
     playAlertSound() {
         if (!window.EPL?.EnemySfx?.onEndbossAlertStart) return;
         window.EPL.EnemySfx.onEndbossAlertStart(this);
     }
 
-    /**
-     * Executes the clear alert interval routine.
-     * The logic is centralized here for maintainability.
-     */
+    /** Executes the clear alert interval routine. The logic is centralized here for maintainability. */
     clearAlertInterval() {
         if (!this.alertInterval) return;
         clearInterval(this.alertInterval);
@@ -210,28 +162,19 @@ class Endboss extends MoveableObject {
         this.isAlerting = false;
     }
 
-    /**
-     * Stops alert loop if any.
-     * The operation is isolated here to keep behavior predictable.
-     */
+    /** Stops alert loop if any. The operation is isolated here to keep behavior predictable. */
     stopAlertLoopIfAny() {
         this.clearAlertInterval();
     }
 
-    /**
-     * Executes the prepare alert state routine.
-     * The logic is centralized here for maintainability.
-     */
+    /** Executes the prepare alert state routine. The logic is centralized here for maintainability. */
     prepareAlertState() {
         this.isAlerting = true;
         this.stopWalkingAnimation();
         this.setAlertFrame();
     }
 
-    /**
-     * Starts alert interval.
-     * The operation is isolated here to keep behavior predictable.
-     */
+    /** Starts alert interval. The operation is isolated here to keep behavior predictable. */
     startAlertInterval() {
         const frameDelay = this.frameTimers.alert || 200;
         let frameIndex = 1;
@@ -244,22 +187,12 @@ class Endboss extends MoveableObject {
         }, frameDelay);
     }
 
-    /**
-     * Evaluates the character within alert range condition.
-     * Returns whether the current runtime state satisfies that condition.
-     * @param {number} distanceAhead - Numeric value used by this routine.
-     * @returns {boolean} Returns `true` when the condition is satisfied; otherwise `false`.
-     */
+    /** Evaluates the character within alert range condition. Returns whether the current runtime state satisfies that condition. */
     isCharacterWithinAlertRange(distanceAhead) {
         return distanceAhead >= 0 && distanceAhead <= this.alertDistance;
     }
 
-    /**
-     * Evaluates the start attack condition.
-     * Returns whether the current runtime state satisfies that condition.
-     * @param {number} distanceAhead - Numeric value used by this routine.
-     * @returns {boolean} Returns `true` when the condition is satisfied; otherwise `false`.
-     */
+    /** Evaluates the start attack condition. Returns whether the current runtime state satisfies that condition. */
     canStartAttack(distanceAhead) {
         if (!this.world?.character) return false;
         const withinDistance = distanceAhead >= 0 && distanceAhead <= this.attackDistance;
@@ -270,13 +203,7 @@ class Endboss extends MoveableObject {
             && (withinDistance || isColliding);
     }
 
-    /**
-     * Handles attack or alert.
-     * It applies side effects required by this branch.
-     * @param {number} distanceAhead - Numeric value used by this routine.
-     * @param {boolean} allowAlert - Boolean flag controlling this branch.
-     * @returns {boolean} Returns `true` when the condition is satisfied; otherwise `false`.
-     */
+    /** Handles attack or alert. It applies side effects required by this branch. */
     handleAttackOrAlert(distanceAhead, allowAlert = true) {
         if (this.canStartAttack(distanceAhead)) {
             this.startAttackAnimation();
@@ -286,12 +213,7 @@ class Endboss extends MoveableObject {
         return this.handleAlertState(distanceAhead);
     }
 
-    /**
-     * Handles alert state.
-     * It applies side effects required by this branch.
-     * @param {number} distanceAhead - Numeric value used by this routine.
-     * @returns {boolean} Returns `true` when the condition is satisfied; otherwise `false`.
-     */
+    /** Handles alert state. It applies side effects required by this branch. */
     handleAlertState(distanceAhead) {
         const withinAlertRange = this.isCharacterWithinAlertRange(distanceAhead);
         if (withinAlertRange && !this.isAlerting && !this.alertOnCooldown && !this.isAttacking) {
@@ -303,10 +225,7 @@ class Endboss extends MoveableObject {
         return false;
     }
 
-    /**
-     * Starts attack animation.
-     * The operation is isolated here to keep behavior predictable.
-     */
+    /** Starts attack animation. The operation is isolated here to keep behavior predictable. */
     startAttackAnimation() {
         this.clearAttackInterval();
         this.clearAlertInterval();
@@ -314,10 +233,7 @@ class Endboss extends MoveableObject {
         this.startAttackInterval();
     }
 
-    /**
-     * Executes the clear attack interval routine.
-     * The logic is centralized here for maintainability.
-     */
+    /** Executes the clear attack interval routine. The logic is centralized here for maintainability. */
     clearAttackInterval() {
         if (!this.attackInterval) return;
         clearInterval(this.attackInterval);
@@ -325,10 +241,7 @@ class Endboss extends MoveableObject {
         this.isAttacking = false;
     }
 
-    /**
-     * Executes the prepare attack state routine.
-     * The logic is centralized here for maintainability.
-     */
+    /** Executes the prepare attack state routine. The logic is centralized here for maintainability. */
     prepareAttackState() {
         this.isAttacking = true;
         this.attackDamageApplied = false;
@@ -336,10 +249,7 @@ class Endboss extends MoveableObject {
         this.currentImage = 0;
     }
 
-    /**
-     * Starts attack interval.
-     * The operation is isolated here to keep behavior predictable.
-     */
+    /** Starts attack interval. The operation is isolated here to keep behavior predictable. */
     startAttackInterval() {
         const frameDelay = this.frameTimers.attack || 150;
         let frameIndex = 0;
@@ -353,30 +263,21 @@ class Endboss extends MoveableObject {
         }, frameDelay);
     }
 
-    /**
-     * Handles damage during attack.
-     * It applies side effects required by this branch.
-     */
+    /** Handles damage during attack. It applies side effects required by this branch. */
     handleDamageDuringAttack() {
         if (this.attackDamageApplied || !this.world?.character) return;
         if (!this.logic.tryAttackDamage()) return;
         this.attackDamageApplied = true;
     }
 
-    /**
-     * Plays hurt animation.
-     * The operation is isolated here to keep behavior predictable.
-     */
+    /** Plays hurt animation. The operation is isolated here to keep behavior predictable. */
     playHurtAnimation() {
         if (this.isDeadState) return;
         this.prepareHurtState();
         this.startHurtInterval();
     }
 
-    /**
-     * Executes the clear hurt interval routine.
-     * The logic is centralized here for maintainability.
-     */
+    /** Executes the clear hurt interval routine. The logic is centralized here for maintainability. */
     clearHurtInterval() {
         if (!this.hurtInterval) return;
         clearInterval(this.hurtInterval);
@@ -384,10 +285,7 @@ class Endboss extends MoveableObject {
         this.isHurting = false;
     }
 
-    /**
-     * Executes the prepare hurt state routine.
-     * The logic is centralized here for maintainability.
-     */
+    /** Executes the prepare hurt state routine. The logic is centralized here for maintainability. */
     prepareHurtState() {
         this.clearHurtInterval();
         this.isHurting = true;
@@ -396,10 +294,7 @@ class Endboss extends MoveableObject {
         this.clearAlertInterval();
     }
 
-    /**
-     * Starts hurt interval.
-     * The operation is isolated here to keep behavior predictable.
-     */
+    /** Starts hurt interval. The operation is isolated here to keep behavior predictable. */
     startHurtInterval() {
         const frameDelay = this.frameTimers.hurt || 150;
         let frameIndex = 0;
@@ -414,10 +309,7 @@ class Endboss extends MoveableObject {
         }, frameDelay);
     }
 
-    /**
-     * Plays death animation.
-     * The operation is isolated here to keep behavior predictable.
-     */
+    /** Plays death animation. The operation is isolated here to keep behavior predictable. */
     playDeathAnimation() {
         if (this.isDeadState) return;
         this.isDeadState = true;
@@ -426,10 +318,7 @@ class Endboss extends MoveableObject {
         this.startDeathInterval();
     }
 
-    /**
-     * Executes the clear intervals for death routine.
-     * The logic is centralized here for maintainability.
-     */
+    /** Executes the clear intervals for death routine. The logic is centralized here for maintainability. */
     clearIntervalsForDeath() {
         this.stopWalkingAnimation();
         this.logic.clearMovementInterval();
@@ -438,10 +327,7 @@ class Endboss extends MoveableObject {
         this.clearHurtInterval();
     }
 
-    /**
-     * Starts death interval.
-     * The operation is isolated here to keep behavior predictable.
-     */
+    /** Starts death interval. The operation is isolated here to keep behavior predictable. */
     startDeathInterval() {
         this.initializeDeathAnimation();
         const frameDelay = this.getDeathFrameDelay();
@@ -452,30 +338,17 @@ class Endboss extends MoveableObject {
         }, frameDelay);
     }
 
-    /**
-     * Initializes death animation.
-     * It is part of the module startup flow.
-     */
+    /** Initializes death animation. It is part of the module startup flow. */
     initializeDeathAnimation() {
         this.currentImage = 0;
     }
 
-    /**
-     * Returns the death frame delay.
-     * This helper centralizes read access for callers.
-     * @returns {number} Returns the computed numeric value.
-     */
+    /** Returns the death frame delay. This helper centralizes read access for callers. */
     getDeathFrameDelay() {
         return this.frameTimers.dead || 200;
     }
 
-    /**
-     * Updates death frame.
-     * This synchronizes runtime state with current inputs.
-     * @param {number} frameIndex - Numeric value used by this routine.
-     * @param {number} groundY - Numeric value used by this routine.
-     * @returns {number} Returns the computed numeric value.
-     */
+    /** Updates death frame. This synchronizes runtime state with current inputs. */
     updateDeathFrame(frameIndex, groundY) {
         this.img = this.imageCache[this.DEAD_ENDBOSS[frameIndex]];
         if (frameIndex < this.DEAD_ENDBOSS.length - 1) return frameIndex + 1;
@@ -483,11 +356,7 @@ class Endboss extends MoveableObject {
         return frameIndex;
     }
 
-    /**
-     * Applies death fall.
-     * The operation is isolated here to keep behavior predictable.
-     * @param {number} groundY - Numeric value used by this routine.
-     */
+    /** Applies death fall. The operation is isolated here to keep behavior predictable. */
     applyDeathFall(groundY) {
         if (this.y < groundY) {
             this.y += 20;
@@ -498,10 +367,7 @@ class Endboss extends MoveableObject {
         this.deathInterval = null;
     }
 
-    /**
-     * Executes the finish attack animation routine.
-     * The logic is centralized here for maintainability.
-     */
+    /** Executes the finish attack animation routine. The logic is centralized here for maintainability. */
     finishAttackAnimation() {
         this.isAttacking = false;
         this.currentImage = 0;
@@ -512,10 +378,7 @@ class Endboss extends MoveableObject {
         this.startWalkingAnimation();
     }
 
-    /**
-     * Updates health bar.
-     * This synchronizes runtime state with current inputs.
-     */
+    /** Updates health bar. This synchronizes runtime state with current inputs. */
     updateHealthBar() {
         if (!this.healthBar) return;
         const percentage = Math.max(0, Math.min(100, (this.energy / 50) * 100));
@@ -524,20 +387,12 @@ class Endboss extends MoveableObject {
         this.healthBar.y = this.y - 60;
     }
 
-    /**
-     * Returns the min x.
-     * This helper centralizes read access for callers.
-     * @returns {number} Returns the computed numeric value.
-     */
+    /** Returns the min x. This helper centralizes read access for callers. */
     getMinX() {
         return 500;
     }
 
-    /**
-     * Returns the max x.
-     * This helper centralizes read access for callers.
-     * @returns {number} Returns the computed numeric value.
-     */
+    /** Returns the max x. This helper centralizes read access for callers. */
     getMaxX() {
         return 2500;
     }

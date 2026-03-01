@@ -1,22 +1,11 @@
-/**
- * @fileoverview
- * Defines `EndbossLogicHelpers`, a helper layer for endboss actions (movement, jumps, phases) used by `EndbossLogic`.
- */
+/** Defines `EndbossLogicHelpers`, a helper layer for endboss actions (movement, jumps, phases) used by `EndbossLogic`. */
 class EndbossLogicHelpers {
-    /**
-     * Initializes a new methods instance and sets up default runtime state.
-     * The constructor prepares dependencies used by class behavior.
-     * @param {unknown} logic - Input value used by this routine.
-     */
+    /** Initializes a new methods instance and sets up default runtime state. The constructor prepares dependencies used by class behavior. */
     constructor(logic) {
         this.logic = logic;
     }
 
-    /**
-     * Evaluates the start jump condition.
-     * Returns whether the current runtime state satisfies that condition.
-     * @returns {boolean} Returns `true` when the condition is satisfied; otherwise `false`.
-     */
+    /** Evaluates the start jump condition. Returns whether the current runtime state satisfies that condition. */
     shouldStartJump() {
         const logic = this.logic;
         const character = logic.getChar();
@@ -26,21 +15,14 @@ class EndbossLogicHelpers {
         return logic.nowMs() - logic.lastJumpTime >= 2500;
     }
 
-    /**
-     * Executes the try targeted jump routine.
-     * The logic is centralized here for maintainability.
-     * @returns {boolean} Returns `true` when the condition is satisfied; otherwise `false`.
-     */
+    /** Executes the try targeted jump routine. The logic is centralized here for maintainability. */
     tryTargetedJump() {
         if (!this.shouldStartJump()) return false;
         this.startJump();
         return true;
     }
 
-    /**
-     * Starts jump.
-     * The operation is isolated here to keep behavior predictable.
-     */
+    /** Starts jump. The operation is isolated here to keep behavior predictable. */
     startJump() {
         const logic = this.logic;
         const character = logic.getChar();
@@ -51,11 +33,7 @@ class EndbossLogicHelpers {
         logic.boss.stopWalkingAnimation();
     }
 
-    /**
-     * Updates jump.
-     * This synchronizes runtime state with current inputs.
-     * @returns {boolean} Returns `true` when the condition is satisfied; otherwise `false`.
-     */
+    /** Updates jump. This synchronizes runtime state with current inputs. */
     updateJump() {
         const logic = this.logic;
         if (!logic.jump.active) return false;
@@ -66,13 +44,13 @@ class EndbossLogicHelpers {
         return true;
     }
 
+    /**
+     * Updates jump position for the current normalized jump progress.
+     * @param {number} t - Normalized jump progress in the range from 0 to 1.
+     */
     updateJumpPosition(t) { this.updateJumpX(t); this.updateJumpY(t); }
 
-    /**
-     * Updates jump x.
-     * This synchronizes runtime state with current inputs.
-     * @param {number} t - Numeric value used by this routine.
-     */
+    /** Updates jump x. This synchronizes runtime state with current inputs. */
     updateJumpX(t) {
         const logic = this.logic;
         const landingX = logic.jump.targetX - logic.boss.width / 2;
@@ -80,11 +58,7 @@ class EndbossLogicHelpers {
         this.clampToBounds();
     }
 
-    /**
-     * Updates jump y.
-     * This synchronizes runtime state with current inputs.
-     * @param {number} t - Numeric value used by this routine.
-     */
+    /** Updates jump y. This synchronizes runtime state with current inputs. */
     updateJumpY(t) {
         const logic = this.logic;
         const height = logic.jump.height;
@@ -92,12 +66,7 @@ class EndbossLogicHelpers {
         if (t >= 1) logic.boss.y = logic.jump.baseY;
     }
 
-    /**
-     * Evaluates the landing tick condition.
-     * Returns whether the current runtime state satisfies that condition.
-     * @param {number} t - Numeric value used by this routine.
-     * @returns {boolean} Returns `true` when the condition is satisfied; otherwise `false`.
-     */
+    /** Evaluates the landing tick condition. Returns whether the current runtime state satisfies that condition. */
     isLandingTick(t) {
         const logic = this.logic;
         if (logic.jump.impactDone) return false;
@@ -106,10 +75,7 @@ class EndbossLogicHelpers {
         return true;
     }
 
-    /**
-     * Applies landing damage.
-     * The operation is isolated here to keep behavior predictable.
-     */
+    /** Applies landing damage. The operation is isolated here to keep behavior predictable. */
     applyLandingDamage() {
         const logic = this.logic;
         const character = logic.getChar();
@@ -121,33 +87,23 @@ class EndbossLogicHelpers {
         if (this.inShockwaveRange(character)) logic.applyBossDamage(100);
     }
 
-    /**
-     * Executes the direct hit routine.
-     * The logic is centralized here for maintainability.
-     * @param {Character} character - Character instance involved in this operation.
-     * @returns {unknown} Returns the value produced by this routine.
-     */
+    /** Executes the direct hit routine. The logic is centralized here for maintainability. */
     directHit(character) {
         return character.isColliding(this.logic.boss);
     }
 
-    /**
-     * Executes the in shockwave range routine.
-     * The logic is centralized here for maintainability.
-     * @param {Character} character - Character instance involved in this operation.
-     * @returns {number} Returns the computed numeric value.
-     */
+    /** Executes the in shockwave range routine. The logic is centralized here for maintainability. */
     inShockwaveRange(character) {
         const logic = this.logic;
         return Math.abs(logic.centerX(character) - logic.centerX(logic.boss)) <= 520;
     }
 
+    /**
+     * Resets jump state after landing so the next jump can start cleanly.
+     */
     finishJump() { this.logic.jump = this.logic.createJumpState(); }
 
-    /**
-     * Executes the cancel jump routine.
-     * The logic is centralized here for maintainability.
-     */
+    /** Executes the cancel jump routine. The logic is centralized here for maintainability. */
     cancelJump() {
         const logic = this.logic;
         if (!logic.jump.active) return;
@@ -155,32 +111,20 @@ class EndbossLogicHelpers {
         logic.jump = logic.createJumpState();
     }
 
-    /**
-     * Evaluates the mid range condition.
-     * Returns whether the current runtime state satisfies that condition.
-     * @returns {boolean} Returns `true` when the condition is satisfied; otherwise `false`.
-     */
+    /** Evaluates the mid range condition. Returns whether the current runtime state satisfies that condition. */
     isMidRange() {
         const distance = this.getDistanceToCharacter();
         return distance >= 250 && distance <= 650;
     }
 
-    /**
-     * Executes the try sprint routine.
-     * The logic is centralized here for maintainability.
-     * @returns {boolean} Returns `true` when the condition is satisfied; otherwise `false`.
-     */
+    /** Executes the try sprint routine. The logic is centralized here for maintainability. */
     trySprint() {
         if (!this.canStartSprint()) return false;
         this.startSprintTelegraph();
         return true;
     }
 
-    /**
-     * Evaluates the start sprint condition.
-     * Returns whether the current runtime state satisfies that condition.
-     * @returns {boolean} Returns `true` when the condition is satisfied; otherwise `false`.
-     */
+    /** Evaluates the start sprint condition. Returns whether the current runtime state satisfies that condition. */
     canStartSprint() {
         const boss = this.logic.boss;
         if (!this.isMidRange()) return false;
@@ -188,10 +132,7 @@ class EndbossLogicHelpers {
         return true;
     }
 
-    /**
-     * Starts sprint telegraph.
-     * The operation is isolated here to keep behavior predictable.
-     */
+    /** Starts sprint telegraph. The operation is isolated here to keep behavior predictable. */
     startSprintTelegraph() {
         const logic = this.logic;
         logic.boss.stopWalkingAnimation();
@@ -199,11 +140,7 @@ class EndbossLogicHelpers {
         this.startAction('telegraph', 300, this.getDirectionToCharacter(), 1, 0);
     }
 
-    /**
-     * Starts sprint.
-     * The operation is isolated here to keep behavior predictable.
-     * @param {unknown} direction - Horizontal direction factor (`-1` for left, `1` for right).
-     */
+    /** Starts sprint. The operation is isolated here to keep behavior predictable. */
     startSprint(direction) {
         const logic = this.logic;
         const multiplier = this.getSprintMultiplier();
@@ -212,24 +149,19 @@ class EndbossLogicHelpers {
         this.startAction('sprint', 600, direction, multiplier, 0);
     }
 
-    getSprintMultiplier() { const phase = this.getPhase(); return phase === 3 ? 3.8 : phase === 2 ? 3.4 : 3.0; }
-    
     /**
-     * Executes the try jump slam routine.
-     * The logic is centralized here for maintainability.
-     * @returns {boolean} Returns `true` when the condition is satisfied; otherwise `false`.
+     * Returns the sprint speed multiplier for the current boss phase.
+     * @returns {number} Sprint speed multiplier for movement updates.
      */
+    getSprintMultiplier() { const phase = this.getPhase(); return phase === 3 ? 3.8 : phase === 2 ? 3.4 : 3.0; }
+    /** Executes the try jump slam routine. The logic is centralized here for maintainability. */
     tryJumpSlam() {
         if (!this.canStartJumpSlam()) return false;
         this.startJumpSlam();
         return true;
     }
 
-    /**
-     * Evaluates the start jump slam condition.
-     * Returns whether the current runtime state satisfies that condition.
-     * @returns {boolean} Returns `true` when the condition is satisfied; otherwise `false`.
-     */
+    /** Evaluates the start jump slam condition. Returns whether the current runtime state satisfies that condition. */
     canStartJumpSlam() {
         const logic = this.logic;
         if (this.getPhase() < 2) return false;
@@ -238,10 +170,7 @@ class EndbossLogicHelpers {
         return Date.now() - logic.lastSlamTime >= cooldown;
     }
 
-    /**
-     * Starts jump slam.
-     * The operation is isolated here to keep behavior predictable.
-     */
+    /** Starts jump slam. The operation is isolated here to keep behavior predictable. */
     startJumpSlam() {
         const logic = this.logic;
         logic.lastSlamTime = Date.now();
@@ -249,20 +178,12 @@ class EndbossLogicHelpers {
         this.startAction('slam', 700, this.getDirectionToCharacter(), 1.5, 80);
     }
 
-    /**
-     * Returns the slam cooldown.
-     * This helper centralizes read access for callers.
-     * @returns {number} Returns the computed numeric value.
-     */
+    /** Returns the slam cooldown. This helper centralizes read access for callers. */
     getSlamCooldown() {
         return this.getPhase() === 3 ? 1800 : 2400;
     }
 
-    /**
-     * Updates action.
-     * This synchronizes runtime state with current inputs.
-     * @returns {boolean} Returns `true` when the condition is satisfied; otherwise `false`.
-     */
+    /** Updates action. This synchronizes runtime state with current inputs. */
     updateAction() {
         const logic = this.logic;
         if (!this.isActionActive()) return false;
@@ -274,20 +195,12 @@ class EndbossLogicHelpers {
         return true;
     }
 
-    /**
-     * Evaluates the action active condition.
-     * Returns whether the current runtime state satisfies that condition.
-     * @returns {boolean} Returns `true` when the condition is satisfied; otherwise `false`.
-     */
+    /** Evaluates the action active condition. Returns whether the current runtime state satisfies that condition. */
     isActionActive() {
         return Boolean(this.logic.action.type);
     }
 
-    /**
-     * Executes the step action routine.
-     * The logic is centralized here for maintainability.
-     * @returns {unknown|null} Returns the value computed for the active runtime branch.
-     */
+    /** Executes the step action routine. The logic is centralized here for maintainability. */
     stepAction() {
         const type = this.logic.action.type;
         if (type === 'sprint') return this.stepSprint();
@@ -296,38 +209,23 @@ class EndbossLogicHelpers {
         return null;
     }
 
-    /**
-     * Executes the step telegraph routine.
-     * The logic is centralized here for maintainability.
-     * @returns {null} Returns the value produced by this routine.
-     */
+    /** Executes the step telegraph routine. The logic is centralized here for maintainability. */
     stepTelegraph() {
         return null;
     }
 
-    /**
-     * Executes the step sprint routine.
-     * The logic is centralized here for maintainability.
-     */
+    /** Executes the step sprint routine. The logic is centralized here for maintainability. */
     stepSprint() {
         this.stepMove(this.logic.action.direction, this.logic.action.speed);
     }
 
-    /**
-     * Executes the step slam routine.
-     * The logic is centralized here for maintainability.
-     */
+    /** Executes the step slam routine. The logic is centralized here for maintainability. */
     stepSlam() {
         this.stepMove(this.logic.action.direction, this.logic.action.speed);
         this.updateHopY(this.logic.action.height);
     }
 
-    /**
-     * Executes the step move routine.
-     * The logic is centralized here for maintainability.
-     * @param {number} direction - Horizontal direction factor (`-1` for left, `1` for right).
-     * @param {number} multiplier - Numeric value used by this routine.
-     */
+    /** Executes the step move routine. The logic is centralized here for maintainability. */
     stepMove(direction, multiplier) {
         const logic = this.logic;
         const speed = logic.boss.speed * multiplier;
@@ -339,10 +237,7 @@ class EndbossLogicHelpers {
         this.clampToBounds();
     }
 
-    /**
-     * Executes the clamp to bounds routine.
-     * The logic is centralized here for maintainability.
-     */
+    /** Executes the clamp to bounds routine. The logic is centralized here for maintainability. */
     clampToBounds() {
         const logic = this.logic;
         const minX = logic.boss.getMinX();
@@ -351,22 +246,18 @@ class EndbossLogicHelpers {
         if (logic.boss.x > maxX) logic.boss.x = maxX;
     }
 
-    /**
-     * Updates hop y.
-     * This synchronizes runtime state with current inputs.
-     * @param {number} height - Numeric value used by this routine.
-     */
+    /** Updates hop y. This synchronizes runtime state with current inputs. */
     updateHopY(height) {
         const logic = this.logic;
         const progress = this.getActionProgress();
         logic.boss.y = logic.action.baseY - height * Math.sin(Math.PI * progress);
     }
-    getActionProgress() { const logic = this.logic; const elapsed = Date.now() - logic.action.startTime; const duration = logic.action.endTime - logic.action.startTime; return Math.min(1, elapsed / Math.max(1, duration)); }
-    
     /**
-     * Executes the finish action routine.
-     * The logic is centralized here for maintainability.
+     * Returns normalized progress for the active timed action.
+     * @returns {number} Progress clamped between 0 and 1.
      */
+    getActionProgress() { const logic = this.logic; const elapsed = Date.now() - logic.action.startTime; const duration = logic.action.endTime - logic.action.startTime; return Math.min(1, elapsed / Math.max(1, duration)); }
+    /** Executes the finish action routine. The logic is centralized here for maintainability. */
     finishAction() {
         const logic = this.logic;
         const type = logic.action.type;
@@ -377,57 +268,34 @@ class EndbossLogicHelpers {
         if (type === 'slam') this.handleSlamLanding();
     }
 
-    /**
-     * Resets action.
-     * The operation is isolated here to keep behavior predictable.
-     * @param {number} baseY - Numeric value used by this routine.
-     */
+    /** Resets action. The operation is isolated here to keep behavior predictable. */
     resetAction(baseY) {
         const logic = this.logic;
         logic.action = logic.createActionState(baseY);
         logic.boss.y = baseY;
     }
 
-    /**
-     * Starts action.
-     * The operation is isolated here to keep behavior predictable.
-     * @param {string} type - Type identifier selecting the processing branch.
-     * @param {number} duration - Delay value in milliseconds.
-     * @param {unknown} direction - Horizontal direction factor (`-1` for left, `1` for right).
-     * @param {number} speed - Numeric value used by this routine.
-     * @param {number} height - Numeric value used by this routine.
-     */
+    /** Starts action. The operation is isolated here to keep behavior predictable. */
     startAction(type, duration, direction, speed, height) {
         const logic = this.logic;
         const now = Date.now();
         logic.action = { type, endTime: now + duration, direction, speed, startTime: now, baseY: logic.boss.y, height: height || 0 };
     }
 
-    /**
-     * Handles slam landing.
-     * It applies side effects required by this branch.
-     */
+    /** Handles slam landing. It applies side effects required by this branch. */
     handleSlamLanding() {
         if (!this.isPlayerGrounded()) return;
         if (this.getDistanceToCharacter() > 180) return;
         this.logic.applyBossDamage();
     }
 
-    /**
-     * Evaluates the player grounded condition.
-     * Returns whether the current runtime state satisfies that condition.
-     * @returns {boolean} Returns `true` when the condition is satisfied; otherwise `false`.
-     */
+    /** Evaluates the player grounded condition. Returns whether the current runtime state satisfies that condition. */
     isPlayerGrounded() {
         const character = this.logic.getChar();
         return character && !character.isAboveGround();
     }
 
-    /**
-     * Returns the phase.
-     * This helper centralizes read access for callers.
-     * @returns {number} Returns the computed numeric value.
-     */
+    /** Returns the phase. This helper centralizes read access for callers. */
     getPhase() {
         const energy = this.logic.boss.energy;
         if (energy <= 18) return 3;
@@ -435,11 +303,7 @@ class EndbossLogicHelpers {
         return 1;
     }
 
-    /**
-     * Handles movement.
-     * It applies side effects required by this branch.
-     * @returns {unknown} Returns the value produced by this routine.
-     */
+    /** Handles movement. It applies side effects required by this branch. */
     handleMovement() {
         const logic = this.logic;
         if (this.isCharacterDead()) return this.handleDeadMovement();
@@ -453,10 +317,7 @@ class EndbossLogicHelpers {
         this.moveDirection(direction);
     }
 
-    /**
-     * Handles dead movement.
-     * It applies side effects required by this branch.
-     */
+    /** Handles dead movement. It applies side effects required by this branch. */
     handleDeadMovement() {
         const logic = this.logic;
         if (this.canMoveLeft()) {
@@ -468,20 +329,12 @@ class EndbossLogicHelpers {
         logic.boss.stopWalkingAnimation();
     }
 
-    /**
-     * Evaluates the character dead condition.
-     * Returns whether the current runtime state satisfies that condition.
-     * @returns {boolean} Returns `true` when the condition is satisfied; otherwise `false`.
-     */
+    /** Evaluates the character dead condition. Returns whether the current runtime state satisfies that condition. */
     isCharacterDead() {
         return this.logic.getChar()?.isDead?.();
     }
 
-    /**
-     * Returns the movement direction.
-     * This helper centralizes read access for callers.
-     * @returns {number} Returns the computed numeric value.
-     */
+    /** Returns the movement direction. This helper centralizes read access for callers. */
     getMovementDirection() {
         const logic = this.logic;
         const character = logic.getChar();
@@ -493,41 +346,30 @@ class EndbossLogicHelpers {
         return this.getDirectionToCharacter();
     }
 
-    /**
-     * Evaluates the normal blocked condition.
-     * Returns whether the current runtime state satisfies that condition.
-     * @returns {boolean} Returns `true` when the condition is satisfied; otherwise `false`.
-     */
+    /** Evaluates the normal blocked condition. Returns whether the current runtime state satisfies that condition. */
     isNormalBlocked() {
         const boss = this.logic.boss;
         return boss.isAlerting || boss.isAttacking || boss.isHurting;
     }
 
+    /**
+     * Checks whether the boss can move in the requested horizontal direction.
+     * @param {number} direction - Horizontal direction where negative is left and positive is right.
+     * @returns {boolean} True when movement in that direction stays within bounds.
+     */
     canMoveDirection(direction) { return direction < 0 ? this.canMoveLeft() : this.canMoveRight(); }
     
-    /**
-     * Evaluates the move left condition.
-     * Returns whether the current runtime state satisfies that condition.
-     * @returns {boolean} Returns `true` when the condition is satisfied; otherwise `false`.
-     */
+    /** Evaluates the move left condition. Returns whether the current runtime state satisfies that condition. */
     canMoveLeft() {
         return this.logic.boss.x > this.logic.boss.getMinX();
     }
 
-    /**
-     * Evaluates the move right condition.
-     * Returns whether the current runtime state satisfies that condition.
-     * @returns {boolean} Returns `true` when the condition is satisfied; otherwise `false`.
-     */
+    /** Evaluates the move right condition. Returns whether the current runtime state satisfies that condition. */
     canMoveRight() {
         return this.logic.boss.x < this.logic.boss.getMaxX();
     }
 
-    /**
-     * Executes the move direction routine.
-     * The logic is centralized here for maintainability.
-     * @param {number} direction - Horizontal direction factor (`-1` for left, `1` for right).
-     */
+    /** Executes the move direction routine. The logic is centralized here for maintainability. */
     moveDirection(direction) {
         const boss = this.logic.boss;
         if (direction < 0) {
@@ -539,11 +381,7 @@ class EndbossLogicHelpers {
         boss.moveRight();
     }
 
-    /**
-     * Returns the direction to character.
-     * This helper centralizes read access for callers.
-     * @returns {number} Returns the computed numeric value.
-     */
+    /** Returns the direction to character. This helper centralizes read access for callers. */
     getDirectionToCharacter() {
         const logic = this.logic;
         const character = logic.getChar();
@@ -552,11 +390,7 @@ class EndbossLogicHelpers {
         return characterCenter < endbossCenter ? -1 : 1;
     }
 
-    /**
-     * Returns the distance to character.
-     * This helper centralizes read access for callers.
-     * @returns {number} Returns the computed numeric value.
-     */
+    /** Returns the distance to character. This helper centralizes read access for callers. */
     getDistanceToCharacter() {
         const logic = this.logic;
         const character = logic.getChar();
