@@ -82,22 +82,31 @@
 
       <div class="ticker" aria-hidden="true">
         <div class="ticker__bar">
-          <div class="ticker__row">
-            <span>Available for remote work</span>
-            <span class="ticker__dot">•</span>
-            <span>Frontend Developer</span>
-            <span class="ticker__dot">•</span>
-            <span>Based in Munich</span>
-            <span class="ticker__dot">•</span>
-            <span>Available for remote work</span>
-            <span class="ticker__dot">•</span>
-            <span>Frontend Developer</span>
-            <span class="ticker__dot">•</span>
-            <span>Based in Munich</span>
+          <div class="ticker__track">
+            <div class="ticker__row">
+              <span>Available for remote work</span>
+              <span class="ticker__dot">•</span>
+              <span>Frontend Developer</span>
+              <span class="ticker__dot">•</span>
+              <span>Based in Munich</span>
+              <span class="ticker__dot">•</span>
+              <span>Open to work</span>
+              <span class="ticker__dot">•</span>
+            </div>
+
+            <div class="ticker__row" aria-hidden="true">
+              <span>Available for remote work</span>
+              <span class="ticker__dot">•</span>
+              <span>Frontend Developer</span>
+              <span class="ticker__dot">•</span>
+              <span>Based in Munich</span>
+              <span class="ticker__dot">•</span>
+              <span>Open to work</span>
+              <span class="ticker__dot">•</span>
+            </div>
           </div>
         </div>
       </div>
-
       <section class="section" id="about">
         <div class="container about">
           <div class="about__media">
@@ -209,41 +218,32 @@
                 <div class="skill__label">HTML</div>
               </div>
               <div class="skill">
-                <img src="./img/icons/html-5.png" alt="HTML Logo">
+                <img src="./img/icons/css-3.png" alt="CSS Logo">
                 <div class="skill__label">CSS</div>
               </div>
               <div class="skill">
-                <img src="./img/icons/html-5.png" alt="HTML Logo">
+                <img src="./img/icons/js.png" alt="HTML JavaScript Logo">
                 <div class="skill__label">JavaScript</div>
               </div>
               <div class="skill">
-                <img src="./img/icons/html-5.png" alt="HTML Logo">
+                <img src="./img/icons/material-design.svg" alt="HTML material Design Logo">
                 <div class="skill__label">Material<br />Design</div>
               </div>
-
               <div class="skill">
-                <img src="./img/icons/html-5.png" alt="HTML Logo">
-                <div class="skill__label">TypeScript</div>
-              </div>
-              <div class="skill">
-                <img src="./img/icons/html-5.png" alt="HTML Logo">
-                <div class="skill__label">Angular</div>
-              </div>
-              <div class="skill">
-                <img src="./img/icons/html-5.png" alt="HTML Logo">
+                <img src="./img/icons/firebase.svg" alt="HTML Firebase Logo">
                 <div class="skill__label">Firebase</div>
               </div>
               <div class="skill">
-                <img src="./img/icons/html-5.png" alt="HTML Logo">
+                <img src="./img/icons/git.svg" alt="HTML git Logo">
                 <div class="skill__label">Git</div>
               </div>
 
               <div class="skill">
-                <img src="./img/icons/html-5.png" alt="HTML Logo">
+                <img src="./img/icons/rest-api.svg" alt="HTML Rest-API Logo">
                 <div class="skill__label">REST-API</div>
               </div>
               <div class="skill">
-                <img src="./img/icons/html-5.png" alt="HTML Logo">
+                <img src="./img/icons/scrum.png" alt="HTML Scrum Logo">
                 <div class="skill__label">Scrum</div>
               </div>
               <div class="skill">
@@ -292,46 +292,62 @@
             What my colleagues say about me
           </h2>
 
-          <div class="carousel" aria-label="Testimonials">
-            <div class="carousel__track">
-              <article class="quote quote--side">
-                <p class="quote__text">
-                  Working with Lukas in a group that involved a lot of code, and
-                  focused, and made success. He's super to work with, and I'd
-                  happily work with him again.
-                </p>
-                <p class="quote__meta">A.Fischer - Team Partner</p>
-              </article>
+        <div class="carousel" aria-label="Testimonials">
+        <input class="carousel__input" type="radio" name="ts" id="ts-1" checked/>
+        <input class="carousel__input" type="radio" name="ts" id="ts-2"/>
+        <input class="carousel__input" type="radio" name="ts" id="ts-3"/>
 
-              <article class="quote quote--active">
-                <div class="quote__mark" aria-hidden="true">“</div>
-                <p class="quote__text">
-                  Our project benefited enormously from Simon efficient way of
-                  working.
-                </p>
-                <div class="quote__line" aria-hidden="true"></div>
-                <p class="quote__meta">T.Schulz - Frontend Developer</p>
-              </article>
+        <div class="carousel__track">
+            <article class="quote carousel__slide slide--1">
+            <div class="quote__mark" aria-hidden="true">“</div>
+            <p class="quote__text">
+                Working with Lukas in a group that involved a lot of code, and focused,
+                and made success. He's super to work with, and I'd happily work with him again.
+            </p>
+            <div class="quote__line" aria-hidden="true"></div>
+            <p class="quote__meta">A.Fischer - Team Partner</p>
+            </article>
 
-              <article class="quote quote--side">
-                <p class="quote__text">
-                  Lukas has proven to be a reliable technical skills and
-                  proactive approach to success of our project.
-                </p>
-                <p class="quote__meta">—</p>
-              </article>
+            <article class="quote carousel__slide slide--2">
+            <div class="quote__mark" aria-hidden="true">“</div>
+            <p class="quote__text">
+                Our project benefited enormously from Simon efficient way of working.
+            </p>
+            <div class="quote__line" aria-hidden="true"></div>
+            <p class="quote__meta">T.Schulz - Frontend Developer</p>
+            </article>
+
+            <article class="quote carousel__slide slide--3">
+            <div class="quote__mark" aria-hidden="true">“</div>
+            <p class="quote__text">
+                Lukas has proven to be a reliable teammate with strong technical skills
+                and a proactive approach to the success of our project.
+            </p>
+            <div class="quote__line" aria-hidden="true"></div>
+            <p class="quote__meta">—</p>
+            </article>
+        </div>
+
+        <div class="carousel__nav">
+            <div class="carousel__arrows">
+            <label class="carousel__arrow arrow--1-left" for="ts-3" aria-label="Previous">←</label>
+            <label class="carousel__arrow arrow--2-left" for="ts-1" aria-label="Previous">←</label>
+            <label class="carousel__arrow arrow--3-left" for="ts-2" aria-label="Previous">←</label>
             </div>
 
-            <div class="carousel__nav" aria-hidden="true">
-              <span class="carousel__arrow">←</span>
-              <div class="carousel__dots">
-                <span class="dot"></span>
-                <span class="dot"></span>
-                <span class="dot dot--active"></span>
-              </div>
-              <span class="carousel__arrow">→</span>
+            <div class="carousel__dots" aria-label="Pagination">
+            <label class="dot" for="ts-1" aria-label="Go to slide 1"></label>
+            <label class="dot" for="ts-2" aria-label="Go to slide 2"></label>
+            <label class="dot" for="ts-3" aria-label="Go to slide 3"></label>
             </div>
-          </div>
+
+            <div class="carousel__arrows">
+            <label class="carousel__arrow arrow--1-right" for="ts-2" aria-label="Next">→</label>
+            <label class="carousel__arrow arrow--2-right" for="ts-3" aria-label="Next">→</label>
+            <label class="carousel__arrow arrow--3-right" for="ts-1" aria-label="Next">→</label>
+            </div>
+        </div>
+        </div>
         </div>
       </section>
 
