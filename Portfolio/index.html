@@ -1,0 +1,437 @@
+    <!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Jeremy Nanasi</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com"/>
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet"/>
+
+    <link rel="stylesheet" href="style.css" />
+  </head>
+
+  <body>
+    <header class="topbar">
+      <div class="topbar__left">
+        <div class="lang-toggle" aria-label="Language toggle">
+          <button class="lang-toggle__btn is-active" type="button">EN</button>
+          <button class="lang-toggle__btn" type="button">DE</button>
+        </div>
+
+        <nav class="nav" aria-label="Primary navigation">
+          <a class="nav__link" href="#about">About me</a>
+          <a class="nav__link" href="#skills">Skills</a>
+          <a class="nav__link" href="#projects">Projects</a>
+        </nav>
+      </div>
+
+      <a class="brand" href="#home" aria-label="Back to top">
+        <span class="brand__mark" aria-hidden="true">
+          <span class="brand__mark-bar"></span>
+          <span class="brand__mark-stem"></span>
+        </span>
+        <span class="brand__text">
+          <span class="brand__name">Jeremy</span>
+          <span class="brand__name">Nánási</span>
+        </span>
+      </a>
+    </header>
+
+    <main>
+      <section class="hero" id="home">
+        <div class="hero__center">
+          <p class="hero__role">Frontend Developer</p>
+          <h1 class="hero__title">Jeremy Nánási</h1>
+
+          <div class="hero__actions">
+            <a class="btn btn--ghost" href="#projects">Check my work</a>
+            <a class="btn btn--ghost" href="#contact">Contact me</a>
+          </div>
+        </div>
+
+        <aside class="side side--left" aria-label="Scroll hint">
+          <a class="scroll-dot" href="#about" aria-label="Scroll to About">
+            <span class="scroll-dot__icon" aria-hidden="true">↓</span>
+          </a>
+          <span class="side-line" aria-hidden="true"></span>
+        </aside>
+
+        <aside class="side side--right" aria-label="Contact rail">
+          <a class="side-email" href="mailto:lukmu@email.com">jeremynanasi@gmx.de</a>
+
+          <div class="side-icons" aria-label="Social links">
+            <a class="icon-btn" href="#" aria-label="GitHub">
+              <svg viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M12 2a10 10 0 0 0-3.16 19.49c.5.09.68-.22.68-.48v-1.69c-2.78.61-3.37-1.19-3.37-1.19-.46-1.16-1.12-1.47-1.12-1.47-.92-.63.07-.62.07-.62 1.02.07 1.55 1.05 1.55 1.05.9 1.55 2.36 1.1 2.94.84.09-.66.35-1.1.63-1.36-2.22-.25-4.56-1.11-4.56-4.95 0-1.09.39-1.98 1.03-2.68-.1-.25-.45-1.27.1-2.65 0 0 .84-.27 2.75 1.02A9.6 9.6 0 0 1 12 6.8c.85 0 1.71.12 2.51.34 1.9-1.29 2.74-1.02 2.74-1.02.56 1.38.21 2.4.11 2.65.64.7 1.02 1.59 1.02 2.68 0 3.85-2.35 4.7-4.58 4.95.36.31.68.92.68 1.86v2.75c0 .27.18.58.69.48A10 10 0 0 0 12 2Z"/>
+              </svg>
+            </a>
+
+            <a class="icon-btn" href="#" aria-label="LinkedIn">
+              <svg viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M4.98 3.5A2.48 2.48 0 1 1 5 8.46 2.48 2.48 0 0 1 4.98 3.5ZM3 21V9h4v12H3Zm7 0V9h3.82v1.64h.05c.53-1 1.82-2.06 3.75-2.06 4.01 0 4.75 2.64 4.75 6.08V21h-4v-5.28c0-1.26-.02-2.88-1.75-2.88-1.75 0-2.02 1.37-2.02 2.79V21h-4Z"/>
+              </svg>
+            </a>
+          </div>
+
+          <span class="side-line" aria-hidden="true"></span>
+        </aside>
+      </section>
+
+      <div class="ticker" aria-hidden="true">
+        <div class="ticker__bar">
+          <div class="ticker__row">
+            <span>Available for remote work</span>
+            <span class="ticker__dot">•</span>
+            <span>Frontend Developer</span>
+            <span class="ticker__dot">•</span>
+            <span>Based in Munich</span>
+            <span class="ticker__dot">•</span>
+            <span>Available for remote work</span>
+            <span class="ticker__dot">•</span>
+            <span>Frontend Developer</span>
+            <span class="ticker__dot">•</span>
+            <span>Based in Munich</span>
+          </div>
+        </div>
+      </div>
+
+      <section class="section" id="about">
+        <div class="container about">
+          <div class="about__media">
+            <div class="diag diag--left" aria-hidden="true"></div>
+            <img
+              class="about__img"
+              src="assets/about.jpg"
+              alt="Portrait working on laptop"
+            />
+            <div class="diag diag--bottom" aria-hidden="true"></div>
+          </div>
+
+          <div class="about__content">
+            <p class="eyebrow">Who I Am</p>
+
+            <article class="panel panel--outline">
+              <h2 class="panel__title">About me</h2>
+
+              <p class="panel__text">
+                Hey there, I'm Lukas! Write some information about yourself that
+                is IT related. Why are you passionate about coding? What is your
+                source of inspiration for improving your programming skills?
+              </p>
+
+              <ul class="feature-list">
+                <li class="feature">
+                  <span class="feature__icon" aria-hidden="true">
+                    <svg viewBox="0 0 24 24">
+                      <path
+                        d="M12 2a7 7 0 0 1 7 7c0 5-7 13-7 13S5 14 5 9a7 7 0 0 1 7-7Zm0 9.5A2.5 2.5 0 1 0 12 6.5a2.5 2.5 0 0 0 0 5Z"
+                      />
+                    </svg>
+                  </span>
+                  <span class="feature__text">
+                    Where are you based? Would you be open to working remotely
+                    or potentially relocating?
+                  </span>
+                </li>
+
+                <li class="feature">
+                  <span class="feature__icon" aria-hidden="true">
+                    <svg viewBox="0 0 24 24">
+                      <path
+                        d="M12 3a9 9 0 1 1 0 18 9 9 0 0 1 0-18Zm1 5h-2v6l5 3 1-1.73-4-2.27V8Z"
+                      />
+                    </svg>
+                  </span>
+                  <span class="feature__text">
+                    Show that you are open-minded. Are you enthusiastic about
+                    learning new technologies and continually improving your
+                    skills?
+                  </span>
+                </li>
+
+                <li class="feature">
+                  <span class="feature__icon" aria-hidden="true">
+                    <svg viewBox="0 0 24 24">
+                      <path d="M12 2 3 7v6c0 5 4 9 9 9s9-4 9-9V7l-9-5Zm0 4.2L18 9v4c0 3.72-2.92 6.7-6 6.94C8.92 19.7 6 16.72 6 13V9l6-2.8Z"/>
+                    </svg>
+                  </span>
+                  <span class="feature__text">
+                    A brief description of your problem-solving approach. Do you
+                    learn from each challenge as you search for the most
+                    efficient or elegant solution? You can include some keywords
+                    like: analytical thinking, creativity, persistence and
+                    collaboration.
+                  </span>
+                </li>
+              </ul>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section class="section" id="skills">
+        <div class="container skills">
+          <div class="skills__left">
+            <p class="eyebrow">Technologies</p>
+
+            <article class="panel panel--gradient">
+              <h2 class="panel__title">Skill Set</h2>
+
+              <p class="panel__text">
+                A short introduction of your skills. Highlight your experience
+                of using different front-end technologies and emphasise your
+                openness to learning and adapting to new technologies. Show how
+                important it is for you to keep up with the rapid changes in web
+                development.
+              </p>
+
+              <p class="panel__sub">
+                <strong>You need</strong>
+                <span class="accent">another skill?</span>
+              </p>
+
+              <p class="panel__muted">
+                Feel free to contact me. I look forward to expanding on my
+                previous knowledge.
+              </p>
+
+              <a class="btn btn--ghost btn--small" href="#contact">Let's Talk</a>
+            </article>
+          </div>
+
+          <div class="skills__right" aria-label="Skill icons">
+            <div class="skill-grid">
+              <div class="skill">
+                <img src="./img/icons/html-5.png" alt="HTML Logo">
+                <div class="skill__label">HTML</div>
+              </div>
+              <div class="skill">
+                <img src="./img/icons/html-5.png" alt="HTML Logo">
+                <div class="skill__label">CSS</div>
+              </div>
+              <div class="skill">
+                <img src="./img/icons/html-5.png" alt="HTML Logo">
+                <div class="skill__label">JavaScript</div>
+              </div>
+              <div class="skill">
+                <img src="./img/icons/html-5.png" alt="HTML Logo">
+                <div class="skill__label">Material<br />Design</div>
+              </div>
+
+              <div class="skill">
+                <img src="./img/icons/html-5.png" alt="HTML Logo">
+                <div class="skill__label">TypeScript</div>
+              </div>
+              <div class="skill">
+                <img src="./img/icons/html-5.png" alt="HTML Logo">
+                <div class="skill__label">Angular</div>
+              </div>
+              <div class="skill">
+                <img src="./img/icons/html-5.png" alt="HTML Logo">
+                <div class="skill__label">Firebase</div>
+              </div>
+              <div class="skill">
+                <img src="./img/icons/html-5.png" alt="HTML Logo">
+                <div class="skill__label">Git</div>
+              </div>
+
+              <div class="skill">
+                <img src="./img/icons/html-5.png" alt="HTML Logo">
+                <div class="skill__label">REST-API</div>
+              </div>
+              <div class="skill">
+                <img src="./img/icons/html-5.png" alt="HTML Logo">
+                <div class="skill__label">Scrum</div>
+              </div>
+              <div class="skill">
+                <div class="skill__icon skill__icon--accent">⟲</div>
+                <div class="skill__label">Growth<br />mindset</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="section" id="projects">
+        <div class="container">
+          <p class="eyebrow">Portfolio</p>
+          <h2 class="section-title">Featured Projects</h2>
+          <p class="section-desc">
+            Explore a selection of my work here - Interact with projects to see
+            my skills in action.
+          </p>
+
+          <div class="project-list" role="list">
+            <a class="project-row" href="#" role="listitem">
+              <span class="project-row__name">Join</span>
+              <span class="project-row__tags"
+                >JavaScript | HTML | CSS | Firebase</span
+              >
+            </a>
+
+            <a class="project-row" href="#" role="listitem">
+              <span class="project-row__name">El Pollo Loco</span>
+              <span class="project-row__tags">HTML | CSS | JavaScript</span>
+            </a>
+
+            <a class="project-row" href="#" role="listitem">
+              <span class="project-row__name">Pokedex</span>
+              <span class="project-row__tags"
+                >Angular | Firebase | JavaScript | Rest-API</span>
+            </a>
+          </div>
+        </div>
+      </section>
+
+      <section class="section section--center" id="testimonials">
+        <div class="container">
+          <h2 class="section-title section-title--center">
+            What my colleagues say about me
+          </h2>
+
+          <div class="carousel" aria-label="Testimonials">
+            <div class="carousel__track">
+              <article class="quote quote--side">
+                <p class="quote__text">
+                  Working with Lukas in a group that involved a lot of code, and
+                  focused, and made success. He's super to work with, and I'd
+                  happily work with him again.
+                </p>
+                <p class="quote__meta">A.Fischer - Team Partner</p>
+              </article>
+
+              <article class="quote quote--active">
+                <div class="quote__mark" aria-hidden="true">“</div>
+                <p class="quote__text">
+                  Our project benefited enormously from Simon efficient way of
+                  working.
+                </p>
+                <div class="quote__line" aria-hidden="true"></div>
+                <p class="quote__meta">T.Schulz - Frontend Developer</p>
+              </article>
+
+              <article class="quote quote--side">
+                <p class="quote__text">
+                  Lukas has proven to be a reliable technical skills and
+                  proactive approach to success of our project.
+                </p>
+                <p class="quote__meta">—</p>
+              </article>
+            </div>
+
+            <div class="carousel__nav" aria-hidden="true">
+              <span class="carousel__arrow">←</span>
+              <div class="carousel__dots">
+                <span class="dot"></span>
+                <span class="dot"></span>
+                <span class="dot dot--active"></span>
+              </div>
+              <span class="carousel__arrow">→</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="section" id="contact">
+        <div class="container contact">
+          <div class="contact__left">
+            <p class="eyebrow">Contact me</p>
+            <h2 class="contact__title">Let's work<br />together</h2>
+
+            <p class="contact__subtitle">Got a problem to solve?</p>
+
+            <p class="contact__text">
+              Encourage people to contact you and describe what role you are
+              interested in. Show that you will add value to their projects
+              through your work.
+            </p>
+
+            <p class="contact__text">
+              Need a Frontend developer? <span class="accent">Let's talk!</span>
+            </p>
+          </div>
+
+          <form class="contact__form">
+            <div class="field">
+              <label class="field__label" for="name">What's your name?</label>
+              <input
+                class="field__input"
+                id="name"
+                name="name"
+                type="text"
+                placeholder="Your name goes here"
+              />
+            </div>
+
+            <div class="field">
+              <label class="field__label" for="email">What's your email?</label>
+              <input
+                class="field__input"
+                id="email"
+                name="email"
+                type="email"
+                placeholder="youremail@email.com"
+              />
+            </div>
+
+            <div class="field">
+              <label class="field__label" for="message">How can I help you?</label>
+              <input
+                class="field__input"
+                id="message"
+                name="message"
+                type="text"
+                placeholder="Hello Lukas, I am interested in..."
+              />
+            </div>
+
+            <label class="check">
+              <input class="check__box" type="checkbox" />
+              <span class="check__mark" aria-hidden="true"></span>
+              <span class="check__text">
+                I've read the <a href="#" class="link">privacy policy</a> and
+                agree to the processing of my data as outlined.
+              </span>
+            </label>
+
+            <button class="btn btn--ghost btn--center" type="button">
+              Say Hello ;)
+            </button>
+          </form>
+        </div>
+      </section>
+    </main>
+
+    <footer class="footer">
+      <div class="container footer__inner">
+        <div class="footer__left">
+          <div class="footer__brand">
+            <span class="brand__mark brand__mark--small" aria-hidden="true">
+              <span class="brand__mark-bar"></span>
+              <span class="brand__mark-stem"></span>
+            </span>
+            <span class="brand__text">
+              <span class="brand__name">Jeremy</span>
+              <span class="brand__name">Nánási</span>
+            </span>
+          </div>
+
+          <p class="footer__meta">Web Developer</p>
+          <p class="footer__meta">Munich Germany</p>
+        </div>
+
+        <div class="footer__center">© Jeremy Nánási 2026</div>
+
+        <div class="footer__right">
+          <a class="footer__link" href="#">Github</a>
+          <a class="footer__link" href="#">LinkedIn</a>
+          <a class="footer__link" href="#">Email</a>
+          <a class="footer__link" href="#">Legal Notice</a>
+        </div>
+      </div>
+    </footer>
+</body>
+</html>
