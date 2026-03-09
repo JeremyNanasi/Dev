@@ -367,6 +367,7 @@ a {
 
 :root {
   --ticker-speed: 18s;
+  --ticker-gap: 34px;
 }
 
 .ticker {
@@ -418,14 +419,33 @@ a {
   display: flex;
   width: max-content;
   will-change: transform;
+  transform: translate3d(0, 0, 0);
   animation: ticker-move var(--ticker-speed) linear infinite;
+}
+
+.ticker__content {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--ticker-gap);
+  white-space: nowrap;
+  flex: 0 0 auto;
+
+  font-family: var(--font-mono);
+  font-size: 22px;
+  color: rgba(42, 214, 191, 0.85);
+  text-shadow: 0 0 18px rgba(42, 214, 191, 0.12);
+
+  padding-right: var(--ticker-gap);
 }
 
 .ticker__row {
   display: inline-flex;
   align-items: center;
-  gap: 26px;
-  padding-left: 8vw;
+  gap: var(--ticker-gap);
+  padding: 0;
+  margin: 0;
+  flex: 0 0 auto;
+
   font-family: var(--font-mono);
   font-size: 22px;
   color: rgba(42, 214, 191, 0.85);
