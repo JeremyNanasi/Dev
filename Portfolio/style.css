@@ -646,11 +646,11 @@ a {
 }
 
 .skill-grid {
-  margin-top: 44px;
+  margin-top: 34px;
   display: grid;
   grid-template-columns: repeat(4, 1fr);
-  column-gap: clamp(60px, 7vw, 140px);
-  row-gap: clamp(50px, 6vw, 88px);
+  column-gap: clamp(24px, 4.2vw, 72px);
+  row-gap: clamp(28px, 4.2vw, 58px);
   justify-items: center;
   align-items: start;
 }
@@ -658,48 +658,48 @@ a {
 .skill {
   display: grid;
   justify-items: center;
-  gap: 16px;
+  gap: 11px;
   text-align: center;
 }
 
 .skill__iconwrap {
-  width: 120px;
-  height: 92px;
+  width: 96px;
+  height: 74px;
   display: grid;
   place-items: center;
 }
 
 .skill__img {
   width: auto;
-  height: 72px;
-  max-width: 104px;
+  height: 60px;
+  max-width: 90px;
   object-fit: contain;
   filter: drop-shadow(0 24px 70px rgba(0, 0, 0, 0.65));
   image-rendering: -webkit-optimize-contrast;
 }
 
 .skill--md .skill__img {
-  height: 86px;
+  height: 68px;
 }
 
 .skill--ts .skill__img,
 .skill--js .skill__img {
-  height: 78px;
+  height: 64px;
 }
 
 .skill--api .skill__img {
-  height: 74px;
+  height: 62px;
 }
 
 .skill--growth .skill__img {
-  height: 92px;
+  height: 72px;
 }
 
 .skill__label {
   font-family: var(--font-mono);
-  font-size: 22px;
+  font-size: 19px;
   color: rgba(245, 245, 245, 0.88);
-  line-height: 1.15;
+  line-height: 1.1;
   text-shadow: 0 18px 50px rgba(0, 0, 0, 0.55);
 }
 
@@ -1140,12 +1140,12 @@ a {
 
   .skill-grid {
     grid-template-columns: repeat(3, 1fr);
-    column-gap: 44px;
-    row-gap: 56px;
+    column-gap: 30px;
+    row-gap: 38px;
   }
 
   .skill__label {
-    font-size: 20px;
+    font-size: 18px;
   }
 
   .project-row {
@@ -1179,28 +1179,28 @@ a {
 @media (max-width: 720px) {
   .skill-grid {
     grid-template-columns: repeat(2, 1fr);
-    column-gap: 34px;
-    row-gap: 46px;
+    column-gap: 24px;
+    row-gap: 30px;
   }
 
   .skill__label {
-    font-size: 18px;
+    font-size: 17px;
   }
 
   .skill__iconwrap {
-    width: 110px;
-    height: 86px;
+    width: 86px;
+    height: 66px;
   }
 
   .skill__img {
-    height: 64px;
+    height: 52px;
   }
 
   .skill--md .skill__img {
-    height: 76px;
+    height: 60px;
   }
 
   .skill--growth .skill__img {
-    height: 84px;
+    height: 64px;
   }
 }
