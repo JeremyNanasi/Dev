@@ -737,13 +737,52 @@ a {
   align-items: center;
   padding: 26px 0;
   border-bottom: 1px solid rgba(42, 214, 191, 0.5);
+  position: relative;
+  isolation: isolate;
+  transition: transform 180ms ease, border-color 180ms ease;
 }
+
+.project-row::before {
+  content: "";
+  position: absolute;
+  inset: 6px -14px;
+  border-radius: 14px;
+  background:
+    linear-gradient(
+      90deg,
+      rgba(42, 214, 191, 0.18) 0%,
+      rgba(42, 214, 191, 0.08) 45%,
+      rgba(42, 214, 191, 0.04) 100%
+    );
+  box-shadow: 0 14px 34px rgba(3, 11, 10, 0.35);
+  opacity: 0;
+  z-index: -1;
+  transition: opacity 180ms ease;
+}
+
+
+.project-row:hover,
+.project-row:focus-visible {
+  transform: translateX(6px);
+  border-bottom-color: rgba(42, 214, 191, 0.82);
+}
+
+.project-row:hover::before,
+.project-row:focus-visible::before {
+  opacity: 1;
+}
+
+.project-row:focus-visible {
+  outline: none;
+}
+
 
 .project-row__name {
   font-family: var(--font-mono);
   font-weight: 700;
   color: rgba(245, 245, 245, 0.9);
   font-size: 22px;
+  transition: color 180ms ease;
 }
 
 .project-row__tags {
@@ -751,6 +790,17 @@ a {
   font-family: var(--font-mono);
   font-size: 14px;
   color: rgba(245, 245, 245, 0.62);
+  transition: color 180ms ease;
+}
+
+.project-row:hover .project-row__name,
+.project-row:focus-visible .project-row__name {
+  color: rgba(42, 214, 191, 0.95);
+}
+
+.project-row:hover .project-row__tags,
+.project-row:focus-visible .project-row__tags {
+  color: rgba(245, 245, 245, 0.82);
 }
 
 .quote {
@@ -1401,20 +1451,20 @@ svg {
 }
 
 .ticker {
-  height: clamp(58px, 16vw, 86px);
-  overflow: clip;
+  height: clamp(60px, 16vw, 92px);
+  overflow: visible;
 }
 
 .ticker__bar {
-  left: 0;
-  right: 0;
-  top: clamp(0px, 2vw, 8px);
+  left: -10vw;
+  right: -10vw;
+  top: clamp(2px, 1.4vw, 10px);
   transform: rotate(-4deg);
 }
 
 .ticker__bar::before,
 .ticker__bar::after {
-  width: clamp(44px, 12vw, 120px);
+  width: clamp(12px, 5vw, 40px);
 }
 
 .ticker__row {
@@ -1742,6 +1792,44 @@ svg {
   .contact {
     grid-template-columns: 1fr 1fr;
     gap: 70px;
+  }
+
+  .skills {
+    grid-template-rows: auto 1fr;
+    grid-template-areas:
+      "skills-eyebrow ."
+      "skills-panel skills-icons";
+    align-items: stretch;
+  }
+
+  .skills__left {
+    display: contents;
+  }
+
+  .skills__left > .eyebrow {
+    grid-area: skills-eyebrow;
+    margin: 0;
+  }
+
+  .skills__left > .panel--gradient {
+    grid-area: skills-panel;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .skills__right {
+    grid-area: skills-icons;
+    display: flex;
+    align-self: stretch;
+    min-height: 100%;
+  }
+
+  .skills__right .skill-grid {
+    margin-top: 0;
+    width: 100%;
+    min-height: 100%;
+    align-content: space-between;
   }
 
   .about__media {

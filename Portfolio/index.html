@@ -11,6 +11,7 @@
       href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet"/>
 
     <link rel="stylesheet" href="style.css" />
+    <script href="./script/main"></script>
   </head>
 
   <body>
@@ -96,7 +97,7 @@
             <span class="ticker__dot">•</span>
             <span>Frontend Developer</span>
             <span class="ticker__dot">•</span>
-            <span>Based in Munich</span>
+            <span>Based in Memmingen</span>
             <span class="ticker__dot">•</span>
             <span>Open to work</span>
             <span class="ticker__dot">•</span>
@@ -107,7 +108,7 @@
             <span class="ticker__dot">•</span>
             <span>Frontend Developer</span>
             <span class="ticker__dot">•</span>
-            <span>Based in Munich</span>
+            <span>Based in Memmingen</span>
             <span class="ticker__dot">•</span>
             <span>Open to work</span>
             <span class="ticker__dot">•</span>
@@ -134,7 +135,7 @@
               <h2 class="panel__title">About me</h2>
 
               <p class="panel__text">
-                Hey there, I’m Lukas — a Frontend Developer who enjoys building clean, responsive interfaces with Vanilla JavaScript, 
+                Hey there, I’m Jeremy — a Frontend Developer who enjoys building clean, responsive interfaces with Vanilla JavaScript, 
                 HTML and CSS. I love coding because it combines creativity with structured problem-solving, and I’m motivated by steady 
                 progress: learning, applying and refining until the user experience feels smooth and reliable.
               </p>
@@ -480,37 +481,12 @@
         <div class="footer__center">©Jeremy Nánási 2026</div>
 
         <div class="footer__right">
-          <a class="footer__link" href="#">Github</a>
+          <a class="footer__link" href="https://github.com/JeremyNanasi">Github</a>
           <a class="footer__link" href="#">LinkedIn</a>
-          <a class="footer__link" href="#">Email</a>
-          <a class="footer__link" href="#">Legal Notice</a>
+          <a class="footer__link" href="jeremynanasi@gmx.de">Email</a>
+          <a class="footer__link" href="./impressum.html">Legal Notice</a>
         </div>
       </div>
     </footer>
-    <script>
-      const topbar = document.querySelector(".topbar");
-      const toggle = document.querySelector(".menu-toggle");
-      const nav = document.querySelector("#primary-nav");
-
-      const closeMenu = () => {
-        topbar.classList.remove("is-open");
-        toggle.setAttribute("aria-expanded", "false");
-      };
-
-      if (topbar && toggle && nav) {
-        toggle.addEventListener("click", () => {
-          const open = topbar.classList.toggle("is-open");
-          toggle.setAttribute("aria-expanded", String(open));
-        });
-
-        nav.querySelectorAll("a").forEach((link) => {
-          link.addEventListener("click", closeMenu);
-        });
-
-        window.addEventListener("resize", () => {
-          if (window.innerWidth >= 768) closeMenu();
-        });
-      }
-    </script>
 </body>
 </html>
