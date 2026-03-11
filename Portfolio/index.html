@@ -21,7 +21,19 @@
           <button class="lang-toggle__btn" type="button">DE</button>
         </div>
 
-        <nav class="nav" aria-label="Primary navigation">
+        <button
+          class="menu-toggle"
+          type="button"
+          aria-expanded="false"
+          aria-controls="primary-nav"
+          aria-label="Toggle navigation"
+        >
+          <span class="menu-toggle__line" aria-hidden="true"></span>
+          <span class="menu-toggle__line" aria-hidden="true"></span>
+          <span class="menu-toggle__line" aria-hidden="true"></span>
+        </button>
+
+        <nav class="nav" id="primary-nav" aria-label="Primary navigation">
           <a class="nav__link" href="#about">About me</a>
           <a class="nav__link" href="#skills">Skills</a>
           <a class="nav__link" href="#projects">Projects</a>
@@ -63,12 +75,12 @@
           <a class="side-email" href="mailto:jeremynanasi@gmx.de">jeremynanasi@gmx.de</a>
 
           <div class="side-icons" aria-label="Social links">
-            <a class="icon-btn" href="#" aria-label="GitHub">
-              <a href="https://github.com/JeremyNanasi"><img src="./img/icons/button-icons/GitHub-Hover.svg"></a>
+            <a class="icon-btn" href="https://github.com/JeremyNanasi" aria-label="GitHub profile">
+              <img src="./img/icons/button-icons/GitHub-Hover.svg" alt="" />
             </a>
 
-            <a class="icon-btn" href="#" aria-label="LinkedIn">
-              <img src="./img/icons/button-icons/Linkedin.svg"></a>
+            <a class="icon-btn" href="#" aria-label="LinkedIn profile">
+              <img src="./img/icons/button-icons/Linkedin.svg" alt="" />
             </a>
           </div>
 
@@ -109,8 +121,8 @@
             <div class="diag diag--left" aria-hidden="true"></div>
             <img
               class="about__img"
-              src="assets/about.jpg"
-              alt="Portrait working on laptop"
+              src="#MyselfPicture"
+              alt="Picture of Myself"
             />
             <div class="diag diag--bottom" aria-hidden="true"></div>
           </div>
@@ -475,5 +487,30 @@
         </div>
       </div>
     </footer>
+    <script>
+      const topbar = document.querySelector(".topbar");
+      const toggle = document.querySelector(".menu-toggle");
+      const nav = document.querySelector("#primary-nav");
+
+      const closeMenu = () => {
+        topbar.classList.remove("is-open");
+        toggle.setAttribute("aria-expanded", "false");
+      };
+
+      if (topbar && toggle && nav) {
+        toggle.addEventListener("click", () => {
+          const open = topbar.classList.toggle("is-open");
+          toggle.setAttribute("aria-expanded", String(open));
+        });
+
+        nav.querySelectorAll("a").forEach((link) => {
+          link.addEventListener("click", closeMenu);
+        });
+
+        window.addEventListener("resize", () => {
+          if (window.innerWidth >= 768) closeMenu();
+        });
+      }
+    </script>
 </body>
 </html>
