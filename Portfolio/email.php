@@ -6,12 +6,6 @@ header("Access-Control-Allow-Methods: POST, OPTIONS");
 header("Access-Control-Allow-Headers: Content-Type");
 header("Content-Type: application/json; charset=utf-8");
 
-// ------------------------------------------------------------
-// WICHTIG:
-// Deine eigene Adresse in Zeile 15 setzen!
-// ------------------------------------------------------------
-
-// >>> DEINE EMAIL HIER EINTRAGEN <<<
 $siteEmail = "jeremynanasi@gmx.de";
 
 switch ($_SERVER['REQUEST_METHOD']) {
@@ -36,9 +30,15 @@ switch ($_SERVER['REQUEST_METHOD']) {
         $email = $params->email ?? '';
         $name = $params->name ?? '';
         $userMessage = $params->message ?? '';
+        $privacyAccepted = $params->privacyAccepted ?? false;
 
         // Basic validation
-        if (!filter_var($email, FILTER_VALIDATE_EMAIL) || empty($name) || empty($userMessage)) {
+        if (
+            !filter_var($email, FILTER_VALIDATE_EMAIL) ||
+            empty($name) ||
+            empty($userMessage) ||
+            $privacyAccepted !== true
+        ) {
             http_response_code(400);
             echo json_encode(['success' => false, 'error' => 'Invalid input data']);
             exit;

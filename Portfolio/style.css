@@ -731,6 +731,90 @@ a {
   width: min(980px, 100%);
 }
 
+.projects-layout {
+  display: block;
+}
+
+.projects-layout .project-list {
+  width: 100%;
+}
+
+.project-preview {
+  display: none;
+}
+
+@media (min-width: 1024px) {
+  .projects-layout {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(320px, 420px);
+    gap: clamp(28px, 4vw, 54px);
+    align-items: start;
+  }
+
+  .projects-layout .project-list {
+    margin-top: 0;
+  }
+
+  .project-preview {
+    display: block;
+    position: relative;
+    min-height: clamp(260px, 30vw, 360px);
+    border-radius: 22px;
+    border: 1px solid rgba(42, 214, 191, 0.4);
+    overflow: hidden;
+    isolation: isolate;
+    box-shadow: 0 22px 60px rgba(0, 0, 0, 0.42);
+    background:
+      radial-gradient(
+        360px 260px at 16% 20%,
+        rgba(42, 214, 191, 0.2),
+        transparent 60%
+      ),
+      radial-gradient(
+        300px 200px at 84% 84%,
+        rgba(42, 214, 191, 0.14),
+        transparent 65%
+      ),
+      rgba(10, 28, 25, 0.75);
+    transition: border-color 260ms ease, box-shadow 260ms ease;
+  }
+
+  .project-preview__img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    opacity: 0;
+    transform: scale(1.08);
+    filter: saturate(0.9) contrast(1.04);
+    transition: opacity 420ms ease, transform 460ms ease;
+    pointer-events: none;
+  }
+
+  .projects-layout:has(.project-row[data-project="join"]:hover)
+    .project-preview__img--join,
+  .projects-layout:has(.project-row[data-project="join"]:focus-visible)
+    .project-preview__img--join,
+  .projects-layout:has(.project-row[data-project="el_pollo_loco"]:hover)
+    .project-preview__img--el_pollo_loco,
+  .projects-layout:has(.project-row[data-project="el_pollo_loco"]:focus-visible)
+    .project-preview__img--el_pollo_loco,
+  .projects-layout:has(.project-row[data-project="pokedex"]:hover)
+    .project-preview__img--pokedex,
+  .projects-layout:has(.project-row[data-project="pokedex"]:focus-visible)
+    .project-preview__img--pokedex {
+    opacity: 1;
+    transform: scale(1);
+  }
+
+  .projects-layout:has(.project-row:hover) .project-preview,
+  .projects-layout:has(.project-row:focus-visible) .project-preview {
+    border-color: rgba(42, 214, 191, 0.78);
+    box-shadow: 0 28px 70px rgba(0, 0, 0, 0.5);
+  }
+}
+
 .project-row {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -1090,6 +1174,7 @@ a {
   color: rgba(245, 245, 245, 0.62);
   font-size: 12px;
   line-height: 1.6;
+  cursor: pointer;
 }
 
 .check__box {
@@ -1099,12 +1184,55 @@ a {
 }
 
 .check__mark {
+  position: relative;
   width: 14px;
   height: 14px;
   border: 1px solid rgba(42, 214, 191, 0.85);
   border-radius: 2px;
   margin-top: 2px;
   box-shadow: 0 10px 24px rgba(0, 0, 0, 0.2);
+}
+
+.check__mark::after {
+  content: "";
+  position: absolute;
+  inset: 2px;
+  border-radius: 1px;
+  background: rgba(42, 214, 191, 0.95);
+  opacity: 0;
+  transform: scale(0.65);
+  transition: transform 140ms ease, opacity 140ms ease;
+}
+
+.check__box:checked + .check__mark::after {
+  opacity: 1;
+  transform: scale(1);
+}
+
+.check__box:focus-visible + .check__mark {
+  outline: 2px solid rgba(42, 214, 191, 0.85);
+  outline-offset: 2px;
+}
+
+.contact__form .btn[disabled] {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+.form-status {
+  min-height: 1.6em;
+  margin: 12px 0 0 0;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: rgba(245, 245, 245, 0.62);
+}
+
+.form-status.is-success {
+  color: rgba(42, 214, 191, 0.95);
+}
+
+.form-status.is-error {
+  color: rgba(255, 138, 138, 0.9);
 }
 
 .footer {
