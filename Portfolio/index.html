@@ -11,6 +11,7 @@
       href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet"/>
 
     <link rel="stylesheet" href="style.css" />
+    <script src="./language-change.js"></script>
     <script src="./main.js" defer></script>
   </head>
 
@@ -18,8 +19,8 @@
     <header class="topbar">
       <div class="topbar__left">
         <div class="lang-toggle" aria-label="Language toggle">
-          <button class="lang-toggle__btn is-active" type="button">EN</button>
-          <button class="lang-toggle__btn" type="button">DE</button>
+          <button class="lang-toggle__btn is-active" type="button" data-lang="en" aria-pressed="true">EN</button>
+          <button class="lang-toggle__btn" type="button" data-lang="de" aria-pressed="false">DE</button>
         </div>
 
         <button
@@ -79,10 +80,6 @@
             <a class="icon-btn" href="https://github.com/JeremyNanasi" aria-label="GitHub profile">
               <img src="./img/icons/button-icons/GitHub-Hover.svg" alt="" />
             </a>
-
-            <a class="icon-btn" href="#" aria-label="LinkedIn profile">
-              <img src="./img/icons/button-icons/Linkedin.svg" alt="" />
-            </a>
           </div>
 
           <span class="side-line" aria-hidden="true"></span>
@@ -92,18 +89,7 @@
     <div class="ticker" aria-hidden="true">
       <div class="ticker__bar">
         <div class="ticker__track">
-          <div class="ticker__row">
-            <span>Available for remote work</span>
-            <span class="ticker__dot">•</span>
-            <span>Frontend Developer</span>
-            <span class="ticker__dot">•</span>
-            <span>Based in Memmingen</span>
-            <span class="ticker__dot">•</span>
-            <span>Open to work</span>
-            <span class="ticker__dot">•</span>
-          </div>
-
-          <div class="ticker__row" aria-hidden="true">
+          <div class="ticker__row" data-ticker-template="true">
             <span>Available for remote work</span>
             <span class="ticker__dot">•</span>
             <span>Frontend Developer</span>
@@ -305,39 +291,64 @@
 
           <div class="projects-layout">
             <div class="project-list" role="list">
-              <a
-                class="project-row"
-                data-project="join"
-                href="#"
-                role="listitem"
-              >
-                <span class="project-row__name">Join</span>
-                <span class="project-row__tags"
-                  >JavaScript | HTML | CSS | Firebase</span
-                >
-              </a>
+              <div class="project-row" data-project="join" role="listitem">
+                <div class="project-row__content">
+                  <span class="project-row__name">Join</span>
+                  <span class="project-row__tags"
+                    >JavaScript | HTML | CSS | Firebase</span
+                  >
+                </div>
+              </div>
 
-              <a
-                class="project-row"
-                data-project="el_pollo_loco"
-                href="#"
-                role="listitem"
-              >
-                <span class="project-row__name">El Pollo Loco</span>
-                <span class="project-row__tags">HTML | CSS | JavaScript</span>
-              </a>
+              <div class="project-row" data-project="el_pollo_loco" role="listitem">
+                <div class="project-row__content">
+                  <span class="project-row__name">El Pollo Loco</span>
+                  <span class="project-row__tags">HTML | CSS | JavaScript</span>
+                </div>
 
-              <a
-                class="project-row"
-                data-project="pokedex"
-                href="#"
-                role="listitem"
-              >
-                <span class="project-row__name">Pokedex</span>
-                <span class="project-row__tags"
-                  >Angular | Firebase | JavaScript | Rest-API</span
-                >
-              </a>
+                <div class="project-row__actions" aria-label="El Pollo Loco project links">
+                  <a
+                    class="project-link"
+                    href="https://raw.githack.com/JeremyNanasi/Dev/main/el_pollo_loco/index.html"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    aria-label="Open the El Pollo Loco live demo in a new tab"
+                  >Live Demo</a>
+                  <a
+                    class="project-link"
+                    href="https://github.com/JeremyNanasi/Dev/tree/main/el_pollo_loco"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    aria-label="Open the El Pollo Loco GitHub source in a new tab"
+                  >GitHub</a>
+                </div>
+              </div>
+
+              <div class="project-row" data-project="pokedex" role="listitem">
+                <div class="project-row__content">
+                  <span class="project-row__name">Pokedex</span>
+                  <span class="project-row__tags"
+                    >Angular | Firebase | JavaScript | Rest-API</span
+                  >
+                </div>
+
+                <div class="project-row__actions" aria-label="Pokedex project links">
+                  <a
+                    class="project-link"
+                    href="https://raw.githack.com/JeremyNanasi/Dev/main/developer-main-projects/Pokedex/index.html"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    aria-label="Open the Pokedex live demo in a new tab"
+                  >Live Demo</a>
+                  <a
+                    class="project-link"
+                    href="https://github.com/JeremyNanasi/Dev/tree/main/developer-main-projects/Pokedex"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    aria-label="Open the Pokedex GitHub source in a new tab"
+                  >GitHub</a>
+                </div>
+              </div>
             </div>
 
             <div class="project-preview" aria-hidden="true">
@@ -376,30 +387,28 @@
             <article class="quote carousel__slide slide--1">
             <div class="quote__mark" aria-hidden="true">“</div>
             <p class="quote__text">
-                Working with Jeremy in a group that involved a lot of code, and focused,
-                and made success. He's super to work with, and I'd happily work with him again.
+                Jeremy stands out through his reliable way of working, strong problem-solving mindset, and genuine motivation to improve. He approaches technical challenges with focus and persistence, and he quickly turns feedback into practical results.
             </p>
             <div class="quote__line" aria-hidden="true"></div>
-            <p class="quote__meta">A.Fischer - Team Partner</p>
+            <p class="quote__meta">Head of IT</p>
             </article>
 
             <article class="quote carousel__slide slide--2">
             <div class="quote__mark" aria-hidden="true">“</div>
             <p class="quote__text">
-                Our project benefited enormously from Simon efficient way of working.
+                Working with Jeremy is always productive. He communicates clearly, supports the team, and contributes strong ideas in collaborative projects.
             </p>
             <div class="quote__line" aria-hidden="true"></div>
-            <p class="quote__meta">T.Schulz - Frontend Developer</p>
+            <p class="quote__meta">Daniel - IT friend</p>
             </article>
 
             <article class="quote carousel__slide slide--3">
             <div class="quote__mark" aria-hidden="true">“</div>
             <p class="quote__text">
-                Lukas has proven to be a reliable teammate with strong technical skills
-                and a proactive approach to the success of our project.
+                Jeremy works with persistence, curiosity, and attention to detail. He stays committed until he finds a clean and effective solution.
             </p>
             <div class="quote__line" aria-hidden="true"></div>
-            <p class="quote__meta">—</p>
+            <p class="quote__meta">Dominique</p>
             </article>
         </div>
 
@@ -445,7 +454,15 @@
             </p>
           </div>
 
-          <form class="contact__form" id="contact-form">
+          <form
+            class="contact__form"
+            id="contact-form"
+            action="./email.php"
+            method="post"
+            data-primary-endpoint="./email.php"
+            data-skip-primary-endpoint="true"
+            data-fallback-endpoint="https://formsubmit.co/ajax/jeremynanasi@gmx.de"
+          >
             <div class="field">
               <label class="field__label" for="name">What's your name?</label>
               <input
@@ -522,8 +539,6 @@
 
         <div class="footer__right">
           <a class="footer__link" href="https://github.com/JeremyNanasi">Github</a>
-          <a class="footer__link" href="#">LinkedIn</a>
-          <a class="footer__link" href="jeremynanasi@gmx.de">Email</a>
           <a class="footer__link" href="./impressum.html">Legal Notice</a>
         </div>
       </div>
