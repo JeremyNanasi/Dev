@@ -258,6 +258,15 @@ a {
   text-shadow: 0 12px 60px rgba(0, 0, 0, 0.4);
 }
 
+.hero__focus {
+  margin: 18px auto 0 auto;
+  width: min(620px, 100%);
+  font-family: var(--font-mono);
+  font-size: clamp(13px, 1.8vw, 16px);
+  line-height: 1.7;
+  color: rgba(245, 245, 245, 0.74);
+}
+
 .hero__actions {
   margin-top: 26px;
   display: flex;
@@ -778,6 +787,7 @@ a {
   .project-preview {
     display: grid;
     position: relative;
+    aspect-ratio: 3 / 2;
     border-radius: 22px;
     overflow: hidden;
     isolation: isolate;
@@ -829,18 +839,15 @@ a {
     position: relative;
     z-index: 1;
     width: 100%;
-    height: auto;
+    height: 100%;
+    object-fit: cover;
+    object-position: top center;
+    border-radius: 22px;
     opacity: 0;
     transform: scale(1.02);
     filter: saturate(0.9) contrast(1.04);
     transition: opacity 420ms ease, transform 460ms ease;
     pointer-events: none;
-  }
-
-  .project-preview__img--pokedex {
-    width: 88%;
-    justify-self: center;
-    align-self: center;
   }
 
   .projects-layout:has(.project-row[data-project="join"]:hover)
@@ -851,23 +858,12 @@ a {
     .project-preview__img--el_pollo_loco,
   .projects-layout:has(.project-row[data-project="el_pollo_loco"]:focus-within)
     .project-preview__img--el_pollo_loco,
-  .projects-layout:has(.project-row[data-project="pokedex"]:hover)
-    .project-preview__img--pokedex,
-  .projects-layout:has(.project-row[data-project="pokedex"]:focus-within)
-    .project-preview__img--pokedex {
+  .projects-layout:has(.project-row[data-project="bestellapp"]:hover)
+    .project-preview__img--bestellapp,
+  .projects-layout:has(.project-row[data-project="bestellapp"]:focus-within)
+    .project-preview__img--bestellapp {
     opacity: 1;
     transform: scale(1);
-  }
-
-  .projects-layout:has(.project-row[data-project="pokedex"]:hover)
-    .project-preview::before,
-  .projects-layout:has(.project-row[data-project="pokedex"]:focus-within)
-    .project-preview::before,
-  .projects-layout:has(.project-row[data-project="pokedex"]:hover)
-    .project-preview::after,
-  .projects-layout:has(.project-row[data-project="pokedex"]:focus-within)
-    .project-preview::after {
-    opacity: 0.42;
   }
 
   .projects-layout:has(.project-row:hover) .project-preview,
@@ -990,7 +986,8 @@ a {
   justify-self: end;
   font-family: var(--font-mono);
   font-size: 14px;
-  white-space: nowrap;
+  max-width: 100%;
+  text-align: right;
   color: rgba(245, 245, 245, 0.62);
   transition: color 180ms ease;
 }

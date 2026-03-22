@@ -22,6 +22,7 @@ const TRANSLATIONS = {
     nav_skills: "Skills",
     nav_projects: "Projects",
     hero_role: "Frontend Developer",
+    hero_focus: "Current focus: Bestellapp with address flow and clean ordering UX",
     hero_action_work: "Check my work",
     hero_action_contact: "Contact me",
     ticker_available: "Available for remote work",
@@ -36,7 +37,7 @@ const TRANSLATIONS = {
     about_feature_1:
       "I'm based in Memmingen, Germany, and I'm open to working remotely, hybrid or on-site. I'm curious and open-minded, always improving my workflow and fundamentals - from clean UI structure to performance and interaction details.",
     about_feature_2:
-      "Two projects I'm especially proud of are El Pollo Loco and my Bestellapp. El Pollo Loco strengthens my skills in game logic, animations and performance, where small improvements are immediately visible. The Bestellapp reflects real-world needs: clear user flows, validation and a practical, polished experience.",
+      "Two projects I'm especially proud of are El Pollo Loco and my Bestellapp. El Pollo Loco strengthens my skills in game logic, animations and performance, where small improvements are immediately visible. The Bestellapp reflects real-world needs with a structured address flow, clear validation and a practical, polished ordering experience.",
     about_feature_3:
       "When it comes to problem-solving, I work in a structured and collaborative way: I break problems down, test assumptions early, and iterate toward the most maintainable solution. I value analytical thinking, creativity, persistence and teamwork - and I treat every challenge as an opportunity to improve both the product and my skills.",
     skills_eyebrow: "Technologies",
@@ -115,6 +116,7 @@ const TRANSLATIONS = {
     nav_skills: "Fähigkeiten",
     nav_projects: "Projekte",
     hero_role: "Frontend-Entwickler",
+    hero_focus: "Aktueller Fokus: Bestellapp mit Adressablauf und sauberem Bestellprozess",
     hero_action_work: "Meine Projekte ansehen",
     hero_action_contact: "Kontakt aufnehmen",
     ticker_available: "Verfügbar für Remote-Arbeit",
@@ -129,7 +131,7 @@ const TRANSLATIONS = {
     about_feature_1:
       "Ich komme aus Memmingen in Deutschland und bin offen für Remote-, Hybrid- oder Vor-Ort-Arbeit. Ich bin neugierig und aufgeschlossen und verbessere laufend meinen Workflow und meine Grundlagen - von sauberer UI-Struktur bis hin zu Performance- und Interaktionsdetails.",
     about_feature_2:
-      "Auf zwei Projekte bin ich besonders stolz: El Pollo Loco und meine Bestell-App. El Pollo Loco stärkt meine Fähigkeiten in Spiellogik, Animationen und Performance, bei denen kleine Verbesserungen sofort sichtbar werden. Die Bestell-App bildet reale Anforderungen ab: klare Nutzerflüsse, Validierung und eine praktische, ausgereifte Umsetzung.",
+      "Auf zwei Projekte bin ich besonders stolz: El Pollo Loco und meine Bestell-App. El Pollo Loco stärkt meine Fähigkeiten in Spiellogik, Animationen und Performance, bei denen kleine Verbesserungen sofort sichtbar werden. Die Bestell-App bildet reale Anforderungen mit einem strukturierten Adressablauf, klarer Validierung und einer praktischen, ausgereiften Bestellerfahrung ab.",
     about_feature_3:
       "Beim Lösen von Problemen arbeite ich strukturiert und kollaborativ: Ich zerlege Aufgaben, prüfe Annahmen früh und nähere mich iterativ der wartbarsten Lösung. Analytisches Denken, Kreativität, Ausdauer und Teamarbeit sind mir wichtig - und ich sehe jede Herausforderung als Chance, sowohl das Produkt als auch meine Fähigkeiten zu verbessern.",
     skills_eyebrow: "Technologien",

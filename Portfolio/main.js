@@ -120,6 +120,7 @@ const applyLanguage = (language) => {
   setElementText(".nav__link[href='#skills']", "nav_skills");
   setElementText(".nav__link[href='#projects']", "nav_projects");
   setElementText(".hero__role", "hero_role");
+  setElementText(".hero__focus", "hero_focus");
   setElementText(".hero__actions .btn[href='#projects']", "hero_action_work");
   setElementText(".hero__actions .btn[href='#contact']", "hero_action_contact");
 
