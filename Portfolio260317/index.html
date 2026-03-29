@@ -62,8 +62,8 @@
           <h1 class="hero__title">Jeremy Nánási</h1>
 
           <div class="hero__actions">
-            <a class="btn btn--ghost" href="#projects"><span class="btn__text">Check my work</span></a>
-            <a class="btn btn--ghost" href="#contact"><span class="btn__text">Contact me</span></a>
+            <a class="btn btn--ghost" href="#projects">Check my work</a>
+            <a class="btn btn--ghost" href="#contact">Contact me</a>
           </div>
         </div>
 
@@ -194,7 +194,7 @@
                 previous knowledge.
               </p>
 
-              <a class="btn btn--ghost btn--small" href="#contact"><span class="btn__text">Let's Talk</span></a>
+              <a class="btn btn--ghost btn--small" href="#contact">Let's Talk</a>
             </article>
           </div>
 
@@ -202,21 +202,21 @@
             <div class="skill-grid">
               <div class="skill skill--html">
                 <div class="skill__iconwrap">
-                  <img class="skill__img" src="./img/icons/HTML5.svg" alt="HTML">
+                  <img class="skill__img" src="./img/icons/html-5.png" alt="HTML">
                 </div>
                 <div class="skill__label">HTML</div>
               </div>
 
               <div class="skill skill--css">
                 <div class="skill__iconwrap">
-                  <img class="skill__img" src="./img/icons/css3.svg" alt="CSS">
+                  <img class="skill__img" src="./img/icons/css-3.png" alt="CSS">
                 </div>
                 <div class="skill__label">CSS</div>
               </div>
 
               <div class="skill skill--js">
                 <div class="skill__iconwrap">
-                  <img class="skill__img" src="./img/icons/JS.svg" alt="JavaScript">
+                  <img class="skill__img" src="./img/icons/js.png" alt="JavaScript">
                 </div>
                 <div class="skill__label">JavaScript</div>
               </div>
@@ -265,7 +265,7 @@
 
               <div class="skill skill--scrum">
                 <div class="skill__iconwrap">
-                  <img class="skill__img" src="./img/icons/scrum.svg" alt="Scrum">
+                  <img class="skill__img" src="./img/icons/scrum.png" alt="Scrum">
                 </div>
                 <div class="skill__label">Scrum</div>
               </div>
@@ -299,6 +299,23 @@
                     >JavaScript | HTML | CSS | Firebase</span
                   >
                 </div>
+
+                <div class="project-row__actions" aria-label="Join project links">
+                  <a
+                    class="project-link"
+                    href="https://join.rucel-tsafack.com/index.html"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    aria-label="Open the Join live demo in a new tab"
+                  >Live Demo</a>
+                  <a
+                    class="project-link"
+                    href="https://github.com/TinoWulf/Join"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    aria-label="Open the Join GitHub source in a new tab"
+                  >GitHub</a>
+                </div>
               </div>
 
               <div class="project-row" data-project="el_pollo_loco" role="listitem">
@@ -306,14 +323,48 @@
                   <span class="project-row__name">El Pollo Loco</span>
                   <span class="project-row__tags">HTML | CSS | JavaScript</span>
                 </div>
+
+                <div class="project-row__actions" aria-label="El Pollo Loco project links">
+                  <a
+                    class="project-link"
+                    href="https://raw.githack.com/JeremyNanasi/Dev/main/el_pollo_loco/index.html"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    aria-label="Open the El Pollo Loco live demo in a new tab"
+                  >Live Demo</a>
+                  <a
+                    class="project-link"
+                    href="https://github.com/JeremyNanasi/Dev/tree/main/el_pollo_loco"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    aria-label="Open the El Pollo Loco GitHub source in a new tab"
+                  >GitHub</a>
+                </div>
               </div>
 
-              <div class="project-row project-row--right" data-project="bestellapp" role="listitem">
+              <div class="project-row" data-project="bestellapp" role="listitem">
                 <div class="project-row__content">
                   <span class="project-row__name">Bestellapp</span>
                   <span class="project-row__tags"
                     >JavaScript | HTML | CSS</span
                   >
+                </div>
+
+                <div class="project-row__actions" aria-label="Bestellapp project links">
+                  <a
+                    class="project-link"
+                    href="https://raw.githack.com/JeremyNanasi/Dev/main/developer-main-projects/bestellapp/index.html"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    aria-label="Open the Bestellapp live demo in a new tab"
+                  >Live Demo</a>
+                  <a
+                    class="project-link"
+                    href="https://github.com/JeremyNanasi/Dev/tree/main/developer-main-projects/bestellapp"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    aria-label="Open the Bestellapp GitHub source in a new tab"
+                  >GitHub</a>
                 </div>
               </div>
             </div>
@@ -510,25 +561,5 @@
         </div>
       </div>
     </footer>
-
-    <div class="project-overlay" id="project-overlay" aria-hidden="true" role="dialog" aria-modal="true">
-      <div class="project-overlay__inner">
-        <button class="project-overlay__close" aria-label="Close">×</button>
-        <div class="project-overlay__content">
-          <div>
-            <span class="project-overlay__number"></span>
-            <h2 class="project-overlay__name"></h2>
-            <p class="project-overlay__subtitle"></p>
-            <p class="project-overlay__desc"></p>
-            <div class="project-overlay__techs"></div>
-            <div class="project-overlay__buttons"></div>
-          </div>
-          <div class="project-overlay__right">
-            <img class="project-overlay__img" src="" alt="">
-          </div>
-        </div>
-        <a class="project-overlay__next" href="#"></a>
-      </div>
-    </div>
 </body>
 </html>
