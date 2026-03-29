@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Impressum & Datenschutz – Jeremy Nánási</title>
+    <title>Legal Notice – Jeremy Nánási</title>
 
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -12,16 +12,57 @@
       rel="stylesheet"
     />
 
+    <link rel="icon" type="image/png" href="./img/icons/letter-j.png">
+    <link rel="stylesheet" href="style.css" />
     <link rel="stylesheet" href="impressum.css" />
+    <script src="./translations.js"></script>
+    <script src="./language-change.js"></script>
+    <script src="./main.js" defer></script>
   </head>
 
   <body>
-    <header class="legal-header">
-      <a href="./index.html">Zurück zur Startseite</a>
+    <header class="topbar">
+      <div class="topbar__left">
+        <div class="lang-toggle" aria-label="Language toggle">
+          <button class="lang-toggle__btn is-active" type="button" data-lang="en" aria-pressed="true">EN</button>
+          <button class="lang-toggle__btn" type="button" data-lang="de" aria-pressed="false">DE</button>
+        </div>
+
+        <button
+          class="menu-toggle"
+          type="button"
+          aria-expanded="false"
+          aria-controls="primary-nav"
+          aria-label="Toggle navigation"
+        >
+          <span class="menu-toggle__line" aria-hidden="true"></span>
+          <span class="menu-toggle__line" aria-hidden="true"></span>
+          <span class="menu-toggle__line" aria-hidden="true"></span>
+        </button>
+
+        <nav class="nav" id="primary-nav" aria-label="Primary navigation">
+          <a class="nav__link" href="./index.html#about">About me</a>
+          <a class="nav__link" href="./index.html#skills">Skills</a>
+          <a class="nav__link" href="./index.html#projects">Projects</a>
+        </nav>
+      </div>
+
+      <a class="brand" href="./index.html" aria-label="Back to homepage">
+        <span class="brand__mark" aria-hidden="true">
+          <span class="brand__mark-bar"></span>
+          <span class="brand__mark-stem"></span>
+        </span>
+        <span class="brand__text">
+          <span class="brand__name">Jeremy</span>
+          <span class="brand__name">Nánási</span>
+        </span>
+      </a>
     </header>
 
     <main class="legal-main">
-      <h1>Impressum</h1>
+      <a class="legal-back" href="./index.html">Zurück zur Startseite</a>
+
+      <h1 class="legal-title">Legal Notice</h1>
 
       <h3>Angaben gemäß § 5 TMG</h3>
       <p>
@@ -188,6 +229,31 @@
       </p>
     </main>
 
-    <footer class="legal-footer">©Jeremy Nánási 2026</footer>
+    <footer class="footer">
+      <div class="container footer__inner">
+        <div class="footer__left">
+          <div class="footer__brand">
+            <span class="brand__mark brand__mark--small" aria-hidden="true">
+              <span class="brand__mark-bar"></span>
+              <span class="brand__mark-stem"></span>
+            </span>
+            <span class="brand__text">
+              <span class="brand__name">Jeremy</span>
+              <span class="brand__name">Nánási</span>
+            </span>
+          </div>
+
+          <p class="footer__meta">Web Developer</p>
+          <p class="footer__meta">Munich Germany</p>
+        </div>
+
+        <div class="footer__center">©Jeremy Nánási 2026</div>
+
+        <div class="footer__right">
+          <a class="footer__link" href="https://github.com/JeremyNanasi" target="_blank" rel="noopener noreferrer">Github</a>
+          <a class="footer__link" href="./impressum.html">Legal Notice</a>
+        </div>
+      </div>
+    </footer>
   </body>
 </html>

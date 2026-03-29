@@ -62,6 +62,7 @@ window.EPL.Controllers.KeyboardInput = window.EPL.Controllers.KeyboardInput || c
      */
     handleKeydown(e) {
         if (this.handleEnterMenu(e)) return;
+        if (this.getCodeMap()[e.keyCode]) e.preventDefault();
         if (this.shouldIgnore()) return;
         this.setKey(e.keyCode, true);
     }

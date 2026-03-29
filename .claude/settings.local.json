@@ -1,0 +1,26 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(grep -i -E \"\\\\.\\(png|jpg|jpeg|svg|webp|gif\\)$\")",
+      "Bash(find C:/Dev/Portfolio/.claude/worktrees/stoic-einstein/Portfolio/img/ -type f -name *.png -o -name *.jpg -o -name *.jpeg -o -name *.svg -o -name *.webp)",
+      "Bash(git -C C:/Dev/Portfolio show main:Portfolio/img/)",
+      "Bash(git -C \"C:/Dev/Portfolio/.claude/worktrees/stoic-einstein\" log --oneline -5)",
+      "Bash(find C:/Users/jerem/ -maxdepth 3 -name join*.png -o -name join*.jpg -o -name Join*.png -o -name Join*.jpg)",
+      "Bash(find C:/Users/jerem/ -maxdepth 3 -type d -name img -o -name icons -o -name portfolio* -o -name Portfolio*)",
+      "Bash(find C:/Users/jerem/Downloads/Portfolio/ -type f -name *.png -o -name *.jpg -o -name *.jpeg -o -name *.svg)",
+      "Bash(cp \"C:/Users/jerem/Downloads/Portfolio/Portfolio/img/join.png\" \"C:/Dev/Portfolio/.claude/worktrees/stoic-einstein/Portfolio/img/join.png\")",
+      "Bash(cp \"C:/Users/jerem/Downloads/Portfolio/Portfolio/img/el_pollo_loco.png\" \"C:/Dev/Portfolio/.claude/worktrees/stoic-einstein/Portfolio/img/el_pollo_loco.png\")",
+      "mcp__Claude_Preview__preview_start",
+      "Bash(python3 -c \":*)",
+      "Bash(node -e \":*)",
+      "Bash(ls \"C:\\\\Users\\\\jerem\\\\Downloads\\\\Portfolio\\\\Portfolio\\\\img\\\\icons\"\" 2>/dev/null || echo \"not found \")",
+      "Bash(head -5 \"C:/Dev/Portfolio/img/icons/Frame 383 \\(1\\).svg\")",
+      "Bash(head -5 \"C:/Dev/Portfolio/img/icons/Frame 383 \\(2\\).svg\")",
+      "Bash(head -5 \"C:/Dev/Portfolio/img/icons/Frame 383 \\(3\\).svg\")",
+      "Bash(cp \"C:/Dev/Portfolio/img/icons/Frame 383 \\(1\\).svg\" \"C:/Dev/Portfolio/.claude/worktrees/stoic-einstein/Portfolio/img/icons/html-5.svg\")",
+      "Bash(cp \"C:/Dev/Portfolio/img/icons/Frame 383.svg\" \"C:/Dev/Portfolio/.claude/worktrees/stoic-einstein/Portfolio/img/icons/css-3.svg\")",
+      "Bash(cp \"C:/Dev/Portfolio/img/icons/Frame 383 \\(2\\).svg\" \"C:/Dev/Portfolio/.claude/worktrees/stoic-einstein/Portfolio/img/icons/js.svg\")",
+      "Bash(cp \"C:/Dev/Portfolio/img/icons/Frame 383 \\(3\\).svg\" \"C:/Dev/Portfolio/.claude/worktrees/stoic-einstein/Portfolio/img/icons/scrum.svg\")"
+    ]
+  }
+}

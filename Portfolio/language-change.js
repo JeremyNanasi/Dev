@@ -118,8 +118,8 @@ const applyLanguage = (language) => {
   setElementText(".nav__link[href='#projects']", "nav_projects");
   setElementText(".hero__role", "hero_role");
   setElementText(".hero__focus", "hero_focus");
-  setElementText(".hero__actions .btn[href='#projects']", "hero_action_work");
-  setElementText(".hero__actions .btn[href='#contact']", "hero_action_contact");
+  setElementText(".hero__actions .btn[href='#projects'] .btn__text", "hero_action_work");
+  setElementText(".hero__actions .btn[href='#contact'] .btn__text", "hero_action_contact");
 
   applyTickerTranslation();
 
@@ -161,7 +161,7 @@ const applyLanguage = (language) => {
   setElementText("#skills .panel__sub strong", "skills_need_strong");
   setElementText("#skills .panel__sub .accent", "skills_need_accent");
   setElementText("#skills .panel__muted", "skills_muted");
-  setElementText("#skills .btn--small", "skills_cta");
+  setElementText("#skills .btn--small .btn__text", "skills_cta");
 
   setElementText("#projects .eyebrow", "portfolio_eyebrow");
   setElementText("#projects .section-title", "projects_title");
