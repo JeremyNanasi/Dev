@@ -3,7 +3,7 @@
 /* ── Align topbar, footer, and side elements to legal-main (820 px) width ── */
 .topbar {
   padding-top: 22px;
-  padding-bottom: 0;
+  padding-bottom: 15px;
   padding-left: max(calc((100% - 820px) / 2), 20px);
   padding-right: max(calc((100% - 820px) / 2), 20px);
 }
@@ -26,7 +26,7 @@
   align-items: center;
   gap: 8px;
   font-family: var(--font-title);
-  font-size: 15px;
+  font-size: clamp(16px, 1.2vw, 22px);
   font-weight: 600;
   color: var(--accent);
   text-decoration: none;
@@ -65,7 +65,7 @@
 /* Content area */
 .legal-main {
   flex: 1;
-  width: min(820px, 100%);
+  width: min(1000px, 100%);
   margin: 0 auto;
   padding: clamp(110px, 14vw, 150px) clamp(20px, 5vw, 60px) clamp(40px, 6vw, 72px);
   font-family: var(--font-mono);
@@ -73,7 +73,7 @@
 
 .legal-main h1 {
   font-family: var(--font-title);
-  font-size: clamp(28px, 5vw, 42px);
+  font-size: clamp(28px, 5vw, 48px);
   font-weight: 700;
   color: var(--accent);
   margin-bottom: 12px;
@@ -82,7 +82,7 @@
 
 .legal-main h2 {
   font-family: var(--font-title);
-  font-size: clamp(20px, 3.5vw, 26px);
+  font-size: clamp(20px, 3.5vw, 32px);
   font-weight: 700;
   color: var(--accent);
   margin-top: 48px;
@@ -93,7 +93,7 @@
 
 .legal-main h3 {
   font-family: var(--font-title);
-  font-size: clamp(16px, 2.5vw, 19px);
+  font-size: clamp(16px, 2.5vw, 24px);
   font-weight: 600;
   color: rgba(245, 245, 245, 0.92);
   margin-top: 28px;
@@ -102,7 +102,7 @@
 
 .legal-main p,
 .legal-main li {
-  font-size: clamp(13px, 2vw, 15px);
+  font-size: clamp(16px, 1.2vw, 22px);
   color: rgba(245, 245, 245, 0.68);
   margin-bottom: 10px;
 }
@@ -152,13 +152,13 @@
   }
 
   .legal-main h3 {
-    font-size: 15px;
+    font-size: 16px;
     margin-top: 22px;
   }
 
   .legal-main p,
   .legal-main li {
-    font-size: 13px;
+    font-size: 16px;
   }
 
   .legal-main {

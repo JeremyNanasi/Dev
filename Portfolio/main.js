@@ -234,14 +234,33 @@ if (contactForm instanceof HTMLFormElement) {
     }
   };
 
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+  const isFormValid = () => {
+    const name = contactForm.querySelector("#name")?.value.trim();
+    const email = contactForm.querySelector("#email")?.value.trim();
+    const message = contactForm.querySelector("#message")?.value.trim();
+    const privacy = contactForm.querySelector("#privacy")?.checked;
+    return Boolean(name && email && emailRegex.test(email) && message && privacy);
+  };
+
+  const updateSubmitState = () => {
+    if (submitButton instanceof HTMLButtonElement && !submitButton.dataset.submitting) {
+      submitButton.disabled = !isFormValid();
+    }
+  };
+
+  contactForm.querySelectorAll(".field__input").forEach((input) => {
+    input.addEventListener("input", updateSubmitState);
+  });
+  contactForm.querySelector("#privacy")?.addEventListener("change", updateSubmitState);
+  updateSubmitState();
+
   contactForm.addEventListener("submit", async (event) => {
     event.preventDefault();
     setFormStatus("", "");
 
-    if (!contactForm.checkValidity()) {
-      contactForm.reportValidity();
-      return;
-    }
+    if (!isFormValid()) return;
 
     const formData = new FormData(contactForm);
     const payload = {
@@ -331,7 +350,7 @@ if (projectOverlay) {
       techs: ["HTML", "CSS", "JavaScript"],
       img: "./img/el_pollo_loco.png",
       imgAlt: "El Pollo Loco project screenshot",
-      liveDemo: "https://raw.githack.com/JeremyNanasi/Dev/main/el_pollo_loco/index.html",
+      liveDemo: "../el_pollo_loco/index.html",
       github: "https://github.com/JeremyNanasi/Dev/tree/main/el_pollo_loco",
     },
     bestellapp: {
@@ -342,7 +361,7 @@ if (projectOverlay) {
       techs: ["HTML", "CSS", "JavaScript"],
       img: "./img/bestellapp.png",
       imgAlt: "Bestellapp project screenshot",
-      liveDemo: "https://raw.githack.com/JeremyNanasi/Dev/main/developer-main-projects/bestellapp/index.html",
+      liveDemo: "../developer-main-projects/bestellapp/index.html",
       github: "https://github.com/JeremyNanasi/Dev/tree/main/developer-main-projects/bestellapp",
     },
   };

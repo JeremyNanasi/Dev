@@ -4,6 +4,7 @@
     <meta charset="UTF-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <title>Jeremy Nanasi</title>
+    <link rel="icon" type="image/png" href="./img/icons/letter-j.png"/>
 
     <link rel="preconnect" href="https://fonts.googleapis.com"/>
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
@@ -75,7 +76,10 @@
         </aside>
 
         <aside class="side side--right" aria-label="Contact rail">
-          <a class="side-email" href="mailto:jeremynanasi@gmx.de">jeremynanasi@gmx.de</a>
+          <figure class="side-email-figure">
+            <a class="side-email" href="mailto:jeremynanasi@gmx.de">jeremynanasi@gmx.de</a>
+            <figcaption class="sr-only">E-Mail-Adresse für Kontaktaufnahme</figcaption>
+          </figure>
 
           <div class="side-icons" aria-label="Social links">
             <a class="icon-btn" href="https://github.com/JeremyNanasi" aria-label="GitHub profile">
@@ -219,13 +223,6 @@
                   <img class="skill__img" src="./img/icons/JS.svg" alt="JavaScript">
                 </div>
                 <div class="skill__label">JavaScript</div>
-              </div>
-
-              <div class="skill skill--md">
-                <div class="skill__iconwrap">
-                  <img class="skill__img" src="./img/icons/material-design.svg" alt="Material Design">
-                </div>
-                <div class="skill__label">Material<br>Design</div>
               </div>
 
               <div class="skill skill--ts">
@@ -426,6 +423,7 @@
             id="contact-form"
             action="./email.php"
             method="post"
+            novalidate
             data-primary-endpoint="./email.php"
             data-skip-primary-endpoint="true"
             data-fallback-endpoint="https://formsubmit.co/ajax/jeremynanasi@gmx.de"
@@ -438,8 +436,8 @@
                 name="name"
                 type="text"
                 placeholder="Your name goes here"
-                required
               />
+
             </div>
 
             <div class="field">
@@ -450,8 +448,8 @@
                 name="email"
                 type="email"
                 placeholder="youremail@email.com"
-                required
               />
+
             </div>
 
             <div class="field">
@@ -462,12 +460,12 @@
                 name="message"
                 type="text"
                 placeholder="Hello Jeremy, I am interested in..."
-                required
               />
+
             </div>
 
             <label class="check">
-              <input class="check__box" id="privacy" name="privacy" type="checkbox" required />
+              <input class="check__box" id="privacy" name="privacy" type="checkbox" />
               <span class="check__mark" aria-hidden="true"></span>
               <span class="check__text">
                 I've read the <a href="./impressum.html" class="link">privacy policy</a> and

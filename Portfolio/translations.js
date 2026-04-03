@@ -86,6 +86,10 @@ const TRANSLATIONS = {
     form_status_activation_required:
       "Form not activated yet. Check your email and click the activation link.",
     form_status_error: "Sending failed. Please try again.",
+    form_status_empty: "Please fill in all fields.",
+    form_field_required: "This field is required.",
+    form_status_invalid_email: "Please enter a valid email address.",
+    form_status_privacy: "Please accept the privacy policy.",
     form_subject: "Website Contact Form",
     footer_meta_role: "Web Developer",
     footer_meta_location: "Munich Germany",
@@ -180,6 +184,10 @@ const TRANSLATIONS = {
     form_status_activation_required:
       "Formular noch nicht aktiviert. Prüfe deine E-Mails und klicke auf den Aktivierungslink.",
     form_status_error: "Senden fehlgeschlagen. Bitte versuche es erneut.",
+    form_status_empty: "Bitte alle Felder ausfüllen.",
+    form_field_required: "Dieses Feld ist erforderlich.",
+    form_status_invalid_email: "Bitte eine gültige E-Mail-Adresse eingeben.",
+    form_status_privacy: "Bitte die Datenschutzerklärung akzeptieren.",
     form_subject: "Kontaktformular der Website",
     footer_meta_role: "Webentwickler",
     footer_meta_location: "München, Deutschland",
