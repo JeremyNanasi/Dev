@@ -42,7 +42,6 @@ body {
   color: var(--text);
   background: var(--bg);
   font-family: var(--font-title);
-  overflow-x: hidden;
 }
 
 main {
@@ -1556,10 +1555,6 @@ a {
 }
 
 /* Responsive stability overrides */
-body {
-  overflow-x: clip;
-}
-
 main,
 header,
 footer {
