@@ -230,6 +230,18 @@ const applyLanguage = (language) => {
   );
   setElementText(".footer__link[href='jeremynanasi@gmx.de']", "footer_link_email");
   setElementText(".footer__link[href='./impressum.html']", "footer_link_legal_notice");
+
+  document.querySelectorAll("[data-i18n]").forEach((el) => {
+    const key = el.getAttribute("data-i18n");
+    const text = getTranslation(currentLanguage, key);
+    if (text) el.textContent = text;
+  });
+
+  document.querySelectorAll("[data-i18n-html]").forEach((el) => {
+    const key = el.getAttribute("data-i18n-html");
+    const html = getTranslation(currentLanguage, key);
+    if (html) el.innerHTML = html;
+  });
 };
 
 const getStoredLanguage = () => {

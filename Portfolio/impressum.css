@@ -1,24 +1,6 @@
 /* ── Impressum-specific overrides ─────────────────────────────────────────── */
 
-/* ── Align topbar, footer, and side elements to legal-main (820 px) width ── */
-.topbar {
-  padding-top: 22px;
-  padding-bottom: 15px;
-  padding-left: max(calc((100% - 820px) / 2), 20px);
-  padding-right: max(calc((100% - 820px) / 2), 20px);
-}
-
-.footer .container {
-  width: min(820px, calc(100% - 40px));
-}
-
-.side--left {
-  left: max(calc((100vw - 820px) / 2 - 44px), 8px);
-}
-
-.side--right {
-  right: max(calc((100vw - 820px) / 2 - 44px), 8px);
-}
+/* ── Topbar and footer inherit from style.css (identical to index.html) ── */
 
 /* Back link */
 .legal-main .legal-back {
@@ -50,7 +32,6 @@
   opacity: 0.75;
 }
 
-/* "Legal Notice" hero heading */
 .legal-title {
   font-family: var(--font-mono);
   font-size: clamp(40px, 10vw, 88px);
@@ -62,10 +43,10 @@
   letter-spacing: -1px;
 }
 
-/* Content area */
 .legal-main {
   flex: 1;
-  width: min(1000px, 100%);
+  max-width: 2000px;
+  width: 100%;
   margin: 0 auto;
   padding: clamp(110px, 14vw, 150px) clamp(20px, 5vw, 60px) clamp(40px, 6vw, 72px);
   font-family: var(--font-mono);

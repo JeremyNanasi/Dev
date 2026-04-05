@@ -350,20 +350,20 @@ if (projectOverlay) {
       techs: ["HTML", "CSS", "JavaScript"],
       img: "./img/el_pollo_loco.png",
       imgAlt: "El Pollo Loco project screenshot",
-      liveDemo: "../el_pollo_loco/index.html",
+      liveDemo: "./el_pollo_loco/index.html",
       github: "https://github.com/JeremyNanasi/Dev/tree/main/el_pollo_loco",
     },
-    bestellapp: {
-      number: "03",
-      name: "Bestellapp",
-      subtitle: "JavaScript | HTML | CSS",
-      desc: "A food ordering web app with a clean UI. Users can browse items, add them to a cart, and place orders — all handled dynamically in vanilla JavaScript.",
-      techs: ["HTML", "CSS", "JavaScript"],
-      img: "./img/bestellapp.png",
-      imgAlt: "Bestellapp project screenshot",
-      liveDemo: "../developer-main-projects/bestellapp/index.html",
-      github: "https://github.com/JeremyNanasi/Dev/tree/main/developer-main-projects/bestellapp",
-    },
+pokedex: {
+  number: "03",
+  name: "Pokédex",
+  subtitle: "JavaScript | HTML | CSS | REST API",
+  desc: "A Pokédex web app that fetches live data from the PokéAPI. Browse Pokémon, view stats, types and sprites — all rendered dynamically with vanilla JavaScript.",
+  techs: ["HTML", "CSS", "JavaScript", "REST API"],
+  img: "./img/pokedex.png",
+  imgAlt: "Pokédex project screenshot",
+  liveDemo: "./Pokedex/index.html",
+  github: "https://github.com/JeremyNanasi/Dev/tree/main/developer-main-projects/Pokedex",
+},
   };
 
   const techIconMap = {
@@ -371,6 +371,7 @@ if (projectOverlay) {
     CSS: "./img/icons/css3.svg",
     JavaScript: "./img/icons/JS.svg",
     Firebase: "./img/icons/firebase.svg",
+    "REST API": "./img/icons/rest-api.svg",
   };
 
   const projectKeys = Object.keys(projects);
