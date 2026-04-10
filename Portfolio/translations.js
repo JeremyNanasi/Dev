@@ -32,14 +32,17 @@ const TRANSLATIONS = {
     ticker_dot: "\u2022",
     about_eyebrow: "Who I Am",
     about_title: "About me",
-    about_text:
-      "Hey there, I'm Jeremy - a Frontend Developer who enjoys building clean, responsive interfaces with Vanilla JavaScript, HTML and CSS. I love coding because it combines creativity with structured problem-solving, and I'm motivated by steady progress: learning, applying and refining until the user experience feels smooth and reliable.",
-    about_feature_1:
-      "I'm based in Memmingen, Germany, and I'm open to working remotely, hybrid or on-site. I'm curious and open-minded, always improving my workflow and fundamentals - from clean UI structure to performance and interaction details.",
-    about_feature_2:
-      "Two projects I'm especially proud of are El Pollo Loco and my Pokédex. El Pollo Loco strengthens my skills in game logic, animations and performance, where small improvements are immediately visible. The Pokédex fetches live data from the PokéAPI and renders it dynamically — a great exercise in working with REST APIs, async JavaScript and clean UI structure.",
-    about_feature_3:
-      "When it comes to problem-solving, I work in a structured and collaborative way: I break problems down, test assumptions early, and iterate toward the most maintainable solution. I value analytical thinking, creativity, persistence and teamwork - and I treat every challenge as an opportunity to improve both the product and my skills.",
+about_text:
+  "Hey, I’m Jeremy — a Frontend Developer focused on clean, responsive interfaces with Vanilla JavaScript, HTML and CSS.",
+
+about_feature_1:
+  "I’m based in Memmingen, Germany, and open to remote, hybrid and on-site work. I value growth, clean workflows and consistent quality in every project.",
+
+about_feature_2:
+  "My key projects include El Pollo Loco and my Pokedex. Through them, I strengthened my skills in UI structure, interaction logic and practical problem-solving.",
+
+about_feature_3:
+  "I work in a structured, solution-oriented way and focus on clean, maintainable code. My goal is to create performant, clear and reliable results.",
     skills_eyebrow: "Technologies",
     skills_title: "Skill Set",
     skills_text_1:
@@ -182,13 +185,13 @@ const TRANSLATIONS = {
     about_eyebrow: "Wer ich bin",
     about_title: "Über mich",
     about_text:
-      "Hallo, ich bin Jeremy - ein Frontend-Entwickler, der gerne klare und responsive Benutzeroberflächen mit Vanilla JavaScript, HTML und CSS entwickelt. Ich liebe das Programmieren, weil es Kreativität mit strukturiertem Problemlösen verbindet. Dabei motiviert mich kontinuierlicher Fortschritt: lernen, anwenden und verfeinern, bis sich die Nutzererfahrung rund und zuverlässig anfühlt.",
+      "Hey, ich bin Jeremy \u2014 ein Frontend-Entwickler mit Fokus auf klare, responsive Benutzeroberflächen mit Vanilla JavaScript, HTML und CSS.",
     about_feature_1:
-      "Ich komme aus Memmingen in Deutschland und bin offen für Remote-, Hybrid- oder Vor-Ort-Arbeit. Ich bin neugierig und aufgeschlossen und verbessere laufend meinen Workflow und meine Grundlagen - von sauberer UI-Struktur bis hin zu Performance- und Interaktionsdetails.",
+      "Ansässig in Memmingen, Deutschland \u2014 offen für Remote-, Hybrid- und Vor-Ort-Arbeit.",
     about_feature_2:
-      "Auf zwei Projekte bin ich besonders stolz: El Pollo Loco und meinen Pokédex. El Pollo Loco stärkt meine Fähigkeiten in Spiellogik, Animationen und Performance, bei denen kleine Verbesserungen sofort sichtbar werden. Der Pokédex ruft Live-Daten von der PokéAPI ab und stellt sie dynamisch dar — eine großartige Übung im Umgang mit REST-APIs, asynchronem JavaScript und sauberer UI-Struktur.",
+      "Schlüsselprojekte: El Pollo Loco und Pokedex.",
     about_feature_3:
-      "Beim Lösen von Problemen arbeite ich strukturiert und kollaborativ: Ich zerlege Aufgaben, prüfe Annahmen früh und nähere mich iterativ der wartbarsten Lösung. Analytisches Denken, Kreativität, Ausdauer und Teamarbeit sind mir wichtig - und ich sehe jede Herausforderung als Chance, sowohl das Produkt als auch meine Fähigkeiten zu verbessern.",
+      "Ich arbeite strukturiert und konzentriere mich auf saubere, wartbare Lösungen.",
     skills_eyebrow: "Technologien",
     skills_title: "Fähigkeiten",
     skills_text_1:

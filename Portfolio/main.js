@@ -236,31 +236,63 @@ if (contactForm instanceof HTMLFormElement) {
 
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
-  const isFormValid = () => {
+  const getValidationKey = () => {
     const name = contactForm.querySelector("#name")?.value.trim();
     const email = contactForm.querySelector("#email")?.value.trim();
     const message = contactForm.querySelector("#message")?.value.trim();
     const privacy = contactForm.querySelector("#privacy")?.checked;
-    return Boolean(name && email && emailRegex.test(email) && message && privacy);
+    if (!name || !email || !message) return "form_status_empty";
+    if (!emailRegex.test(email)) return "form_status_invalid_email";
+    if (!privacy) return "form_status_privacy";
+    return null;
   };
+
+  const isFormValid = () => getValidationKey() === null;
 
   const updateSubmitState = () => {
     if (submitButton instanceof HTMLButtonElement && !submitButton.dataset.submitting) {
-      submitButton.disabled = !isFormValid();
+      submitButton.disabled = false;
     }
+  };
+
+  const markFieldInvalid = (input) => {
+    input?.closest(".field, .check")?.classList.add("is-invalid");
+  };
+  const clearFieldInvalid = (input) => {
+    input?.closest(".field, .check")?.classList.remove("is-invalid");
+  };
+
+  const markInvalidFields = () => {
+    const name = contactForm.querySelector("#name");
+    const email = contactForm.querySelector("#email");
+    const message = contactForm.querySelector("#message");
+    const privacy = contactForm.querySelector("#privacy");
+    [name, email, message, privacy].forEach(clearFieldInvalid);
+    if (!name?.value.trim()) markFieldInvalid(name);
+    if (!email?.value.trim() || !emailRegex.test(email.value.trim())) markFieldInvalid(email);
+    if (!message?.value.trim()) markFieldInvalid(message);
+    if (!privacy?.checked) markFieldInvalid(privacy);
   };
 
   contactForm.querySelectorAll(".field__input").forEach((input) => {
     input.addEventListener("input", updateSubmitState);
+    input.addEventListener("focus", () => clearFieldInvalid(input));
   });
-  contactForm.querySelector("#privacy")?.addEventListener("change", updateSubmitState);
+  const privacyInput = contactForm.querySelector("#privacy");
+  privacyInput?.addEventListener("change", updateSubmitState);
+  privacyInput?.addEventListener("focus", () => clearFieldInvalid(privacyInput));
   updateSubmitState();
 
   contactForm.addEventListener("submit", async (event) => {
     event.preventDefault();
     setFormStatus("", "");
 
-    if (!isFormValid()) return;
+    const validationKey = getValidationKey();
+    if (validationKey) {
+      setFormStatus("error", validationKey);
+      markInvalidFields();
+      return;
+    }
 
     const formData = new FormData(contactForm);
     const payload = {
@@ -326,7 +358,6 @@ if (contactForm instanceof HTMLFormElement) {
   });
 }
 
-// Project Overlay
 const projectOverlay = document.getElementById("project-overlay");
 
 if (projectOverlay) {
@@ -337,7 +368,7 @@ if (projectOverlay) {
       subtitle: "JavaScript | HTML | CSS | Firebase",
       desc: "A Kanban-style project management tool built collaboratively. Features drag-and-drop task management, user authentication, and real-time database sync via Firebase.",
       techs: ["HTML", "CSS", "JavaScript", "Firebase"],
-      img: "./img/join.png",
+      img: "img/join.jpg",
       imgAlt: "Join project screenshot",
       liveDemo: "https://join.rucel-tsafack.com/index.html",
       github: "https://github.com/TinoWulf/Join",
@@ -348,18 +379,18 @@ if (projectOverlay) {
       subtitle: "HTML | CSS | JavaScript",
       desc: "A classic jump-and-run browser game built with object-oriented JavaScript. Includes animations, enemy AI, collectibles, and a complete game loop.",
       techs: ["HTML", "CSS", "JavaScript"],
-      img: "./img/el_pollo_loco.png",
+      img: "img/el_pollo_loco.jpg",
       imgAlt: "El Pollo Loco project screenshot",
       liveDemo: "./el_pollo_loco/index.html",
       github: "https://github.com/JeremyNanasi/Dev/tree/main/el_pollo_loco",
     },
 pokedex: {
   number: "03",
-  name: "Pokédex",
+  name: "Pokedex",
   subtitle: "JavaScript | HTML | CSS | REST API",
   desc: "A Pokédex web app that fetches live data from the PokéAPI. Browse Pokémon, view stats, types and sprites — all rendered dynamically with vanilla JavaScript.",
   techs: ["HTML", "CSS", "JavaScript", "REST API"],
-  img: "./img/pokedex.png",
+  img: "./img/pokedex/pokedex.png",
   imgAlt: "Pokédex project screenshot",
   liveDemo: "./Pokedex/index.html",
   github: "https://github.com/JeremyNanasi/Dev/tree/main/developer-main-projects/Pokedex",

@@ -340,9 +340,39 @@ a {
 }
 
 .side--right {
-  right: max(calc((100vw - 2189px) / 2 + 44px), 44px);
+  right: max(calc((100vw - 2189px) / 2 + 44px), 25px);
   justify-content: flex-start;
   gap: 12px;
+}
+
+@media (min-width: 1400px) {
+  .side--right {
+    right: max((100% - min(1240px, 100% - 180px)) / 2, 20px);
+  }
+}
+
+@media (min-width: 1800px) {
+  .side--right {
+    right: max((100% - min(1600px, 100% - 200px)) / 2, 20px);
+  }
+}
+
+@media (min-width: 2200px) {
+  .side--right {
+    right: max((100% - min(2000px, 100% - 280px)) / 2, 20px);
+  }
+}
+
+@media (max-width: 980px) {
+  .side--right {
+    right: max((100% - min(1080px, 100% - 44px)) / 2, 20px);
+  }
+}
+
+@media (max-width: 768px) {
+  .side--right {
+    display: none;
+  }
 }
 
 .side-line {
@@ -350,6 +380,14 @@ a {
   height: 140px;
   background: rgba(42, 214, 191, 0.55);
   opacity: 0.9;
+  position: relative;
+  left: 4px;
+}
+
+@media (max-width: 1100px) {
+  .side-icons {
+    width: 16px;
+  }
 }
 
 .scroll-dot {
@@ -406,6 +444,10 @@ a {
   color: rgba(42, 214, 191, 0.95);
 }
 
+.btn-cursor {
+  cursor: pointer;
+}
+
 .icon-btn svg {
   width: 26px;
   height: 26px;
@@ -430,7 +472,7 @@ a {
   bottom: clamp(-54px, -10vw, -20px);
   left: 0;
   right: 0;
-  height: clamp(54px, 10vw, 80px);
+  height: clamp(54px, 10vw, 170px);
   z-index: 5;
   overflow-x: clip;
 }
@@ -743,6 +785,11 @@ a {
   object-fit: contain;
   filter: drop-shadow(0 24px 70px rgba(0, 0, 0, 0.65));
   image-rendering: -webkit-optimize-contrast;
+  transition: transform 0.25s ease;
+}
+
+.skill:hover .skill__img {
+  transform: scale(1.08);
 }
 
 .skill--md .skill__img {
@@ -877,8 +924,8 @@ a {
     z-index: 1;
     width: 100%;
     height: 100%;
-    object-fit: cover;
-    object-position: top center;
+    object-fit: contain;
+    object-position: center top;
     border-radius: 22px;
     opacity: 0;
     transform: scale(1.02);
@@ -1209,7 +1256,6 @@ a {
   filter: none;
   z-index: 3;
   background: rgba(23, 78, 69, 0.92);
-  padding: 34px 34px;
 }
 
 #ts-1:checked ~ .carousel__track .slide--2,
@@ -1313,6 +1359,15 @@ a {
 
 .field:first-of-type {
   border-top: 1px solid rgba(42, 214, 191, 0.45);
+}
+
+.field.is-invalid + .field,
+.field.is-invalid + .check {
+  border-top-color: rgba(231, 76, 60, 0.85);
+}
+
+.check.is-invalid {
+  border-top-color: rgba(231, 76, 60, 0.85);
 }
 
 .field__label {
@@ -2064,8 +2119,6 @@ svg {
     --shift: clamp(260px, calc((100% - 540px) / 2), 1400px);
   }
 
-
-
   .carousel__slide {
     width: min(540px, 86%);
     opacity: 0.35;
@@ -2078,6 +2131,7 @@ svg {
   #ts-3:checked ~ .carousel__track .slide--3 {
     transform: scale(var(--active-scale));
     opacity: 1;
+    filter: none;
     z-index: 3;
   }
 
