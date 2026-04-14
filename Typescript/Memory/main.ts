@@ -1,0 +1,1 @@
+document.getElementById("h1_hello")!.innerText = "das sollte nun so aussehen";

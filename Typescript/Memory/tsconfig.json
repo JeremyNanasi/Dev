@@ -1,0 +1,27 @@
+{
+"compilerOptions": {
+    /* Sprache & Zielumgebung */
+    "target": "ESNext",                  // moderne Syntax, gut für Browser + Vite
+    "lib": ["ESNext", "DOM"],            // Browser-APIs und moderne JS-Funktionen
+
+
+    /* Module & Auflösung */
+    "module": "ESNext",                  // ES Modules für Vite/Rollup
+    "moduleResolution": "Bundler",       // spezielle Auflösung für Vite, ersetzt "node"
+    "isolatedModules": true,             // jede Datei wird wie ein Modul behandelt
+
+
+    /* Typprüfung */
+    "strict": true,                      // alle strikten Checks aktivieren
+    "skipLibCheck": true,                // schneller, da node_modules-Typen nicht geprüft werden
+    "noEmit": true,                      // keine JS-Ausgabe, Build übernimmt Vite
+
+
+    /* Sonstiges */
+    "esModuleInterop": true,             // bessere Import-Kompatibilität
+    "resolveJsonModule": true,           // erlaubt `import data from './data.json'`
+    "forceConsistentCasingInFileNames": true
+  },
+  "include": ["src"],                    // nur eigenen Code kompilieren
+  "exclude": ["node_modules", "dist"]    // keine Fremd- oder Build-Dateien prüfen
+}
