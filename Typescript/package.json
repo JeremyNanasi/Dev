@@ -1,16 +1,4 @@
 {
-  "name": "typescript",
-  "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
-  "scripts": {
-    "build": "sass scss/main.scss css/main.css",
-    "watch": "sass --watch scss/main.scss css/main.css"
-  },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "type": "commonjs",
   "devDependencies": {
     "sass": "^1.99.0"
   }

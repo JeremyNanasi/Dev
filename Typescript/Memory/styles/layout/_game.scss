@@ -1,0 +1,37 @@
+@use '../abstracts/variables' as v;
+
+body {
+  background-color: v.$color-page-bg;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  padding: 32px;
+  font-family: v.$font-family-base;
+  color: v.$color-text-light;
+}
+
+.game {
+  background-color: v.$color-game-bg;
+  border-radius: 16px;
+  width: 100%;
+  max-width: 1040px;
+  min-height: 640px;
+  padding: 24px 32px 48px;
+  display: flex;
+  flex-direction: column;
+  gap: 40px;
+
+  &__header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+  }
+
+  &__field {
+    flex: 1;
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+  }
+}

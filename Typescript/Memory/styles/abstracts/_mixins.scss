@@ -1,0 +1,29 @@
+@use 'sass:map';
+@use 'variables' as v;
+
+@mixin flex-center {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+@mixin fade-in($time: 0.3s, $ease: ease-in-out) {
+  animation: fadeIn $time $ease forwards;
+}
+
+@mixin respond($size) {
+  @media screen and (max-width: map.get(v.$breakpoints, $size)) {
+    @content;
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

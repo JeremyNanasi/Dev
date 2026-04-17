@@ -3,10 +3,56 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/jpeg" href="/assets/icons/fiber-manual-record.jpg">
     <title>Memory</title>
 </head>
 <body>
-    <h1 id="h1_hello">Hallo World</h1>
+    <div class="game">
+        <!-- Top bar: scores, current player, exit button -->
+        <header class="game__header">
+            <section class="score" aria-label="Scores">
+                <span class="score__item score__item--blue">
+                    <span class="score__label">Blue</span>
+                    <span class="score__value" id="score-blue">0</span>
+                </span>
+                <span class="score__item score__item--orange">
+                    <span class="score__label">Orange</span>
+                    <span class="score__value" id="score-orange">0</span>
+                </span>
+            </section>
+
+            <section class="player" aria-label="Current player">
+                <span class="player__label">Current player:</span>
+                <span class="player__indicator player__indicator--blue" id="current-player"></span>
+            </section>
+
+            <button type="button" class="button button--ghost" id="exit-button">
+                <span class="button__icon" aria-hidden="true">⎋</span>
+                <span class="button__text">Exit game</span>
+            </button>
+        </header>
+
+        <!-- Playing field: filled dynamically by main.ts -->
+        <main class="game__field" id="field" aria-label="Memory field"></main>
+    </div>
+
+    <!-- Exit confirmation modal -->
+    <dialog class="modal" id="exit-modal" aria-labelledby="exit-modal-title">
+        <div class="modal__content">
+            <h2 class="modal__title" id="exit-modal-title">
+                Are you sure you want to quit the game?
+            </h2>
+            <div class="modal__actions">
+                <button type="button" class="button button--primary" id="cancel-exit">
+                    Back to game
+                </button>
+                <button type="button" class="button button--secondary" id="confirm-exit">
+                    Exit game
+                </button>
+            </div>
+        </div>
+    </dialog>
+
+    <script type="module" src="./main.ts"></script>
 </body>
 </html>
-<script type="module" src="./main.ts"></script>

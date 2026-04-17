@@ -1,0 +1,17 @@
+@use '../abstracts/_variables' as v;
+
+.score {
+    &__item {
+    &--blue {
+        color: v.$color-blue;
+    }
+    &--orange {
+        color: v.$color-orange;
+    }
+    }
+
+    &__value {
+    color: v.$color-text-light;
+    }
+}
+

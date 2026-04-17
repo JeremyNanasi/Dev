@@ -1,0 +1,9 @@
+@use '../abstracts/variables' as v;
+
+.field {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+  width: 100%;
+  max-width: 560px;
+}

@@ -1,0 +1,37 @@
+@use '../abstracts/variables' as v;
+
+$text-sizes: (
+  sm: v.$font-size-sm,
+  md: v.$font-size-md,
+  lg: v.$font-size-lg,
+  xl: v.$font-size-xl,
+);
+
+@each $name, $size in $text-sizes {
+  .text-#{$name} {
+    font-size: $size;
+  }
+}
+
+h1 {
+  font-size: v.$font-size-xl;
+  font-weight: v.$font-weight-bold;
+  line-height: 1.2;
+}
+
+h2 {
+  font-size: v.$font-size-lg;
+  font-weight: v.$font-weight-bold;
+  line-height: 1.2;
+}
+
+h3 {
+  font-size: v.$font-size-md;
+  font-weight: v.$font-weight-bold;
+  line-height: 1.2;
+}
+
+:focus-visible {
+  outline: 2px solid v.$color-blue;
+  outline-offset: 2px;
+}
