@@ -1,41 +1,43 @@
 @use '../abstracts/variables' as v;
-@use '../abstracts/mixins' as mx;
-@use '../abstracts/functions' as fct;
 
 .card {
   width: 100%;
   aspect-ratio: 1 / 1;
   background-color: transparent;
   border: none;
+  padding: 0;
   cursor: pointer;
-  perspective: 600px;
+  perspective: 800px;
 
   &__inner {
     position: relative;
     width: 100%;
     height: 100%;
     transform-style: preserve-3d;
-    transition: transform 300ms ease-in-out;
+    transition: transform 400ms ease-in-out;
   }
 
   &__face {
     position: absolute;
     inset: 0;
     backface-visibility: hidden;
-    background-color: v.$color-card;
     border-radius: 10px;
+    overflow: hidden;
     display: flex;
     align-items: center;
     justify-content: center;
-    overflow: hidden;
+    background-color: v.$color-card;
+    box-shadow: v.$shadow-card;
 
-    &--front {
-      background-color: v.$color-card;
+    img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
     }
 
     &--back {
       transform: rotateY(180deg);
-      background-color: v.$color-card;
     }
   }
 
@@ -43,7 +45,11 @@
     transform: rotateY(180deg);
   }
 
-  @include mx.respond(sm) {
-    font-size: fct.px-to-rem(10);
+  &:hover &__inner {
+    transform: scale(1.03);
+  }
+
+  &.is-flipped:hover &__inner {
+    transform: rotateY(180deg) scale(1.03);
   }
 }

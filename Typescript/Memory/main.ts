@@ -1,6 +1,5 @@
 import './styles/styles.scss';
 
-/** Eine einzelne Memory-Karte. */
 interface Card {
   id: number;
   image: string;
@@ -8,13 +7,15 @@ interface Card {
   revealed: boolean;
 }
 
-/** Verfuegbare Themes. */
 type Theme = "code" | "games";
 
 const PAIR_COUNT: number = 8;
 const DEFAULT_THEME: Theme = "games";
 
-/** Erzeugt pairCount * 2 Karten (jedes Motiv zweimal). */
+function getBackImage(theme: Theme): string {
+  return `/assets/${theme}-themes/back.jpg`;
+}
+
 function createCards(pairCount: number, theme: Theme): Card[] {
   const cards: Card[] = [];
   for (let i = 1; i <= pairCount; i++) {
@@ -25,7 +26,6 @@ function createCards(pairCount: number, theme: Theme): Card[] {
   return cards;
 }
 
-/** Mischt ein Card-Array per Fisher-Yates Shuffle. */
 function shuffle(cards: Card[]): Card[] {
   const result: Card[] = [...cards];
   for (let i = result.length - 1; i > 0; i--) {
@@ -35,21 +35,21 @@ function shuffle(cards: Card[]): Card[] {
   return result;
 }
 
-/** Baut den HTML-String fuer alle Karten. */
-function renderCards(cards: Card[]): string {
+function renderCards(cards: Card[], backImage: string): string {
   return cards.map((card, index) => `
     <button class="card" data-index="${index}" data-id="${card.id}" aria-label="Karte ${index + 1}">
       <div class="card__inner">
         <div class="card__face card__face--front">
+          <img src="${backImage}" alt="Kartenruecken">
+        </div>
+        <div class="card__face card__face--back">
           <img src="${card.image}" alt="Motiv ${card.id}">
         </div>
-        <div class="card__face card__face--back"></div>
       </div>
     </button>
   `).join("");
 }
 
-/** Bindet Exit-Button und Modal-Events. */
 function setupModal(): void {
   const exitButton: HTMLElement | null = document.getElementById("exit-button");
   const modal: HTMLDialogElement | null = document.getElementById("exit-modal") as HTMLDialogElement | null;
@@ -71,14 +71,14 @@ function setupModal(): void {
   });
 }
 
-/** Startet das Spiel: Karten erzeugen, mischen, rendern, Events binden. */
 function init(): void {
   const fieldRef: HTMLElement | null = document.getElementById("field");
   if (!fieldRef) return;
 
   const theme: Theme = (localStorage.getItem("theme") as Theme) || DEFAULT_THEME;
   const cards: Card[] = shuffle(createCards(PAIR_COUNT, theme));
-  fieldRef.innerHTML = renderCards(cards);
+  const backImage: string = getBackImage(theme);
+  fieldRef.innerHTML = renderCards(cards, backImage);
 
   fieldRef.addEventListener("click", (e: MouseEvent) => {
     const cardElement = (e.target as HTMLElement).closest(".card") as HTMLButtonElement | null;

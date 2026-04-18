@@ -1,0 +1,30 @@
+@use '../abstracts/variables' as v;
+
+.player {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  color: v.$color-text-light;
+  font-size: v.$font-size-sm;
+  font-weight: v.$font-weight-medium;
+
+  &__label {
+    color: v.$color-text-light;
+  }
+
+  &__indicator {
+    display: inline-block;
+    width: 24px;
+    height: 14px;
+    border-radius: 4px 8px 8px 4px;
+    clip-path: polygon(0 0, 90% 0, 100% 50%, 90% 100%, 0 100%);
+
+    &--blue {
+      background-color: v.$color-blue;
+    }
+
+    &--orange {
+      background-color: v.$color-orange;
+    }
+  }
+}

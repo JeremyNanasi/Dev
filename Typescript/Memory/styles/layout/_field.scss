@@ -1,9 +1,21 @@
 @use '../abstracts/variables' as v;
+@use '../abstracts/mixins' as mx;
 
-.field {
+.game__field {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   gap: 16px;
   width: 100%;
   max-width: 560px;
+  margin: 0 auto;
+
+  @include mx.respond(md) {
+    max-width: 440px;
+    gap: 12px;
+  }
+
+  @include mx.respond(sm) {
+    max-width: 100%;
+    gap: 8px;
+  }
 }

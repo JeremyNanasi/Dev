@@ -1,0 +1,58 @@
+@use '../abstracts/variables' as v;
+
+.button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 10px 20px;
+  border-radius: 8px;
+  font-size: v.$font-size-sm;
+  font-weight: v.$font-weight-bold;
+  border: 2px solid transparent;
+  cursor: pointer;
+  transition: background-color 150ms ease, color 150ms ease, border-color 150ms ease;
+
+  &--primary {
+    background-color: v.$color-card;
+    color: v.$color-text-light;
+    border-color: v.$color-card;
+
+    &:hover {
+      background-color: v.$color-card-border;
+      border-color: v.$color-card-border;
+    }
+  }
+
+  &--secondary {
+    background-color: transparent;
+    color: v.$color-card;
+    border-color: v.$color-card;
+
+    &:hover {
+      background-color: v.$color-card;
+      color: v.$color-text-light;
+    }
+  }
+
+  &--ghost {
+    background-color: transparent;
+    color: v.$color-text-light;
+    border-color: v.$color-card;
+    padding: 8px 16px;
+
+    &:hover {
+      background-color: v.$color-card;
+    }
+  }
+
+  &__icon {
+    display: inline-flex;
+    align-items: center;
+    font-size: v.$font-size-md;
+  }
+
+  &__text {
+    // erbt Farbe vom Button-Modifier
+  }
+}
