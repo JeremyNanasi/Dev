@@ -1,0 +1,117 @@
+@use '../abstracts/variables' as v;
+
+.winner {
+  max-width: 560px;
+  width: calc(100% - 32px);
+  border-radius: 12px;
+  background-color: #2f3033;
+  color: v.$color-text-light;
+  box-shadow: v.$shadow-modal;
+  padding: 0;
+  border: none;
+  overflow: hidden;
+  position: relative;
+
+  &::backdrop {
+    background-color: rgba(0, 0, 0, 0.65);
+  }
+
+  &__confetti {
+    position: relative;
+    height: 90px;
+    background-color: #2f3033;
+    overflow: hidden;
+  }
+
+  &__piece {
+    position: absolute;
+    top: 0;
+    width: 10px;
+    height: 14px;
+    border-radius: 2px;
+    transform: rotate(var(--tilt, 20deg));
+
+    &--red    { background-color: #e94f4f; }
+    &--blue   { background-color: #4bb8dc; }
+    &--yellow { background-color: #f2c94c; }
+    &--green  { background-color: #4ec16f; }
+  }
+
+  // 20 Streuel-Positionen verteilen (einfache zufallsfreie Verteilung)
+  @for $i from 1 through 20 {
+    $left-pct: ($i - 1) * 5;
+    $tilt: (($i * 37) % 90) - 45;
+    $top-px: ($i * 13) % 70;
+    $w-px: 8 + ($i % 4) * 2;
+    $h-px: 10 + ($i % 3) * 4;
+
+    &__piece:nth-child(#{$i}) {
+      left: #{$left-pct + '%'};
+      top: #{$top-px}px;
+      --tilt: #{$tilt}deg;
+      width: #{$w-px}px;
+      height: #{$h-px}px;
+    }
+  }
+
+  &__content {
+    padding: 20px 40px 36px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 18px;
+    text-align: center;
+  }
+
+  &__label {
+    font-size: v.$font-size-md;
+    font-weight: v.$font-weight-regular;
+    color: v.$color-text-light;
+    margin: 0;
+  }
+
+  &__name {
+    font-size: 28px;
+    font-weight: v.$font-weight-bold;
+    letter-spacing: 0.05em;
+    margin: 0;
+  }
+
+  &__pawn {
+    width: 110px;
+    height: 140px;
+  }
+
+  &__button {
+    margin-top: 8px;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 6px;
+    background-color: #3b6a68;
+    color: v.$color-text-light;
+    font-family: inherit;
+    font-size: v.$font-size-sm;
+    font-weight: v.$font-weight-medium;
+    cursor: pointer;
+    transition: background-color 150ms ease;
+
+    &:hover {
+      background-color: #4a8482;
+    }
+  }
+
+  // Farben pro Gewinner
+  &--blue {
+    .winner__name,
+    .winner__pawn {
+      color: v.$color-blue;
+    }
+  }
+
+  &--orange {
+    .winner__name,
+    .winner__pawn {
+      color: v.$color-orange;
+    }
+  }
+}

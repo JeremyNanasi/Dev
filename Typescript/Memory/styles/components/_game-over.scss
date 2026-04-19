@@ -1,0 +1,97 @@
+@use '../abstracts/variables' as v;
+
+.game-over {
+  max-width: 560px;
+  width: calc(100% - 32px);
+  min-height: 380px;
+  border-radius: 12px;
+  background-color: #2f3033;
+  color: v.$color-text-light;
+  box-shadow: v.$shadow-modal;
+  padding: 0;
+  border: none;
+
+  &::backdrop {
+    background-color: rgba(0, 0, 0, 0.65);
+  }
+
+  &__content {
+    padding: 70px 40px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 28px;
+    text-align: center;
+  }
+
+  &__title {
+    font-family: "Inter", sans-serif;
+    font-size: 72px;
+    font-weight: 800;
+    line-height: 1;
+    margin: 0;
+    color: #76d4bd;
+    text-shadow: 2px 3px 0 rgba(0, 0, 0, 0.35);
+  }
+
+  &__label {
+    font-size: v.$font-size-sm;
+    font-weight: v.$font-weight-medium;
+    color: v.$color-text-light;
+    margin: 0;
+  }
+
+  &__scores {
+    display: flex;
+    gap: 10px;
+    background-color: #1f2a2d;
+    padding: 8px 12px;
+    border-radius: 8px;
+  }
+
+  &__score {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 4px 10px;
+    border-radius: 6px;
+    font-size: v.$font-size-sm;
+    font-weight: v.$font-weight-bold;
+
+    &::before {
+      content: "";
+      display: inline-block;
+      width: 12px;
+      height: 16px;
+      background-size: contain;
+      background-repeat: no-repeat;
+      background-position: center;
+    }
+
+    &--blue {
+      background-color: rgba(9, 127, 197, 0.2);
+      color: v.$color-blue;
+
+      &::before {
+        background-image: url("/assets/icons/pawn-blue.svg");
+      }
+    }
+
+    &--orange {
+      background-color: rgba(234, 105, 0, 0.2);
+      color: v.$color-orange;
+
+      &::before {
+        background-image: url("/assets/icons/pawn-orange.svg");
+      }
+    }
+  }
+
+  &__score-label {
+    color: inherit;
+  }
+
+  &__score-value {
+    color: v.$color-text-light;
+  }
+}

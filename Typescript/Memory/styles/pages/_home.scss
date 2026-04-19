@@ -1,0 +1,122 @@
+@use "../abstracts/variables" as v;
+@use "../abstracts/mixins" as m;
+
+// ============================================
+//  Home page — 1:1 from main repo
+// ============================================
+
+$home-bg:     #303131;
+$home-accent: #f0ea6e;
+$home-text:   #ffffff;
+
+.home-body {
+  background: $home-bg;
+  min-height: 100dvh;
+  margin: 0;
+  padding: 0;
+  overflow-x: hidden;
+}
+
+.home {
+  position: relative;
+  width: 100%;
+  min-height: 100dvh;
+  background: $home-bg;
+  color: $home-text;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  overflow: hidden;
+
+  &__decor {
+    position: absolute;
+    width: 414.31px;
+    height: 301.31px;
+    bottom: -80px;
+    left: -88px;
+    transform: rotate(-37.42deg);
+    opacity: 0.05;
+    pointer-events: none;
+    user-select: none;
+    z-index: 0;
+  }
+
+  &__content {
+    position: relative;
+    z-index: 1;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: clamp(v.$space-xl, 8vh, 85px);
+  }
+
+  &__text {
+    width: fit-content;
+    max-width: min(991px, calc(100% - v.$space-2xl));
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: v.$space-md;
+  }
+
+  &__eyebrow {
+    font-family: "Almarai", system-ui, sans-serif;
+    font-weight: 400;
+    font-size: clamp(24px, 3.3vw, 48px);
+    line-height: 1;
+    color: $home-text;
+  }
+
+  &__headline {
+    font-family: "Red Rose", serif;
+    font-weight: 700;
+    font-size: clamp(56px, 9.7vw, 140px);
+    line-height: 1;
+    color: $home-text;
+    margin: 0;
+  }
+}
+
+.primary-button {
+  align-self: center;
+  display: inline-flex;
+  align-items: center;
+  gap: 20px;
+  min-width: 250px;
+  min-height: 98px;
+  padding: 24px;
+  background: $home-accent;
+  color: $home-bg;
+  border: none;
+  border-radius: 0;
+  cursor: pointer;
+  font-family: inherit;
+  transition: transform 0.1s ease, filter 0.15s ease;
+
+  &:hover  { filter: brightness(1.05); }
+  &:active { transform: translateY(1px); }
+
+  &__icon {
+    width: 44px;
+    height: 32px;
+    object-fit: contain;
+    flex-shrink: 0;
+  }
+
+  &__label {
+    font-family: "Red Rose", serif;
+    font-weight: 700;
+    font-size: 40px;
+    line-height: 1;
+    color: $home-bg;
+  }
+
+  &__arrow {
+    width: 33px;
+    height: auto;
+    object-fit: contain;
+    flex-shrink: 0;
+  }
+}

@@ -1,0 +1,297 @@
+@use "../abstracts/variables" as v;
+@use "../abstracts/mixins" as m;
+
+// ============================================
+//  Settings page — based on main-repo 1:1
+//  Improvements: smaller/tighter sizes, image-
+//  based theme preview, real Start icon.
+// ============================================
+
+$settings-accent-yellow: #e8ee56;
+$settings-accent-pink:   #d6228a;
+$settings-accent-teal:   #1fd1a0;
+$settings-accent-blue:   #2f6bde;
+$settings-page-bg:       #ffffff;
+$settings-summary-bg:    #f2f2f2;
+$settings-text:          #1a1a1a;
+$settings-text-soft:     #2a2f33;
+
+.settings-body {
+  background: $settings-page-bg;
+  color: $settings-text;
+  font-family: "Almarai", v.$font-family-base;
+  min-height: 100dvh;
+}
+
+.settings {
+  position: relative;
+  padding: 40px 56px 88px;
+  max-width: 1280px;
+  margin: 0 auto;
+
+  &__inner {
+    display: grid;
+    grid-template-columns: minmax(0, 5fr) minmax(0, 6fr);
+    gap: 56px;
+    align-items: start;
+
+    @include m.respond(lg) {
+      grid-template-columns: 1fr;
+      gap: 32px;
+    }
+  }
+
+  &__header {
+    position: relative;
+    display: inline-block;
+    margin-bottom: 32px;
+  }
+
+  &__title {
+    font-family: "Red Rose", serif;
+    font-size: clamp(38px, 4.2vw, 56px);
+    font-weight: 900;
+    letter-spacing: -0.02em;
+    line-height: 1;
+    margin: 0;
+  }
+
+  &__underline {
+    display: block;
+    margin-top: 10px;
+    height: 4px;
+    width: 100%;
+    background: $settings-accent-yellow;
+    position: relative;
+
+    &::before,
+    &::after {
+      content: "";
+      position: absolute;
+      top: 50%;
+      width: 11px;
+      height: 11px;
+      background: $settings-accent-yellow;
+      transform: translateY(-50%) rotate(45deg);
+    }
+
+    &::before { left: -5px; }
+    &::after  { right: -5px; }
+  }
+
+  &__left {
+    padding-right: 8px;
+  }
+
+  &__right {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  &__form {
+    display: flex;
+    flex-direction: column;
+    gap: 28px;
+  }
+}
+
+// === Option Groups ===============================================
+.settings-group {
+  border: none;
+  padding: 0;
+  margin: 0;
+
+  &__legend {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    padding: 0;
+    margin-bottom: 10px;
+  }
+
+  &__icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 24px;
+    height: 24px;
+
+    &--theme  { color: $settings-accent-pink; }
+    &--player { color: $settings-accent-teal; }
+    &--board  { color: $settings-accent-blue; }
+  }
+
+  &__title {
+    font-size: 18px;
+    font-weight: 700;
+  }
+
+  &__list {
+    list-style: none;
+    padding-left: 32px;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+}
+
+// === Single radio option =========================================
+.settings-option {
+  &__label {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    padding: 3px 0;
+    cursor: pointer;
+    user-select: none;
+    font-size: 15px;
+    color: $settings-text-soft;
+    font-weight: 400;
+  }
+
+  &__input {
+    position: absolute;
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  &__marker {
+    position: relative;
+    width: 18px;
+    height: 18px;
+    border: 2px solid #1a1a1a;
+    border-radius: 50%;
+    flex-shrink: 0;
+    background: transparent;
+    transition: border-color 0.15s ease;
+
+    &::after {
+      content: "";
+      position: absolute;
+      inset: 2px;
+      border-radius: 50%;
+      background: #1a1a1a;
+      transform: scale(0);
+      transition: transform 0.15s ease;
+    }
+  }
+
+  &__arrow {
+    display: inline-block;
+    width: 48px;
+    height: 2px;
+    background: $settings-accent-yellow;
+    position: relative;
+    margin-left: 8px;
+    opacity: 0;
+    transform: translateX(-6px);
+    transition: opacity 0.2s ease, transform 0.2s ease;
+
+    &::after {
+      content: "";
+      position: absolute;
+      right: -6px;
+      top: 50%;
+      width: 10px;
+      height: 10px;
+      background: $settings-accent-yellow;
+      transform: translateY(-50%) rotate(45deg);
+    }
+  }
+
+  &__input:checked ~ &__marker::after {
+    transform: scale(1);
+  }
+
+  &__input:checked ~ &__text {
+    font-weight: 700;
+    color: #000;
+  }
+
+  &__input:checked ~ &__arrow {
+    opacity: 1;
+    transform: translateX(0);
+  }
+
+  &__label:hover .settings-option__marker {
+    border-color: $settings-accent-pink;
+  }
+}
+
+// === Theme Preview (image-based) =================================
+.preview {
+  border-radius: 14px;
+  overflow: hidden;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.10);
+  width: 100%;
+
+  &__image {
+    display: block;
+    width: 100%;
+    height: auto;
+    object-fit: cover;
+    transition: opacity 0.2s ease;
+  }
+}
+
+// === Summary Strip ==============================================
+.summary {
+  background: $settings-summary-bg;
+  border-radius: 8px;
+  padding: 10px 16px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+
+  &__steps {
+    display: inline-flex;
+    align-items: center;
+    gap: 14px;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    font-size: 15px;
+    font-weight: 500;
+    color: $settings-text-soft;
+  }
+
+  &__step { padding: 0; }
+
+  &__separator {
+    width: 2px;
+    height: 20px;
+    background: $settings-accent-yellow;
+    transform: rotate(18deg);
+  }
+
+  &__start {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: $settings-accent-yellow;
+    color: #111;
+    font-weight: 700;
+    font-size: 15px;
+    padding: 8px 22px;
+    border: none;
+    border-radius: 6px;
+    box-shadow: 0 3px 0 rgba(0, 0, 0, 0.08);
+    cursor: pointer;
+    font-family: inherit;
+    transition: transform 0.1s ease, box-shadow 0.1s ease, opacity 0.15s ease;
+
+    &:hover:not(:disabled)  { transform: translateY(-1px); }
+    &:active:not(:disabled) { transform: translateY(1px); box-shadow: none; }
+
+    &-icon {
+      width: 22px;
+      height: 16px;
+      object-fit: contain;
+      flex-shrink: 0;
+    }
+  }
+}

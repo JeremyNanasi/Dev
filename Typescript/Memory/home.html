@@ -3,13 +3,30 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/png" href="/assets/icons/memory.png">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Almarai:wght@400;700&family=Red+Rose:wght@400;700&display=swap" rel="stylesheet">
     <title>Memory Home</title>
 </head>
-<body>
-    <section class="section_home">
-        <span>It´s play time.</span>
-        <h1>Ready to Play</h1>
-        <button>play</button>
-    </section>  
+<body class="home-body">
+    <main class="home">
+        <img class="home__decor" src="/assets/icons/stadia_controller.png" alt="" aria-hidden="true">
+
+        <section class="home__content">
+            <div class="home__text">
+                <span class="home__eyebrow">It&rsquo;s play time.</span>
+                <h1 class="home__headline">Ready to play?</h1>
+            </div>
+
+            <button type="button" class="primary-button" id="play-button">
+                <img class="primary-button__icon" src="/assets/icons/stadia_controller-small.png" alt="" aria-hidden="true">
+                <span class="primary-button__label">Play</span>
+                <img class="primary-button__arrow" src="/assets/icons/Arrow 1.png" alt="" aria-hidden="true">
+            </button>
+        </section>
+    </main>
+
+    <script type="module" src="./home.ts"></script>
 </body>
 </html>
