@@ -1,7 +1,7 @@
 @use '../abstracts/variables' as v;
 
 .modal {
-  max-width: 420px;
+  max-width: 560px;
   width: calc(100% - 32px);
   border-radius: 16px;
   background-color: v.$color-modal-bg;
@@ -9,25 +9,28 @@
   box-shadow: v.$shadow-modal;
   padding: 0;
   border: none;
+  inset: 0;
+  margin: auto;
 
   &::backdrop {
     background-color: v.$color-modal-backdrop;
   }
 
   &__content {
-    padding: 32px 24px;
+    padding: 40px 40px 32px;
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 24px;
+    gap: 28px;
     text-align: center;
   }
 
   &__title {
-    font-size: v.$font-size-lg;
+    font-size: v.$font-size-xl;
     font-weight: v.$font-weight-bold;
     line-height: 1.3;
     color: v.$color-text-dark;
+    max-width: 360px;
   }
 
   &__actions {

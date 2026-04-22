@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/svg+xml" href="/assets/icons/mode_standby.svg">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Almarai:wght@400;700&family=Red+Rose:wght@400;700;900&family=Orbitron:wght@400;700;900&display=swap" rel="stylesheet">
+    <title>Memory</title>
+</head>
+<body class="winner-body" data-theme="code">
+    <main class="winner">
+        <img class="winner__confetti winner__confetti--top" src="/assets/icons/Confetti.png" alt="" aria-hidden="true">
+
+        <h1 class="winner__title">Winner</h1>
+
+        <div class="winner__gaming-heading">
+            <span class="winner__gaming-intro">The winner is</span>
+            <span class="winner__gaming-player" id="winner-gaming-player">Blue Player</span>
+        </div>
+
+        <img class="winner__trophy" src="/assets/games-themes/pockal 1.png" alt="Trophy" aria-hidden="true">
+
+        <div class="winner__display">
+            <img class="winner__pawn" id="winner-pawn" src="/assets/icons/chess_pawn-win.png" alt="Winner pawn">
+            <p class="winner__player" id="winner-player">Orange</p>
+        </div>
+
+        <dl class="winner__scores">
+            <div class="winner__score winner__score--blue">
+                <dt class="winner__score-label">Blue</dt>
+                <dd class="winner__score-value" id="final-blue">0</dd>
+            </div>
+            <div class="winner__score winner__score--orange">
+                <dt class="winner__score-label">Orange</dt>
+                <dd class="winner__score-value" id="final-orange">0</dd>
+            </div>
+        </dl>
+
+        <button type="button" class="winner__button" id="back-to-settings">Back to settings</button>
+    </main>
+
+    <script type="module" src="./winner.ts"></script>
+</body>
+</html>

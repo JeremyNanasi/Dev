@@ -1,0 +1,165 @@
+@use "../abstracts/variables" as v;
+
+.game-over {
+  position: fixed;
+  inset: 0;
+  background: v.$color-game-bg;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: clamp(16px, 4vw, 48px);
+  padding: clamp(16px, 4vw, 32px);
+  z-index: 100;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.25s ease;
+  box-sizing: border-box;
+
+  &.is-visible {
+    opacity: 1;
+    visibility: visible;
+  }
+
+  &__image {
+    width: clamp(200px, 50vw, 600px);
+    height: auto;
+    filter: drop-shadow(0 0 32px rgba(74, 193, 166, 0.35));
+    animation: gameOverPulse 1.6s ease-in-out infinite;
+  }
+}
+
+@keyframes gameOverPulse {
+  0%, 100% { transform: scale(1); }
+  50%       { transform: scale(1.04); }
+}
+
+.winner-body {
+  background: v.$color-game-bg;
+  min-height: 100dvh;
+  margin: 0;
+  font-family: "Almarai", v.$font-family-base;
+  color: v.$color-text-light;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: clamp(16px, 4vw, 32px);
+  box-sizing: border-box;
+  overflow-x: hidden;
+}
+
+.winner {
+  position: relative;
+  width: 100%;
+  max-width: 720px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: clamp(16px, 3.5vw, 32px);
+  text-align: center;
+  padding: clamp(16px, 3vw, 32px) 0;
+
+  &__title {
+    font-family: "Red Rose", serif;
+    font-size: clamp(48px, 11vw, 144px);
+    font-weight: 900;
+    line-height: 1;
+    margin: 0;
+    color: v.$color-card;
+    text-shadow: 0 0 40px rgba(74, 193, 166, 0.45);
+    position: relative;
+    z-index: 2;
+    letter-spacing: -0.01em;
+  }
+
+  &__confetti {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: auto;
+    pointer-events: none;
+    opacity: 0.75;
+    z-index: 0;
+  }
+
+  &__display {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: clamp(10px, 2vw, 16px);
+    position: relative;
+    z-index: 1;
+  }
+
+  &__scores,
+  &__button {
+    position: relative;
+    z-index: 1;
+  }
+
+  &__pawn {
+    width: clamp(80px, 16vw, 180px);
+    height: auto;
+    filter: drop-shadow(0 8px 20px rgba(0, 0, 0, 0.35));
+    position: relative;
+    z-index: 2;
+
+    &--tie { opacity: 0.7; }
+  }
+
+  &__player {
+    font-size: clamp(22px, 3.6vw, 40px);
+    font-weight: 700;
+    font-family: "Red Rose", serif;
+    margin: 0;
+    color: v.$color-text-light;
+    position: relative;
+    z-index: 2;
+  }
+
+  &__scores {
+    display: flex;
+    gap: clamp(12px, 3vw, 24px);
+    margin: 0;
+    padding: clamp(8px, 2vw, 12px) clamp(12px, 4vw, 24px);
+    background: v.$color-pill-bg;
+    border-radius: v.$radius-pill;
+  }
+
+  &__score {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: clamp(14px, 2.5vw, 18px);
+    font-weight: 700;
+
+    &--blue   { color: v.$color-blue; }
+    &--orange { color: v.$color-orange; }
+
+    &-label { margin: 0; }
+    &-value {
+      color: v.$color-text-light;
+      margin: 0;
+    }
+  }
+
+  &__button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: clamp(8px, 2vw, 12px) clamp(20px, 5vw, 32px);
+    background: v.$color-card;
+    color: v.$color-text-light;
+    border: none;
+    border-radius: 8px;
+    font-family: inherit;
+    font-size: clamp(14px, 2.5vw, 16px);
+    font-weight: 700;
+    cursor: pointer;
+    transition: filter 0.15s ease, transform 0.1s ease;
+
+    &:hover  { filter: brightness(1.08); }
+    &:active { transform: translateY(1px); }
+  }
+}

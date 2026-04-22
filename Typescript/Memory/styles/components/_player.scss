@@ -8,8 +8,17 @@
   font-size: v.$font-size-sm;
   font-weight: v.$font-weight-medium;
 
+  @media (max-width: 425px) {
+    gap: 8px;
+    font-size: 12px;
+  }
+
   &__label {
     color: v.$color-text-light;
+
+    @media (max-width: 425px) {
+      display: none;
+    }
   }
 
   &__indicator {
@@ -19,12 +28,7 @@
     border-radius: 4px 8px 8px 4px;
     clip-path: polygon(0 0, 90% 0, 100% 50%, 90% 100%, 0 100%);
 
-    &--blue {
-      background-color: v.$color-blue;
-    }
-
-    &--orange {
-      background-color: v.$color-orange;
-    }
+    &--blue   { background-color: v.$color-blue; }
+    &--orange { background-color: v.$color-orange; }
   }
 }

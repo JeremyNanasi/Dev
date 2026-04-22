@@ -2,30 +2,45 @@
 
 .score {
   background-color: v.$color-pill-bg;
-  border-radius: 10px;
-  padding: 8px 16px;
-  display: flex;
+  border-radius: v.$radius-pill;
+  padding: 6px 14px;
+  display: inline-flex;
   align-items: center;
-  gap: 12px;
+  gap: 14px;
+
+  @media (max-width: 425px) {
+    padding: 4px 10px;
+    gap: 8px;
+  }
 
   &__item {
-    display: flex;
+    display: inline-flex;
     align-items: center;
     gap: 6px;
     font-size: v.$font-size-sm;
     font-weight: v.$font-weight-bold;
 
-    &--blue {
-      color: v.$color-blue;
-    }
+    &--blue   { color: v.$color-blue; }
+    &--orange { color: v.$color-orange; }
 
-    &--orange {
-      color: v.$color-orange;
+    @media (max-width: 425px) {
+      font-size: 12px;
+      gap: 4px;
     }
   }
 
-  &__label {
-    // erbt Farbe vom Item-Modifier (--blue / --orange)
+  &__flag {
+    display: inline-block;
+    width: 18px;
+    height: 12px;
+    background: currentColor;
+    clip-path: polygon(0 0, 82% 0, 100% 50%, 82% 100%, 0 100%);
+    flex-shrink: 0;
+
+    @media (max-width: 425px) {
+      width: 14px;
+      height: 10px;
+    }
   }
 
   &__value {

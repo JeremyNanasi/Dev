@@ -1,31 +1,16 @@
 {
-  "name": "typescript",
+  "name": "memory",
   "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
+  "type": "module",
   "scripts": {
     "dev": "vite",
     "build": "tsc --noEmit && vite build",
     "preview": "vite preview"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "type": "commonjs",
   "devDependencies": {
+    "@types/node": "^25.6.0",
     "sass": "^1.99.0",
-    "typescript": "^6.0.2",
-    "vite": "^8.0.8"
-  },
-  "dependencies": {
-    "chokidar": "^4.0.3",
-    "detect-libc": "^2.1.2",
-    "immutable": "^5.1.5",
-    "is-extglob": "^2.1.1",
-    "is-glob": "^4.0.3",
-    "node-addon-api": "^7.1.1",
-    "picomatch": "^4.0.4",
-    "readdirp": "^4.1.2",
-    "source-map-js": "^1.2.1"
+    "typescript": "^5.4.0",
+    "vite": "^5.4.0"
   }
 }

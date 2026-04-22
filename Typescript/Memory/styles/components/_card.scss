@@ -52,4 +52,17 @@
   &.is-flipped:hover &__inner {
     transform: rotateY(180deg) scale(1.03);
   }
+
+  &.is-matched {
+    cursor: default;
+    pointer-events: none;
+  }
+
+  &.is-matched &__inner {
+    transform: rotateY(180deg);
+  }
+
+  &.is-matched:hover &__inner {
+    transform: rotateY(180deg);
+  }
 }

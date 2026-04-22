@@ -83,9 +83,9 @@ $home-text:   #ffffff;
   align-self: center;
   display: inline-flex;
   align-items: center;
-  gap: 20px;
-  min-width: 250px;
-  min-height: 98px;
+  gap: 8px;
+  min-width: 0;
+  min-height: 0;
   padding: 24px;
   background: $home-accent;
   color: $home-bg;
@@ -99,8 +99,8 @@ $home-text:   #ffffff;
   &:active { transform: translateY(1px); }
 
   &__icon {
-    width: 44px;
-    height: 32px;
+    width: 28px;
+    height: auto;
     object-fit: contain;
     flex-shrink: 0;
   }
@@ -108,15 +108,32 @@ $home-text:   #ffffff;
   &__label {
     font-family: "Red Rose", serif;
     font-weight: 700;
-    font-size: 40px;
+    font-size: 25px;
     line-height: 1;
     color: $home-bg;
   }
 
   &__arrow {
-    width: 33px;
+    width: 26px;
     height: auto;
     object-fit: contain;
     flex-shrink: 0;
+  }
+
+  @media (min-width: 426px) {
+    gap: 20px;
+
+    &__icon {
+      width: 44px;
+      height: 32px;
+    }
+
+    &__label {
+      font-size: 40px;
+    }
+
+    &__arrow {
+      width: 33px;
+    }
   }
 }
