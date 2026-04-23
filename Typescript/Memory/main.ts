@@ -206,9 +206,11 @@ function finishGame(): void {
 
   const overlay = $<HTMLElement>("#game-over-overlay");
   if (overlay) {
-    overlay.classList.add("is-visible");
     window.setTimeout(() => {
-      window.location.href = "winner.html";
+      overlay.classList.add("is-visible");
+      window.setTimeout(() => {
+        window.location.href = "winner.html";
+      }, 5000);
     }, 5000);
   }
 }
