@@ -5,7 +5,7 @@ Currently, I am learning <strong>JavaScript</strong> and <strong>PHP</strong>, a
 <br>
 ## 🧰 Technologies & Tools<br>
 <ul>
-    <li> 🖥️ HTML, CSS, JavaScript</li>  
+    <li> 🖥️ HTML, CSS, JavaScript, Typescript, SCSS</li>  
     <li> 🐘 PHP (initial projects)</li>  
     <li> 🧪 Git & GitHub</li>
     <li>Trello</li>
@@ -16,7 +16,7 @@ Currently, I am learning <strong>JavaScript</strong> and <strong>PHP</strong>, a
 <br>
 ## 🚀 Current Projects<br>
 <ul>
-    <li> 📖 <strong>El Pollo Loco</strong> – a JavaScript 2D game project using OOP</li>
+    <li> 📖 <strong>Memory</strong> – a Typescript Memory game</li>
 </ul>
 <br>
 ## 🎯 Goals<br>
