@@ -6,7 +6,7 @@ Currently, I am learning <strong>JavaScript</strong> and <strong>PHP</strong>, a
 ## 🧰 Technologies & Tools<br>
 <ul>
     <li> 🖥️ HTML, CSS, JavaScript, Typescript, SCSS</li>  
-    <li> 🐘 PHP (initial projects)</li>  
+    <li> 🐘 PHP & Python (initial projects)</li>  
     <li> 🧪 Git & GitHub</li>
     <li>Trello</li>
     <li>Firebase</li>
