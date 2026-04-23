@@ -10,7 +10,7 @@ $home-accent: #f0ea6e;
 $home-text:   #ffffff;
 
 .home-body {
-  background: $home-bg;
+  background: $home-bg url('/assets/icons/memory.png') no-repeat center center / 40vmin;
   min-height: 100dvh;
   margin: 0;
   padding: 0;

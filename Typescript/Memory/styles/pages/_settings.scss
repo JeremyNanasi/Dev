@@ -16,7 +16,7 @@ $ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
 $ease-smooth: cubic-bezier(0.4, 0, 0.2, 1);
 
 .settings-body {
-  background: $settings-page-bg;
+  background: $settings-page-bg url('/assets/icons/memory.png') no-repeat center center / 40vmin;
   color: $settings-text;
   font-family: "Almarai", v.$font-family-base;
   min-height: 100dvh;
