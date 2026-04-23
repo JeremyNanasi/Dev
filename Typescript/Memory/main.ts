@@ -205,11 +205,12 @@ function finishGame(): void {
   if (fso) fso.textContent = String(orange);
 
   const overlay = $<HTMLElement>("#game-over-overlay");
-  if (overlay) overlay.classList.add("is-visible");
-
-  window.setTimeout(() => {
-    window.location.href = "winner.html";
-  }, 5000);
+  if (overlay) {
+    overlay.classList.add("is-visible");
+    window.setTimeout(() => {
+      window.location.href = "winner.html";
+    }, 5000);
+  }
 }
 
 function setupModal(): void {
